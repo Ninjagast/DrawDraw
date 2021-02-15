@@ -174,20 +174,27 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Greyb\\.nuget\\packages\\": {}
+    "C:\\Users\\Steven\\.nuget\\packages\\": {},
+    "D:\\Microsoft\\Xamarin\\NuGet": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Greyb\\OneDrive\\NHL\\DesignPaterns\\project\\V_1\\DrawDraw\\DrawDraw.csproj",
+      "projectUniqueName": "C:\\Users\\Steven\\source\\repos\\drawDraw\\DrawDraw\\DrawDraw.csproj",
       "projectName": "DrawDraw",
-      "projectPath": "C:\\Users\\Greyb\\OneDrive\\NHL\\DesignPaterns\\project\\V_1\\DrawDraw\\DrawDraw.csproj",
-      "packagesPath": "C:\\Users\\Greyb\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Greyb\\OneDrive\\NHL\\DesignPaterns\\project\\V_1\\DrawDraw\\obj\\",
+      "projectPath": "C:\\Users\\Steven\\source\\repos\\drawDraw\\DrawDraw\\DrawDraw.csproj",
+      "packagesPath": "C:\\Users\\Steven\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Steven\\source\\repos\\drawDraw\\DrawDraw\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "D:\\Microsoft\\Xamarin\\NuGet",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Greyb\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Steven\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -231,6 +238,16 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[3.1.10, 3.1.10]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[3.1.11, 3.1.11]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
