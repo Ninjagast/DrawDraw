@@ -49,6 +49,5 @@ Thumbs.db
 *.mov
 *.wmv
 
-/drawDraw/Content/
 /drawDraw/obj/
 /drawDraw/bin/

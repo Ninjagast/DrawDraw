@@ -1,1 +1,5 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/corkel.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/corkel.xnb","TextureProcessor","Texture2DContent",718,4181,0.1685712
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/snaly.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/snaly.xnb","TextureProcessor","Texture2DContent",1363,4181,0.0020297
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/squearl.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/squearl.xnb","TextureProcessor","Texture2DContent",169,4181,0.0045502
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/triganelk.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/triganelk.xnb","TextureProcessor","Texture2DContent",526,4181,0.0018683

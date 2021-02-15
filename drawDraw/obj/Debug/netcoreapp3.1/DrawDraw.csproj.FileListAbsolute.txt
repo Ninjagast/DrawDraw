@@ -44,3 +44,7 @@ C:\Users\Steven\source\repos\drawDraw\DrawDraw\obj\Debug\netcoreapp3.1\DrawDraw.
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\obj\Debug\netcoreapp3.1\DrawDraw.dll
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\obj\Debug\netcoreapp3.1\DrawDraw.pdb
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\obj\Debug\netcoreapp3.1\DrawDraw.genruntimeconfig.cache
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\corkel.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\snaly.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\squearl.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\triganelk.xnb
