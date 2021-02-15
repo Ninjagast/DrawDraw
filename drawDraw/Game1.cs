@@ -54,23 +54,21 @@ namespace DrawDraw
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            _spriteBatch.Begin();
+            
             // TODO: Add your drawing code here
             if (show)
             {
-                Texture2D rect = new Texture2D(_graphics.GraphicsDevice, 80, 30);
+                Texture2D _texture;
 
-                Color[] data = new Color[80*30];
-                for(int i=0; i < data.Length; ++i) data[i] = Color.Chocolate;
-                rect.SetData(data);
+                _texture = new Texture2D(GraphicsDevice, 1, 1);
+                _texture.SetData(new Color[] { Color.DarkSlateGray });
 
-                Vector2 coor = new Vector2(10, 20);
-                _spriteBatch.Draw(rect, coor, Color.White);
+                _spriteBatch.Draw(_texture, new Rectangle(100, 100, 100, 100), Color.White);
             }
 
+            _spriteBatch.End();
             base.Draw(gameTime);
-            
-
         }
     }
 }
