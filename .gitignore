@@ -25,6 +25,7 @@ dist/
 
 # JetBrains IDE
 .idea/
+.vs/
 
 # Unit test reports
 TEST*.xml
@@ -48,3 +49,6 @@ Thumbs.db
 *.mov
 *.wmv
 
+/drawDraw/Content/
+/drawDraw/obj/
+/drawDraw/bin/
