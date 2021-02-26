@@ -11,18 +11,8 @@ namespace DrawDraw
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-//      textures
-        private Texture2D corkel;
-        private Texture2D snaly;
-        private Texture2D squearl;
-        private Texture2D triganelk;
-        
 //      temporary vars to hack around shape placement
-        private Vector2 drawPos;
         private ArrayList squares = new ArrayList();
-        private Boolean modus = true;
-        private int activeCd = 0;
-        private int cd = 120;
         
         public Game1()
         {
@@ -39,13 +29,6 @@ namespace DrawDraw
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-//          #todo change to actual names
-//          creates sprites from these textures and loads them in
-            corkel =    this.Content.Load<Texture2D>("corkel");
-            snaly =     this.Content.Load<Texture2D>("snaly");
-            squearl =   this.Content.Load<Texture2D>("squearl");
-            triganelk = this.Content.Load<Texture2D>("triganelk");
         }
 
         protected override void Update(GameTime gameTime)
@@ -62,40 +45,56 @@ namespace DrawDraw
             {
 //              #todo add a shape to the tree here so we can draw it in the draw function.
 //              #todo change the continuous nature of this code into the menu.
-                drawPos = mousePosition.ToVector2();
-                squares.Add(new Rectangle((int) drawPos.X, (int) drawPos.Y, 100, 100));
-            }
 
-            if (mouseState.RightButton == ButtonState.Pressed)
-            {
-                modus = !modus;
+//              creates circles and squares now
+                // squares.Add(new Rectangle((int) drawPos.X, (int) drawPos.Y, 100, 100));
+                // squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
             }
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-
-            GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
-
-            Texture2D _texture;
-            _texture = new Texture2D(GraphicsDevice, 1, 1);
-            _texture.SetData(new Color[] { Color.DarkSlateGray });
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
 //          #todo replace this with the shape tree
-            foreach (Rectangle square in squares)
+            foreach (Texture2D square in squares)
             {
-                _spriteBatch.Draw(_texture, square, Color.White);
+                _spriteBatch.Draw(square, new Vector2(0,0), Color.Aqua);
             }
 
 //          draw example for textures
-            _spriteBatch.Draw(corkel,   new Vector2(0,0), Color.Brown);
-            _spriteBatch.Draw(snaly,    new Vector2(50,0), Color.Brown);
-            _spriteBatch.Draw(triganelk,new Vector2(100,0), Color.Brown);
-            _spriteBatch.Draw(squearl,  new Vector2(150,0), Color.Brown);
-            _spriteBatch.End();
             base.Draw(gameTime);
+            _spriteBatch.End();
+        }
+
+        private static Texture2D GenerateCircleTexture(GraphicsDevice graphicsDevice, int radius, Color color, float sharpness)
+        {
+            var diameter = radius * 2;
+            var circleTexture = new Texture2D(graphicsDevice, diameter, diameter, false, SurfaceFormat.Color);
+            var colorData = new Color[circleTexture.Width * circleTexture.Height];
+            var center = new Vector2(radius);
+            for (var colIndex = 0; colIndex < circleTexture.Width; colIndex++)
+            {
+                for (var rowIndex = 0; rowIndex < circleTexture.Height; rowIndex++)
+                {
+                    var position = new Vector2(colIndex, rowIndex);
+                    var distance = Vector2.Distance(center, position);
+
+                    // hermite iterpolation
+                    var x = distance / diameter;
+                    var edge0 = (radius * sharpness) / (float)diameter;
+                    var edge1 = radius / (float)diameter;
+                    var temp = MathHelper.Clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+                    var result = temp * temp * (3.0f - 2.0f * temp);
+
+                    colorData[rowIndex * circleTexture.Width + colIndex] = color * (1f - result);
+                }
+            }
+            circleTexture.SetData<Color>(colorData);
+
+            return circleTexture;
         }
     }
 }
