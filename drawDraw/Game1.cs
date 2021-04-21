@@ -48,7 +48,7 @@ namespace DrawDraw
 
 //              creates circles and squares now
                 // squares.Add(new Rectangle((int) drawPos.X, (int) drawPos.Y, 100, 100));
-                // squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
+                squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
             }
             base.Update(gameTime);
         }
