@@ -12,7 +12,8 @@ namespace DrawDraw
         private SpriteBatch _spriteBatch;
 
 //      temporary vars to hack around shape placement
-        private ArrayList squares = new ArrayList();
+        
+        private Canvas _canvas = Canvas.Instance;
         
         public Game1()
         {
@@ -23,6 +24,7 @@ namespace DrawDraw
 
         protected override void Initialize()
         {
+            _canvas.Init(GraphicsDevice);
             base.Initialize();
         }
 
@@ -34,7 +36,6 @@ namespace DrawDraw
         protected override void Update(GameTime gameTime)
         {
             var mouseState = Mouse.GetState();
-            var mousePosition = new Point(mouseState.X, mouseState.Y);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
@@ -47,8 +48,8 @@ namespace DrawDraw
 //              #todo change the continuous nature of this code into the menu.
 
 //              creates circles and squares now
-                // squares.Add(new Rectangle((int) drawPos.X, (int) drawPos.Y, 100, 100));
-                squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
+                _canvas.InsertRectangle(new Point(mouseState.X, mouseState.Y));
+                // squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
             }
             base.Update(gameTime);
         }
@@ -58,13 +59,8 @@ namespace DrawDraw
             _spriteBatch.Begin();
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-//          #todo replace this with the shape tree
-            foreach (Texture2D square in squares)
-            {
-                _spriteBatch.Draw(square, new Vector2(0,0), Color.Aqua);
-            }
-
-//          draw example for textures
+            _canvas.Draw(_spriteBatch);
+                
             base.Draw(gameTime);
             _spriteBatch.End();
         }
