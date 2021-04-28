@@ -1,0 +1,5 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/corkel.png","C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/bin/DesktopGL/Content/corkel.xnb","TextureProcessor","Texture2DContent",718,4181,0.2865569
+"C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/snaly.png","C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/bin/DesktopGL/Content/snaly.xnb","TextureProcessor","Texture2DContent",1363,4181,0.0045985
+"C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/squearl.png","C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/bin/DesktopGL/Content/squearl.xnb","TextureProcessor","Texture2DContent",169,4181,0.0046663
+"C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/triganelk.png","C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/bin/DesktopGL/Content/triganelk.xnb","TextureProcessor","Texture2DContent",526,4181,0.0046274
