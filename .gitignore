@@ -63,3 +63,7 @@ drawDraw/Content/obj/DesktopGL/Content/snaly.mgcontent
 drawDraw/Content/obj/DesktopGL/Content/squearl.mgcontent
 
 drawDraw/Content/obj/DesktopGL/Content/triganelk.mgcontent
+
+drawDraw/drawDraw.csproj
+
+drawDraw/Program.cs
