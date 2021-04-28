@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +9,6 @@ namespace DrawDraw
     public class Canvas
     {
         private static Canvas _instance = new Canvas();
-
         private ArrayList _textures = new ArrayList();
 
         private GraphicsDevice _graphicsDevice;
@@ -29,6 +28,11 @@ namespace DrawDraw
         public void InsertRectangle(Point coords)
         {
             _textures.Add(new Rectangle((int) coords.X, (int) coords.Y, 100, 100));
+        }
+
+        public int GetLastRectangle()
+        {
+            return _textures.Count;
         }
 
         public void Draw(SpriteBatch spriteBatch)
