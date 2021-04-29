@@ -10,6 +10,7 @@ namespace DrawDraw
     {
         private static Canvas _instance = new Canvas();
         private ArrayList _textures = new ArrayList();
+        private ArrayList _buttons = new ArrayList();
 
         private GraphicsDevice _graphicsDevice;
 
@@ -29,7 +30,10 @@ namespace DrawDraw
         {
             _textures.Add(new Rectangle((int) coords.X, (int) coords.Y, 100, 100));
         }
-
+        public void InsertButtons(Rectangle button)
+        {
+            _buttons.Add(button);
+        }
         public int GetLastRectangle()
         {
             return _textures.Count;
@@ -44,7 +48,12 @@ namespace DrawDraw
             {
                 spriteBatch.Draw(_texture, square, Color.White);
             }
-
+            
+            _texture.SetData(new Color[] { Color.Black });
+            foreach (Rectangle button in _buttons)
+            {
+                spriteBatch.Draw(_texture, button, Color.White);
+            }
         }
     }
 }

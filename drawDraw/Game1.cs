@@ -9,6 +9,8 @@ namespace DrawDraw
 //      temporary vars to hack around shape placement
 
         private readonly Canvas _canvas = Canvas.Instance;
+        Button test = new Button("test",new Rectangle((int) 0, (int) 0, 100, 20), 0, 0);
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         
@@ -23,6 +25,9 @@ namespace DrawDraw
         protected override void Initialize()
         {
             _canvas.Init(GraphicsDevice);
+        
+            _canvas.InsertButtons(test.Texture);
+            
             base.Initialize();
         }
 
@@ -35,7 +40,8 @@ namespace DrawDraw
         {
             var mouseState = Mouse.GetState();
             var modifyCanvas = new ModifyCanvas();
-
+            test.Update(gameTime, mouseState);
+            
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
@@ -45,16 +51,15 @@ namespace DrawDraw
             // #todo change the continuous nature of this code into the menu.
                 
             // _canvas.InsertRectangle(new Point(mouseState.X, mouseState.Y));
-            modifyCanvas.SetCommand(new CanvasCommand(mouseState, CommandAction.Add));
+            // modifyCanvas.SetCommand(new CanvasCommand(mouseState, CommandAction.Add));
             
             // modifyCanvas.UndoActions();
             
             // creates circles and squares now
             // squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
             }
-
+            var prevMouseState = mouseState;
             base.Update(gameTime);
-            
         }
 
         protected override void Draw(GameTime gameTime)
