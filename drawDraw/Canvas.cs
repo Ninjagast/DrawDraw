@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using DrawDraw.buttons;
+using DrawDraw.shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -24,11 +26,17 @@ namespace DrawDraw
         public void Init(GraphicsDevice graphicsDevice)
         {
             _graphicsDevice = graphicsDevice;
+            CreateButtons();
         }
-        
+
+        private void CreateButtons()
+        {
+            _buttons.Add(new RectangleButton(0, 0, new Rectangle(0, 0, 100, 20), ""));
+        }
+
         public void InsertRectangle(Point coords)
         {
-            _textures.Add(new Rectangle((int) coords.X, (int) coords.Y, 100, 100));
+            _textures.Add(new RectangleShape("", coords.X, coords.Y, 100, 100, 1));
         }
         public void InsertButtons(Rectangle button)
         {
@@ -41,19 +49,28 @@ namespace DrawDraw
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D _texture;
-            _texture = new Texture2D(_graphicsDevice, 1, 1);
-            _texture.SetData(new Color[] { Color.DarkSlateGray });
-            foreach (Rectangle square in _textures)
+            foreach (ShapeBase texture in _textures)
             {
-                spriteBatch.Draw(_texture, square, Color.White);
+                texture.Draw(spriteBatch, _graphicsDevice);
             }
             
-            _texture.SetData(new Color[] { Color.Black });
-            foreach (Rectangle button in _buttons)
+            foreach (ButtonBase button in _buttons)
             {
-                spriteBatch.Draw(_texture, button, Color.White);
+                button.Draw(spriteBatch, _graphicsDevice);
             }
+        }
+
+        public bool CheckButtons(MouseState mouseState)
+        {
+            foreach (ButtonBase button in _buttons)
+            {
+                if (button.Update(mouseState))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

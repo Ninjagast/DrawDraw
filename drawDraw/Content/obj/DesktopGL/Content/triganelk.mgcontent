@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/triganelk.png</SourceFile>
-  <SourceTime>2021-02-16T10:43:50.4728716+01:00</SourceTime>
-  <DestFile>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/bin/DesktopGL/Content/triganelk.xnb</DestFile>
-  <DestTime>2021-04-28T09:57:48.0661412+02:00</DestTime>
+  <SourceFile>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/triganelk.png</SourceFile>
+  <SourceTime>2021-02-15T21:09:21.0680174+01:00</SourceTime>
+  <DestFile>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/triganelk.xnb</DestFile>
+  <DestTime>2021-04-28T21:26:43.6330273+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

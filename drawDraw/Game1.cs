@@ -6,15 +6,12 @@ namespace DrawDraw
 {
     public class Game1 : Game
     {
-//      temporary vars to hack around shape placement
-
+//      creates the first and only instance of the canvas class
         private readonly Canvas _canvas = Canvas.Instance;
-        Button test = new Button("test",new Rectangle((int) 0, (int) 0, 100, 20), 0, 0);
-
+        
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -24,9 +21,8 @@ namespace DrawDraw
 
         protected override void Initialize()
         {
+//          initializes the canvas instance
             _canvas.Init(GraphicsDevice);
-        
-            _canvas.InsertButtons(test.Texture);
             
             base.Initialize();
         }
@@ -40,23 +36,25 @@ namespace DrawDraw
         {
             var mouseState = Mouse.GetState();
             var modifyCanvas = new ModifyCanvas();
-            test.Update(gameTime, mouseState);
             
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-            if (mouseState.LeftButton == ButtonState.Pressed)
+            if (_canvas.CheckButtons(mouseState))
             {
-            // #todo add a shape to the tree here so we can draw it in the draw function.
-            // #todo change the continuous nature of this code into the menu.
+//              You surely know how to press my buttons ; )
+            }
+            else if (mouseState.LeftButton == ButtonState.Pressed)
+//          if the user clicks with his left mouse button
+//          #todo adds textures over the menu if you click on the menu (add a deadzone where no textures can be drawn)
+            {
+//              #todo change the continuous nature of this code into the menu.
+//              #todo add some sort of modus so we can insert multiple shapes (trough the menu)
                 
-            // _canvas.InsertRectangle(new Point(mouseState.X, mouseState.Y));
-            // modifyCanvas.SetCommand(new CanvasCommand(mouseState, CommandAction.Add));
+                modifyCanvas.SetCommand(new CanvasCommand(mouseState, CommandAction.Add));
+                // modifyCanvas.UndoActions();
             
-            // modifyCanvas.UndoActions();
-            
-            // creates circles and squares now
-            // squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
+                // creates circles and squares now
+                // squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
             }
             var prevMouseState = mouseState;
             base.Update(gameTime);
@@ -65,16 +63,18 @@ namespace DrawDraw
         protected override void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
+//          standard background
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+//          draws all textures
             _canvas.Draw(_spriteBatch);
 
             base.Draw(gameTime);
             _spriteBatch.End();
         }
 
-        private static Texture2D GenerateCircleTexture(GraphicsDevice graphicsDevice, int radius, Color color,
-            float sharpness)
+//      yoinked function from stackoverflow to generate a circle
+        private static Texture2D GenerateCircleTexture(GraphicsDevice graphicsDevice, int radius, Color color, float sharpness)
         {
             var diameter = radius * 2;
             var circleTexture = new Texture2D(graphicsDevice, diameter, diameter, false, SurfaceFormat.Color);
@@ -97,7 +97,6 @@ namespace DrawDraw
             }
 
             circleTexture.SetData(colorData);
-
             return circleTexture;
         }
     }

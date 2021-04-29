@@ -4,10 +4,10 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/corkel.png</File>
-    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/snaly.png</File>
-    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/squearl.png</File>
-    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/triganelk.png</File>
+    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/corkel.png</File>
+    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/snaly.png</File>
+    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/squearl.png</File>
+    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/triganelk.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
