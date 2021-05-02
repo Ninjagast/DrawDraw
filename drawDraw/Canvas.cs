@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DrawDraw.buttons;
 using DrawDraw.shapes;
 using Microsoft.Xna.Framework;
@@ -11,11 +12,13 @@ namespace DrawDraw
     public class Canvas
     {
         private static Canvas _instance = new Canvas();
-        private ArrayList _textures = new ArrayList();
+        private List<ShapeBase> _textures = new List<ShapeBase>();
         private ArrayList _buttons = new ArrayList();
-
+        
         private GraphicsDevice _graphicsDevice;
 
+        public ButtonStages BtnStage; 
+            
         private Canvas()
         {
 
@@ -31,20 +34,33 @@ namespace DrawDraw
 
         private void CreateButtons()
         {
-            _buttons.Add(new RectangleButton(0, 0, new Rectangle(0, 0, 100, 20), ""));
+            _buttons.Add(new RectangleButton(0, 0, new Rectangle(0, 0, 30, 30), "Rectangle"));
+            _buttons.Add(new RectangleButton(70, 0, new Rectangle(70, 0, 30, 30), "Circle"));
         }
 
-        public void InsertRectangle(Point coords)
+        public Guid InsertRectangle(Point coords)
         {
             _textures.Add(new RectangleShape("", coords.X, coords.Y, 100, 100, 1));
+            return _textures[^1].id;
         }
-        public void InsertButtons(Rectangle button)
+        public Guid InsertCircle(Point coords)
         {
-            _buttons.Add(button);
+            _textures.Add(new CircleShape("", coords.X, coords.Y, 100, 100, 1));
+            return _textures[^1].id;
         }
-        public int GetLastRectangle()
+        
+        public void DeleteTexture(Guid id)
         {
-            return _textures.Count;
+            ShapeBase delete = null;
+            foreach (ShapeBase texture in _textures)
+            {
+                if (texture.id == id)
+                {
+                    delete = texture; 
+                    break;
+                }
+            }
+            _textures.Remove(delete);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -60,17 +76,26 @@ namespace DrawDraw
             }
         }
 
-        public bool CheckButtons(MouseState mouseState)
+        public bool CheckButtons(MouseState mouseState, MouseState prevMouseState)
         {
-            foreach (ButtonBase button in _buttons)
+            if (prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
             {
-                if (button.Update(mouseState))
+                foreach (ButtonBase button in _buttons)
                 {
-                    return true;
+                    if (button.Update(mouseState))
+                    {
+                        return true;
+                    }
                 }
             }
-
             return false;
         }
+    }
+
+    public enum ButtonStages
+    {
+        Rectangle,
+        Circle,
+        Undo,
     }
 }

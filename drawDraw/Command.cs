@@ -24,54 +24,47 @@ namespace DrawDraw
         Delete
     }
 
-    public class CanvasCommand : ICommand
+    public class AddRectangle : ICommand
     {
-        private static Canvas _selected = Canvas.Instance;
-        private static CommandAction _action;
+        private static Canvas canvas = Canvas.Instance;
         private static MouseState _mouseState;
+        private Guid objectId; 
 
-        public CanvasCommand(MouseState mouseState,CommandAction action)
+        public AddRectangle(MouseState mouseState)
         {
             _mouseState = mouseState;
-            _action = action;
         }
-
         public void ExecuteAction()
         {
-            switch (_action)
-            {
-                case CommandAction.Copy:
-                    break;
-                case CommandAction.Paste:
-                    break;
-                case CommandAction.Undo:
-                    break;                
-                case CommandAction.Add:
-                    _selected.InsertRectangle(new Point(_mouseState.X, _mouseState.Y));
-                    Console.WriteLine("Adding stuff");
-                    break;                
-                case CommandAction.Delete:
-                    break;
-            }
+            objectId = canvas.InsertRectangle(new Point(_mouseState.X, _mouseState.Y));
+            Console.WriteLine("ADDING");
         }
 
         public void UndoAction()
         {
-            switch (_action)
-            {
-                case CommandAction.Copy:
-                    break;
-                case CommandAction.Paste:
-                    break;
-                case CommandAction.Undo:
-                    break;                
-                case CommandAction.Add:
-                    // _selected.InsertRectangle(new Point(_mouseState.X, _mouseState.Y));
-                    // Console.WriteLine("Undo Remove stuff");
-                    break;                
-                case CommandAction.Delete:
-                    break;
-            }
+            canvas.DeleteTexture(objectId);
+            Console.WriteLine("REMOVING");
+        }
+    }
+    public class AddCircle : ICommand
+    {
+        private static readonly Canvas canvas = Canvas.Instance;
+        private static MouseState _mouseState;
+        private Guid objectId; 
+
+        public AddCircle(MouseState mouseState)
+        {
+            _mouseState = mouseState;
+        }
+        public void ExecuteAction()
+        {
+            objectId = canvas.InsertCircle(new Point(_mouseState.X, _mouseState.Y));
+            Console.WriteLine("ADDING");
+        }
+        public void UndoAction()
+        {
+            canvas.DeleteTexture(objectId);
+            Console.WriteLine("REMOVING");
         }
     }
     
@@ -111,56 +104,54 @@ namespace DrawDraw
 
     internal class CommandHistory
     {
-        private List<ICommand> history = new List<ICommand>();
-
-        // Last in...
-        public void Push(ICommand action, int index)
+        private readonly List<ICommand> history = new List<ICommand>();
+        // push to last
+        public void Push(ICommand action)
         {
-            if (history.Count < 0)
+            history.Add(action);
+        }
+        // pop last
+        public bool Pop()
+        {
+            if (history.Any()) //prevent IndexOutOfRangeException for empty list
             {
-                history.Add(action);
+                history.RemoveAt(history.Count - 1);
+                return true;
             }
             else
             {
-                history.Insert(index, action);
+                return false;
             }
         }
-
-        // ...first out
-        public void Pop(int index)
+        // Return last command
+        public ICommand GetLast()
         {
             if (history.Any()) //prevent IndexOutOfRangeException for empty list
-                history.RemoveAt(index);
-        }
-
-        public ICommand getCommand(int index)
-        {
-            return history[index];
+                return history[history.Count - 1];
+            else
+                return null;
         } 
     }
-
     internal class ModifyCanvas
     {
         private Texture2D Clipboard;
         private readonly CommandHistory history = new CommandHistory();
-        
         private ICommand command;
         
-        private int current = 0;
         public void SetCommand(ICommand commands)
         {
-            this.command = commands;
-            this.command.ExecuteAction();
-            history.Push(this.command, current);
-            current++;
+            history.Push(commands);
+            command = commands;
+            command.ExecuteAction();
         }
         
         public void UndoActions()
         {
-            command = history.getCommand(current - 1);
-            current--;
-            
-            command.UndoAction();
+            command = history.GetLast();
+            if (history.Pop())
+            {
+                command.UndoAction();
+            }
         }
     }
 }

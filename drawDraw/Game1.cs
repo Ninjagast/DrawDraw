@@ -8,7 +8,10 @@ namespace DrawDraw
     {
 //      creates the first and only instance of the canvas class
         private readonly Canvas _canvas = Canvas.Instance;
-        
+        private MouseState prevMouseState = new MouseState();
+        private ModifyCanvas modifyCanvas = new ModifyCanvas();
+
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         
@@ -35,28 +38,38 @@ namespace DrawDraw
         protected override void Update(GameTime gameTime)
         {
             var mouseState = Mouse.GetState();
-            var modifyCanvas = new ModifyCanvas();
             
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-            if (_canvas.CheckButtons(mouseState))
+            if (_canvas.CheckButtons(mouseState, prevMouseState))
             {
-//              You surely know how to press my buttons ; )
+                // You surely know how to press my buttons ; )
             }
-            else if (mouseState.LeftButton == ButtonState.Pressed)
-//          if the user clicks with his left mouse button
-//          #todo adds textures over the menu if you click on the menu (add a deadzone where no textures can be drawn)
+            else if (prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
             {
-//              #todo change the continuous nature of this code into the menu.
-//              #todo add some sort of modus so we can insert multiple shapes (trough the menu)
-                
-                modifyCanvas.SetCommand(new CanvasCommand(mouseState, CommandAction.Add));
-                // modifyCanvas.UndoActions();
+                // if the user clicks with his left mouse button
+                {
+                    // #todo change the continuous nature of this code into the menu.
+                    // #todo add some sort of modus so we can insert multiple shapes (trough the menu)
+                    switch (_canvas.BtnStage)
+                    {
+                        case ButtonStages.Circle:
+                                modifyCanvas.SetCommand(new AddCircle(mouseState));
+                            break;
+                        case ButtonStages.Rectangle:
+                                modifyCanvas.SetCommand(new AddRectangle(mouseState));
+                            break;
+                    }
+                    // creates circles and squares now
+                    // squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
+                }
+            }
+            else if(prevMouseState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released)
+            {
+                modifyCanvas.UndoActions();
+            }
             
-                // creates circles and squares now
-                // squares.Add(GenerateCircleTexture(GraphicsDevice, 5, Color.Aqua, 1));
-            }
-            var prevMouseState = mouseState;
+            prevMouseState = mouseState;
             base.Update(gameTime);
         }
 

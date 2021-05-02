@@ -1,13 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DrawDraw.shapes
 {
-    public class RectangleShape : ShapeBase
+    public class  CircleShape : ShapeBase
     {
         private Rectangle _rectangle;
         
-        public RectangleShape(string name, int x, int y, int width, int height, int type) : base(x, y, width, height, type)
+        public CircleShape(string name, int x, int y, int width, int height, int type) : base(x, y, width, height, type)
         {
             _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
         }
@@ -16,7 +17,7 @@ namespace DrawDraw.shapes
         {
             Texture2D texture;
             texture = new Texture2D(graphicsDevice, 1, 1);
-            texture.SetData(new Color[] { Color.DarkSlateGray });
+            texture.SetData(new Color[] { Color.Pink });
             
             spriteBatch.Draw(texture, _rectangle, Color.White);
         }

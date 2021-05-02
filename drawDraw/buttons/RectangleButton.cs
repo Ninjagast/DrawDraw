@@ -37,18 +37,21 @@ namespace DrawDraw.buttons
 
         public override bool Update(MouseState mouseState)
         {
-            if (CheckClick(mouseState) && mouseState.LeftButton == ButtonState.Pressed)
+            if (CheckClick(mouseState))
             {
                 switch (Name)
                 {
-                    default:
-                        Console.WriteLine("I AM HERE");
+                    case "Rectangle" :
+                        canvas.BtnStage = ButtonStages.Rectangle;
+                        break;
+                    case "Circle" :
+                        canvas.BtnStage = ButtonStages.Circle;
                         break;
                 }
-
+                Console.WriteLine(Name);
+                Console.WriteLine("Button stage : " + canvas.BtnStage);
                 return true;
             }
-
             return false;
         }
     }

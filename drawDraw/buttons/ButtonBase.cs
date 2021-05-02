@@ -6,6 +6,7 @@ namespace DrawDraw.buttons
 {
     public abstract class ButtonBase
     {
+        protected static Canvas canvas = Canvas.Instance;
         protected int x;
         protected int y;
         protected Rectangle Texture;
