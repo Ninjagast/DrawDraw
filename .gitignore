@@ -67,3 +67,11 @@ drawDraw/Content/obj/DesktopGL/Content/triganelk.mgcontent
 drawDraw/drawDraw.csproj
 
 drawDraw/Program.cs
+
+*.json
+
+*.cache
+
+*.mgcontent
+
+*.props
