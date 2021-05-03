@@ -21,7 +21,6 @@ namespace DrawDraw.shapes
             
             spriteBatch.Draw(texture, _rectangle, Color.White);
         }
-
         public override void Update(int x, int y, int width, int height)
         {
             X = x;

@@ -37,7 +37,7 @@ namespace DrawDraw
 
         protected override void Update(GameTime gameTime)
         {
-            var mouseState = Mouse.GetState();
+            MouseState mouseState = Mouse.GetState();
             
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
@@ -54,10 +54,13 @@ namespace DrawDraw
                     switch (_canvas.BtnStage)
                     {
                         case ButtonStages.Circle:
-                                modifyCanvas.SetCommand(new AddCircle(mouseState));
+                            modifyCanvas.SetCommand(new AddCircle(mouseState));
                             break;
                         case ButtonStages.Rectangle:
-                                modifyCanvas.SetCommand(new AddRectangle(mouseState));
+                            modifyCanvas.SetCommand(new AddRectangle(mouseState));
+                            break;
+                        case ButtonStages.Select:
+                            _canvas.SelectTexture(mouseState);
                             break;
                     }
                     // creates circles and squares now

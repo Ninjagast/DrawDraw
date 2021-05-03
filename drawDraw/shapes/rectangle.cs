@@ -16,7 +16,14 @@ namespace DrawDraw.shapes
         {
             Texture2D texture;
             texture = new Texture2D(graphicsDevice, 1, 1);
-            texture.SetData(new Color[] { Color.DarkSlateGray });
+            if (Select)
+            {
+                texture.SetData(new Color[] { Color.Red });
+            }
+            else
+            {
+                texture.SetData(new Color[] { Color.DarkSlateGray });
+            }
             
             spriteBatch.Draw(texture, _rectangle, Color.White);
         }
