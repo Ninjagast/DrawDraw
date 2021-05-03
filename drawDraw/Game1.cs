@@ -1,3 +1,5 @@
+﻿using System.Runtime.Serialization;
+using Microsoft.Xna.Framework;
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -81,6 +83,10 @@ namespace DrawDraw
             else if(prevMouseState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released)
             {
                 modifyCanvas.UndoActions();
+            } 
+            else if (prevMouseState.MiddleButton == ButtonState.Pressed && mouseState.MiddleButton == ButtonState.Released)
+            {
+                modifyCanvas.RedoActions();
             }
             
             prevMouseState = mouseState;

@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,21 +15,11 @@ namespace DrawDraw
         void ExecuteAction();
         void UndoAction();
     }
-    
-    public enum CommandAction
-    {
-        Copy,
-        Paste,
-        Undo,
-        Add,
-        Delete
-    }
-
     public class AddRectangle : ICommand
     {
         private static Canvas canvas = Canvas.Instance;
-        private static MouseState _mouseState;
-        private Guid objectId; 
+        private MouseState _mouseState;
+        private Guid objectId;
 
         public AddRectangle(MouseState mouseState)
         {
@@ -49,7 +40,7 @@ namespace DrawDraw
     public class AddCircle : ICommand
     {
         private static readonly Canvas canvas = Canvas.Instance;
-        private static MouseState _mouseState;
+        private MouseState _mouseState;
         private Guid objectId; 
 
         public AddCircle(MouseState mouseState)
@@ -104,32 +95,37 @@ namespace DrawDraw
 
     internal class CommandHistory
     {
-        private readonly List<ICommand> history = new List<ICommand>();
+        private List<ICommand> history = new List<ICommand>();
+        private int current = -1;
+        
         // push to last
         public void Push(ICommand action)
         {
+            if(current != -1 && history.Count > 0)
+                history = history.GetRange(0, current + 1);
+
             history.Add(action);
+            current = history.Count - 1;
         }
-        // pop last
-        public bool Pop()
+        // undo last
+        public bool Undo()
         {
-            if (history.Any()) //prevent IndexOutOfRangeException for empty list
-            {
-                history.RemoveAt(history.Count - 1);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            if (current < 0) return false;
+            current--;
+            return true;
+        }
+        // redo last
+        public bool Redo()
+        {
+            if (current + 1 >= history.Count) return false;
+            current++;
+            return true;
         }
         // Return last command
-        public ICommand GetLast()
+        public ICommand GetCurrent()
         {
-            if (history.Any()) //prevent IndexOutOfRangeException for empty list
-                return history[history.Count - 1];
-            else
-                return null;
+            Console.WriteLine(current);
+            return current >= 0 ? history.ElementAt(current) : null;
         } 
     }
     internal class ModifyCanvas
@@ -137,6 +133,7 @@ namespace DrawDraw
         private Texture2D Clipboard;
         private readonly CommandHistory history = new CommandHistory();
         private ICommand command;
+
         
         public void SetCommand(ICommand commands)
         {
@@ -147,10 +144,19 @@ namespace DrawDraw
         
         public void UndoActions()
         {
-            command = history.GetLast();
-            if (history.Pop())
+            command = history.GetCurrent();
+            if (history.Undo())
             {
                 command.UndoAction();
+            }
+        }
+
+        public void RedoActions()
+        {
+            if (history.Redo())
+            {
+                command = history.GetCurrent();
+                command.ExecuteAction();
             }
         }
     }
