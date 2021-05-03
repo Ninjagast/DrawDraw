@@ -36,5 +36,19 @@ namespace DrawDraw.shapes
             Height = height;
             _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
         }
+
+        public override Borders DrawBorders()
+        {
+            Borders borders = new Borders
+            {
+                BottomBorder = new Border(X, Y, Width, Height, 0),
+                TopBorder = new Border(X, Y, Width, Height, 1),
+                LeftBorder = new Border(X, Y, Width, Height, 2),
+                RightBorder = new Border(X, Y, Width, Height, 3)
+            };
+
+            borders.ShapeId = id;
+            return borders;
+        }
     }
 }

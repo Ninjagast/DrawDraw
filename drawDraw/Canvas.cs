@@ -14,11 +14,16 @@ namespace DrawDraw
         private static Canvas _instance = new Canvas();
         private List<ShapeBase> _textures = new List<ShapeBase>();
         private ArrayList _buttons = new ArrayList();
-        
+        private List<Borders> _moveBorders = new List<Borders>();
+
+        public int MoveStage = 0;
+        private Point _startPos;
+
         private GraphicsDevice _graphicsDevice;
 
-        public ButtonStages BtnStage; 
-            
+        public ButtonStages BtnStage;
+
+
         private Canvas()
         {
 
@@ -37,6 +42,7 @@ namespace DrawDraw
             _buttons.Add(new RectangleButton(0, 0, new Rectangle(0, 0, 30, 30), "Rectangle", ButtonStages.Rectangle));
             _buttons.Add(new CircleButtons(70, 0, new Rectangle(70, 0, 30, 30), "Circle", ButtonStages.Circle));
             _buttons.Add(new SelectButton(140, 0, new Rectangle(140, 0, 30, 30), "Select", ButtonStages.Select));
+            _buttons.Add(new MoveButton(210, 0, new Rectangle(210, 0, 30, 30), "Move", ButtonStages.Move));
         }
 
         public Guid InsertRectangle(Point coords)
@@ -74,6 +80,14 @@ namespace DrawDraw
             foreach (ButtonBase button in _buttons)
             {
                 button.Draw(spriteBatch, _graphicsDevice);
+            }
+
+            foreach (Borders border in _moveBorders)
+            {
+                border.BottomBorder.Draw(spriteBatch, _graphicsDevice);
+                border.TopBorder.Draw(spriteBatch, _graphicsDevice);
+                border.RightBorder.Draw(spriteBatch, _graphicsDevice);
+                border.LeftBorder.Draw(spriteBatch, _graphicsDevice);
             }
         }
 
@@ -114,6 +128,51 @@ namespace DrawDraw
             }
             Console.WriteLine("nothing found");
         }
+
+        public void MoveStuff(MouseState mouseState)
+        {
+            if (MoveStage == 0)
+            {
+                foreach (ShapeBase shape in _textures)
+                {
+                    if (shape.IsSelected())
+                    {
+                        _moveBorders.Add(shape.DrawBorders());
+                        _startPos = new Point(mouseState.X, mouseState.Y);
+                        MoveStage = 1;
+                    }
+                }
+            }
+            else
+            {
+                foreach (Borders border in _moveBorders)
+                {
+                    foreach (ShapeBase shape in _textures)
+                    {
+                        if (shape.id == border.ShapeId)
+                        {
+                            Point finalPos = border.LeftBorder.LatestPos;
+                            Point dimensions = shape.GetDimension();
+                            shape.Update(finalPos.X, finalPos.Y, dimensions.X, dimensions.Y);
+                            
+                        }
+                    }
+                }
+                _moveBorders = new List<Borders>();
+                MoveStage = 0;
+            }
+        }
+
+        public void UpdateBorders(MouseState mouseState)
+        {
+            foreach (Borders border in _moveBorders)
+            {
+                border.BottomBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.TopBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.LeftBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.RightBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+            }
+        }
     }
 
     public enum ButtonStages
@@ -121,6 +180,7 @@ namespace DrawDraw
         Rectangle,
         Circle,
         Undo,
-        Select
+        Select,
+        Move
     }
 }

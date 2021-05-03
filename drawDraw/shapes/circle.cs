@@ -29,5 +29,10 @@ namespace DrawDraw.shapes
             Height = height;
             _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
         }
+
+        public override Borders DrawBorders()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

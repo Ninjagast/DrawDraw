@@ -31,6 +31,8 @@ namespace DrawDraw.shapes
 
         public abstract void Update(int x, int y, int width, int height);
 
+        public abstract Borders DrawBorders();
+        
         public Point GetPoint()
         {
             return new Point(X, Y);
@@ -44,6 +46,11 @@ namespace DrawDraw.shapes
         public void ToggleSelect()
         {
             Select = !Select;
+        }
+
+        public bool IsSelected()
+        {
+            return Select;
         }
     }
 }

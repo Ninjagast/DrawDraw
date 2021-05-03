@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -41,6 +42,12 @@ namespace DrawDraw
             
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
+//          borders have been draw ready to have them follow the mouse
+            if (_canvas.BtnStage == ButtonStages.Move && _canvas.MoveStage == 1)
+            {
+                _canvas.UpdateBorders(mouseState);
+            }
+            
             if (_canvas.CheckButtons(mouseState, prevMouseState))
             {
                 // You surely know how to press my buttons ; )
@@ -61,6 +68,10 @@ namespace DrawDraw
                             break;
                         case ButtonStages.Select:
                             _canvas.SelectTexture(mouseState);
+                            break;
+                        case ButtonStages.Move:
+                            Console.WriteLine("bitch move get out the way");
+                            _canvas.MoveStuff(mouseState);
                             break;
                     }
                     // creates circles and squares now
