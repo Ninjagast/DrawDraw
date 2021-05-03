@@ -10,8 +10,8 @@ namespace DrawDraw.shapes
     {
         protected Canvas Canvas = Canvas.Instance;
         public Guid id { get; set; }
-        protected int X;
-        protected int Y;
+        public int X;
+        public int Y;
         protected int Width;
         protected int Height;
         protected int Type;

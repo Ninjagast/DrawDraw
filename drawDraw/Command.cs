@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
+using DrawDraw.shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -56,6 +57,34 @@ namespace DrawDraw
         {
             canvas.DeleteTexture(objectId);
             Console.WriteLine("REMOVING");
+        }
+    }
+    
+    public class MoveTexure : ICommand
+    {
+        private static readonly Canvas canvas = Canvas.Instance;
+        private MouseState _mouseState;
+        private List<ShapeBase> _selected;
+        private List<Point> _selected_old_pos = new List<Point>();
+        private Guid objectId; 
+
+        public MoveTexure(MouseState mouseState, List<ShapeBase> selected)
+        {
+            _mouseState = mouseState;
+            _selected = selected;
+
+            foreach (ShapeBase select in selected)
+            {
+                _selected_old_pos.Add(new Point(select.X, select.Y));
+            }
+        }
+        public void ExecuteAction()
+        {
+            canvas.MoveStuff(_mouseState);
+        }
+        public void UndoAction()
+        {
+            canvas.MoveTexure(_selected, _selected_old_pos);
         }
     }
     

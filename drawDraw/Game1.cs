@@ -72,8 +72,7 @@ namespace DrawDraw
                             _canvas.SelectTexture(mouseState);
                             break;
                         case ButtonStages.Move:
-                            Console.WriteLine("bitch move get out the way");
-                            _canvas.MoveStuff(mouseState);
+                            modifyCanvas.SetCommand(new MoveTexure(mouseState, _canvas.GetSelected()));
                             break;
                     }
                     // creates circles and squares now

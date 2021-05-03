@@ -129,6 +129,19 @@ namespace DrawDraw
             Console.WriteLine("nothing found");
         }
 
+        public List<ShapeBase> GetSelected()
+        {
+            List<ShapeBase> selected = new List<ShapeBase>();
+            foreach (var texure in _textures)
+            {
+                if (texure.IsSelected())
+                {
+                    selected.Add(texure);    
+                }
+            }
+            return selected;
+        }
+
         public void MoveStuff(MouseState mouseState)
         {
             if (MoveStage == 0)
@@ -160,6 +173,25 @@ namespace DrawDraw
                 }
                 _moveBorders = new List<Borders>();
                 MoveStage = 0;
+            }
+        }
+
+        public void MoveTexure(List<ShapeBase> selected, int x, int y)
+        {
+            foreach (ShapeBase select in selected)
+            {
+                Point dimensions = select.GetDimension();
+                select.Update(x, y, dimensions.X, dimensions.Y);
+            }
+        }
+        public void MoveTexure(List<ShapeBase> selected, List<Point> oldPos)
+        {
+            int index = 0;
+            foreach (ShapeBase select in selected)
+            {
+                Point dimensions = select.GetDimension();
+                select.Update(oldPos[index].X, oldPos[index].Y, dimensions.X, dimensions.Y);
+                index++;
             }
         }
 
