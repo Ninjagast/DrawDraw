@@ -35,7 +35,7 @@ namespace DrawDraw
         private void CreateButtons()
         {
             _buttons.Add(new RectangleButton(0, 0, new Rectangle(0, 0, 30, 30), "Rectangle"));
-            _buttons.Add(new RectangleButton(70, 0, new Rectangle(70, 0, 30, 30), "Circle"));
+            _buttons.Add(new CircleButtons(70, 0, new Rectangle(70, 0, 30, 30), "Circle"));
         }
 
         public Guid InsertRectangle(Point coords)

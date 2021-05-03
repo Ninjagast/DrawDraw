@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DrawDraw.buttons
 {
-    public class RectangleButton: ButtonBase
+    public class CircleButtons: ButtonBase
     {
-        public RectangleButton(int x, int y, Rectangle texture, string name) : base(x, y, texture, name)
+        public CircleButtons(int x, int y, Rectangle texture, string name) : base(x, y, texture, name)
         {
         }
         
@@ -39,7 +39,7 @@ namespace DrawDraw.buttons
         {
             if (CheckClick(mouseState))
             {
-                canvas.BtnStage = ButtonStages.Rectangle;
+                canvas.BtnStage = ButtonStages.Circle;
                 Console.WriteLine(Name);
                 Console.WriteLine("Button stage : " + canvas.BtnStage);
                 return true;
@@ -48,5 +48,3 @@ namespace DrawDraw.buttons
         }
     }
 }
-        
-
