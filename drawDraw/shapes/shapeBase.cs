@@ -10,12 +10,13 @@ namespace DrawDraw.shapes
     {
         protected Canvas Canvas = Canvas.Instance;
         public Guid id { get; set; }
-        public int X;
-        public int Y;
-        protected int Width;
-        protected int Height;
-        protected int Type;
-        protected bool Select = false;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int Type { get; set; }
+        
+        public bool Select = false;
 
         protected ShapeBase(int x, int y, int width, int height, int type)
         {
@@ -28,11 +29,11 @@ namespace DrawDraw.shapes
         }
 
         public abstract void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice);
-
         public abstract void Update(int x, int y, int width, int height);
+        public abstract void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint);
+        public abstract MoveBorders DrawBorders();
+        public abstract ResizeBorders DrawResizeBorders();
 
-        public abstract Borders DrawBorders();
-        
         public Point GetPoint()
         {
             return new Point(X, Y);
@@ -51,6 +52,49 @@ namespace DrawDraw.shapes
         public bool IsSelected()
         {
             return Select;
+        }
+
+        public Canvas.BorderSides DetectSide(Point mousePoint)
+        {
+            Point right = new Point(X + Width, Y + Width / 2);
+            Point left  = new Point(X, Y + Width / 2);
+            Point top   = new Point(X + Width / 2, Y);
+            Point bot   = new Point(X + Width / 2, Y + Width / 2);
+            
+            int distanceToRight = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), right.ToVector2()));
+            int distanceToLeft = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), left.ToVector2()));
+            int distanceToTop = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), top.ToVector2()));
+            int distanceToBottom = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), bot.ToVector2()));
+
+//          BottomBorder 0
+//          TopBorder 1
+//          LeftBorder 2
+//          RightBorder 3
+            if (distanceToRight <= distanceToLeft && distanceToRight <= distanceToTop && distanceToRight <= distanceToBottom)
+            {
+//              clicked on the right border
+                Console.WriteLine("right!");
+                return Canvas.BorderSides.Right;
+            }
+            else if (distanceToLeft <= distanceToRight && distanceToLeft <= distanceToTop && distanceToLeft <= distanceToBottom)
+            {
+//              clicked on the left border
+                Console.WriteLine("left!");
+                return Canvas.BorderSides.Left;
+            }
+            else if (distanceToTop <= distanceToRight && distanceToTop <= distanceToLeft && distanceToTop <= distanceToBottom)
+            {
+//              clicked on the top border
+                Console.WriteLine("top!");
+                return Canvas.BorderSides.Top;
+            }
+            else
+            {
+//              clicked on the bottom border
+                Console.WriteLine("bot!");
+                return Canvas.BorderSides.Bottom;
+            }
+
         }
     }
 }

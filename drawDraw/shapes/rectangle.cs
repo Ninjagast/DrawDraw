@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -37,18 +38,55 @@ namespace DrawDraw.shapes
             _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
         }
 
-        public override Borders DrawBorders()
+        public override void Resize(Canvas.BorderSides selectedSide, Point mousePoint, Point startPoint)
         {
-            Borders borders = new Borders
+            switch (selectedSide)
             {
-                BottomBorder = new Border(X, Y, Width, Height, 0),
-                TopBorder = new Border(X, Y, Width, Height, 1),
-                LeftBorder = new Border(X, Y, Width, Height, 2),
-                RightBorder = new Border(X, Y, Width, Height, 3)
+                case DrawDraw.Canvas.BorderSides.Bottom:
+                    Height -= (startPoint.Y - mousePoint.Y);
+                    _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
+                    break;                
+                case DrawDraw.Canvas.BorderSides.Top:
+                    Height += (startPoint.Y - mousePoint.Y);
+                    Y -= (startPoint.Y - mousePoint.Y);
+                    _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
+                    break;
+                case DrawDraw.Canvas.BorderSides.Right:
+                    Width -= (startPoint.X - mousePoint.X);
+                    _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
+                    break;
+                case DrawDraw.Canvas.BorderSides.Left:
+                    Width += (startPoint.X - mousePoint.X);
+                    X -= (startPoint.X - mousePoint.X);
+                    _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
+                    break;
+            }
+        }
+
+        public override MoveBorders DrawBorders()
+        {
+            MoveBorders moveBorders = new MoveBorders
+            {
+                BottomMoveBorder = new MoveBorder(X, Y, Width, Height, 0),
+                TopMoveBorder = new MoveBorder(X, Y, Width, Height, 1),
+                LeftMoveBorder = new MoveBorder(X, Y, Width, Height, 2),
+                RightMoveBorder = new MoveBorder(X, Y, Width, Height, 3),
+                ShapeId = id
             };
 
-            borders.ShapeId = id;
-            return borders;
+            return moveBorders;
+        }
+
+        public override ResizeBorders DrawResizeBorders()
+        {
+            ResizeBorders resizeBorders = new ResizeBorders()
+            {
+                BottomResizeBorder = new ResizeBorder(X, Y, Width, Height, 0),
+                TopResizeBorder = new ResizeBorder(X, Y, Width, Height, 1),
+                RightResizeBorder = new ResizeBorder(X, Y, Width, Height, 2),
+                LeftResizeBorder = new ResizeBorder(X, Y, Width, Height, 3)
+            };
+            return resizeBorders;
         }
     }
 }
