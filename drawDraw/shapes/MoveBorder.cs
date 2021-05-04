@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace DrawDraw.shapes
 {
-    public class Border: ShapeBase
+    public class MoveBorder: ShapeBase
     {
         private Rectangle _border;
         public Point LatestPos;
         
-        public Border(int x, int y, int width, int height, int type) : base(x, y, width, height, type)
+        public MoveBorder(int x, int y, int width, int height, int type) : base(x, y, width, height, type)
         {
             // BottomBorder 0
             // TopBorder 1
@@ -18,16 +18,16 @@ namespace DrawDraw.shapes
             switch (type)
             {
                 case 0:
-                    _border = new Rectangle(x, y + height, width, 5);
+                    _border = new Rectangle(x, y + height, width, 2);
                     break;
                 case 1:
-                    _border = new Rectangle(x, y, width, 5);
+                    _border = new Rectangle(x, y, width, 2);
                     break;                
                 case 2:
-                    _border = new Rectangle(x, y, 5, height);
+                    _border = new Rectangle(x, y, 2, height);
                     break;
                 case 3:                    
-                    _border = new Rectangle(x + width, y, 5, height + 5);
+                    _border = new Rectangle(x + width, y, 2, height + 2);
                     break;
             }
         }
@@ -45,6 +45,11 @@ namespace DrawDraw.shapes
             throw new System.NotImplementedException();
         }
 
+        public override void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(Point currentPos, Point startPos)
         {
             int x = X + (currentPos.X - startPos.X);
@@ -53,23 +58,28 @@ namespace DrawDraw.shapes
             switch (Type)
             {
                 case 0:
-                    _border = new Rectangle(x, y + Height, Width, 5);
+                    _border = new Rectangle(x, y + Height, Width, 2);
                     break;
                 case 1:
-                    _border = new Rectangle(x, y, Width, 5);
+                    _border = new Rectangle(x, y, Width, 2);
                     break;                
                 case 2:
-                    _border = new Rectangle(x, y, 5, Height);
+                    _border = new Rectangle(x, y, 2, Height);
                     break;
                 case 3:                    
-                    _border = new Rectangle(x + Width, y, 5, Height + 5);
+                    _border = new Rectangle(x + Width, y, 2, Height + 2);
                     break;
             }
         }
 
-        public override Borders DrawBorders()
+        public override MoveBorders DrawBorders()
         {
             throw new System.Exception("Don't draw borders of borders! Are you insane???");
+        }
+
+        public override ResizeBorders DrawResizeBorders()
+        {
+            throw new System.Exception("Don't draw resize borders of borders! Are you insane???");
         }
     }
 }

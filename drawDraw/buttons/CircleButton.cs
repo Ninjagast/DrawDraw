@@ -7,7 +7,7 @@ namespace DrawDraw.buttons
 {
     public class CircleButton: ButtonBase
     {
-        public CircleButton(int X, int Y, Texture2D texture, string name, ButtonStages buttonStage) : base(X, Y, texture, name, buttonStage)
+        public CircleButton(int X, int Y, Texture2D texture, string name, Canvas.ButtonStages buttonStage) : base(X, Y, texture, name, buttonStage)
         {
         }
         

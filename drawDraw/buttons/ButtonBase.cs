@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,9 +13,9 @@ namespace DrawDraw.buttons
         protected int y;
         protected Texture2D Texture;
         protected string Name;
-        protected ButtonStages ButtonValue;
+        protected Canvas.ButtonStages ButtonValue;
 
-        protected ButtonBase(int X, int Y, Texture2D texture, string name, ButtonStages buttonStage)
+        protected ButtonBase(int X, int Y, Texture2D texture, string name, Canvas.ButtonStages buttonStage)
         {
             ButtonValue = buttonStage;
             x = X;
@@ -27,14 +28,14 @@ namespace DrawDraw.buttons
         protected bool CheckClick(MouseState mouseState)
         {
             Point point = new Point(mouseState.X, mouseState.Y);
-            if (point.X < x + Texture.Width &&
-                point.X > x &&
-                point.Y < x + Texture.Height &&
-                point.X > y)
-            {
-                return true;
-            }
 
+            if (point.X > x && point.X < x + Texture.Width)
+            {
+                if (point.Y > y && point.Y < y + Texture.Height)
+                {
+                    return true;
+                }
+            }
             return false;
         }
 

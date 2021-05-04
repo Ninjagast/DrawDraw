@@ -32,17 +32,16 @@ namespace DrawDraw
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            Texture2D circleButton   = Content.Load<Texture2D>("circle");
-            Texture2D eraserButton   = Content.Load<Texture2D>("eraser");
-            Texture2D moveButton     = Content.Load<Texture2D>("move");
-            Texture2D selectButton   = Content.Load<Texture2D>("select");
-            Texture2D squareButton   = Content.Load<Texture2D>("square");
-            Texture2D openButton     = Content.Load<Texture2D>("Open");
-            Texture2D saveButton     = Content.Load<Texture2D>("save");
-            Texture2D resizeButton     = Content.Load<Texture2D>("resize");
+            Texture2D circleButton = Content.Load<Texture2D>("circle");
+            Texture2D eraserButton = Content.Load<Texture2D>("eraser");
+            Texture2D moveButton   = Content.Load<Texture2D>("move");
+            Texture2D selectButton = Content.Load<Texture2D>("select");
+            Texture2D squareButton = Content.Load<Texture2D>("square");
+            Texture2D openButton   = Content.Load<Texture2D>("Open");
+            Texture2D saveButton   = Content.Load<Texture2D>("save");
+            Texture2D resizeButton = Content.Load<Texture2D>("resize");
             
             _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton);
-
         }
 
         protected override void UnloadContent()
@@ -55,45 +54,53 @@ namespace DrawDraw
             MouseState mouseState = Mouse.GetState();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            
             switch (_canvas.BtnStage)
             {
-                case ButtonStages.Open:
+                case Canvas.ButtonStages.Open:
                     //#todo Add file browser here which can open files and load them into the system
                     break;
-                case ButtonStages.Save:
+                case Canvas.ButtonStages.Save:
                     Console.WriteLine("saaaaaaaaav");
                     _canvas.SaveFile();
                     break;
             }
 
-//          borders have been draw ready to have them follow the mouse
-            if (_canvas.BtnStage == ButtonStages.Move && _canvas.MoveStage == 1)
+//          borders have been drawn ready to have them follow the mouse
+            if (_canvas.BtnStage == Canvas.ButtonStages.Move && _canvas.MoveStage == 1)
             {
                 _canvas.UpdateBorders(mouseState);
             }
             
+//          borders have been drawn ready to have them follow the mouse
+            if (_canvas.BtnStage == Canvas.ButtonStages.Resize && _canvas.MoveStage == 2)
+            {
+                _canvas.UpdateResizeBorders(mouseState);
+            }
+            
             if (_canvas.CheckButtons(mouseState, _prevMouseState))
             {
-                // You surely know how to press my buttons ; )
+//              You surely know how to press my buttons ; )
             }
             else if (_prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
             {
 //              if the user clicks with his left mouse button
-                
                 switch (_canvas.BtnStage)
                 {
-                    case ButtonStages.Circle:
+                    case Canvas.ButtonStages.Circle:
                         _modifyCanvas.SetCommand(new AddCircle(mouseState));
                         break;
-                    case ButtonStages.Rectangle:
+                    case Canvas.ButtonStages.Rectangle:
                         _modifyCanvas.SetCommand(new AddRectangle(mouseState));
                         break;
-                    case ButtonStages.Select:
+                    case Canvas.ButtonStages.Select:
                         _canvas.SelectTexture(mouseState);
                         break;
-                    case ButtonStages.Move:
-                        Console.WriteLine("bitch move get out the way");
+                    case Canvas.ButtonStages.Move:
                         _canvas.MoveStuff(mouseState);
+                        break;
+                    case Canvas.ButtonStages.Resize:
+                        _canvas.ResizeStuff(mouseState);
                         break;
                 }
                 // creates circles and squares now

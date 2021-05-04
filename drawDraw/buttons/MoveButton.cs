@@ -7,7 +7,7 @@ namespace DrawDraw.buttons
     public class MoveButton: ButtonBase
     {
 
-        public MoveButton(int X, int Y, Texture2D texture, string name, ButtonStages buttonStage) : base(X, Y, texture, name, buttonStage)
+        public MoveButton(int X, int Y, Texture2D texture, string name, Canvas.ButtonStages buttonStage) : base(X, Y, texture, name, buttonStage)
         {
         }
         

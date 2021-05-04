@@ -17,7 +17,8 @@ namespace DrawDraw
         private static Canvas _instance = new Canvas();
         private List<ShapeBase> _textures = new List<ShapeBase>();
         private ArrayList _buttons = new ArrayList();
-        private List<Borders> _moveBorders = new List<Borders>();
+        private List<MoveBorders> _moveBorders = new List<MoveBorders>();
+        private ResizeBorders _resizeBorders = null;
 
         public int MoveStage = 0;
         private Point _startPos;
@@ -48,7 +49,7 @@ namespace DrawDraw
             _buttons.Add(new MoveButton(210, 0, moveButton, "Move", ButtonStages.Move));
             _buttons.Add(new OpenButton(280, 0, openButton, "Open", ButtonStages.Open));
             _buttons.Add(new SaveButton(350, 0, saveButton, "Save", ButtonStages.Save));
-            _buttons.Add(new SaveButton(420, 0, saveButton, "Resize", ButtonStages.Resize));
+            _buttons.Add(new ResizeButton(420, 0, resizeButton, "Resize", ButtonStages.Resize));
         }
 
         public Guid InsertRectangle(Point coords)
@@ -88,13 +89,15 @@ namespace DrawDraw
                 button.Draw(spriteBatch, _graphicsDevice);
             }
 
-            foreach (Borders border in _moveBorders)
+            foreach (MoveBorders border in _moveBorders)
             {
-                border.BottomBorder.Draw(spriteBatch, _graphicsDevice);
-                border.TopBorder.Draw(spriteBatch, _graphicsDevice);
-                border.RightBorder.Draw(spriteBatch, _graphicsDevice);
-                border.LeftBorder.Draw(spriteBatch, _graphicsDevice);
+                border.BottomMoveBorder.Draw(spriteBatch, _graphicsDevice);
+                border.TopMoveBorder.Draw(spriteBatch, _graphicsDevice);
+                border.RightMoveBorder.Draw(spriteBatch, _graphicsDevice);
+                border.LeftMoveBorder.Draw(spriteBatch, _graphicsDevice);
             }
+
+            _resizeBorders?.drawBorder(spriteBatch, _graphicsDevice);
         }
 
         public bool CheckButtons(MouseState mouseState, MouseState prevMouseState)
@@ -132,11 +135,12 @@ namespace DrawDraw
                     }
                 }
             }
-            Console.WriteLine("nothing found");
+            UnSelectAllTextures();
         }
 
         public void MoveStuff(MouseState mouseState)
         {
+//          draw borders of selected shit
             if (MoveStage == 0)
             {
                 foreach (ShapeBase shape in _textures)
@@ -151,33 +155,94 @@ namespace DrawDraw
             }
             else
             {
-                foreach (Borders border in _moveBorders)
+                foreach (MoveBorders border in _moveBorders)
                 {
                     foreach (ShapeBase shape in _textures)
                     {
                         if (shape.id == border.ShapeId)
                         {
-                            Point finalPos = border.LeftBorder.LatestPos;
+                            Point finalPos = border.LeftMoveBorder.LatestPos;
                             Point dimensions = shape.GetDimension();
                             shape.Update(finalPos.X, finalPos.Y, dimensions.X, dimensions.Y);
-                            
                         }
                     }
                 }
-                _moveBorders = new List<Borders>();
+                _moveBorders = new List<MoveBorders>();
                 MoveStage = 0;
             }
         }
 
+        public void ResizeStuff(MouseState mouseState)
+        {
+            Point mousePoint = new Point(mouseState.X, mouseState.Y);
+            
+//          select texture to resize
+            if (MoveStage == 0)
+            {
+                UnSelectAllTextures();
+                
+                foreach (ShapeBase shape in _textures)
+                {
+                    Point LeftTop = shape.GetPoint();
+                    Point dimensions = shape.GetDimension();
+
+//                  the point is located between the x boundary
+                    if (mousePoint.X > LeftTop.X && mousePoint.X < LeftTop.X + dimensions.X)
+                    {
+                        if (mousePoint.Y > LeftTop.Y && mousePoint.Y < LeftTop.Y + dimensions.Y)
+                        {
+//                          click click we found a shape
+                            shape.ToggleSelect();
+                            _resizeBorders = shape.DrawResizeBorders();
+                            MoveStage = 1;
+                            return;
+                        }
+                    }
+                }
+            }
+//          We select a side to resize
+            else if(MoveStage == 1)
+            {
+                foreach (ShapeBase shape in _textures)
+                {
+                    if (shape.IsSelected())
+                    {
+                        _startPos = mousePoint;
+                        _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
+                    }
+                }
+                MoveStage = 2;
+            }
+//          We move it to the newest location
+            else
+            {
+                MoveStage = 0;
+                foreach (ShapeBase shape in _textures)
+                {
+                    if (shape.IsSelected())
+                    {
+                        shape.Resize(_resizeBorders.SelectedSide, mousePoint, _startPos);
+                        _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
+                    }
+                }
+                UnSelectAllTextures();
+                _resizeBorders = null;
+            }
+        }
+        
         public void UpdateBorders(MouseState mouseState)
         {
-            foreach (Borders border in _moveBorders)
+            foreach (MoveBorders border in _moveBorders)
             {
-                border.BottomBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
-                border.TopBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
-                border.LeftBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
-                border.RightBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.BottomMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.TopMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.LeftMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.RightMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
             }
+        }
+        public void UpdateResizeBorders(MouseState mouseState)
+        {
+            _resizeBorders.Update(mouseState, _startPos);
         }
 
         public async void SaveFile()
@@ -200,17 +265,35 @@ namespace DrawDraw
             await using FileStream createStream = File.Create(subFolderPath + "\\saveFile"+ i +".txt");
             await JsonSerializer.SerializeAsync(createStream, _textures);
         }
-    }
+        private void UnSelectAllTextures()
+        {
+            foreach (ShapeBase shape in _textures)
+            {
+                if (shape.IsSelected())
+                {
+                    shape.ToggleSelect();
+                }
+            }
+        }
+        public enum ButtonStages
+        {
+            Rectangle,
+            Circle,
+            Undo,
+            Select,
+            Move,
+            Open,
+            Save,
+            Resize
+        }
 
-    public enum ButtonStages
-    {
-        Rectangle,
-        Circle,
-        Undo,
-        Select,
-        Move,
-        Open,
-        Save,
-        Resize
+        public enum BorderSides
+        {
+            Undefined,
+            Top,
+            Left,
+            Bottom,
+            Right
+        }
     }
 }

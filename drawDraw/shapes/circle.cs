@@ -30,7 +30,17 @@ namespace DrawDraw.shapes
             _rectangle = new Rectangle((int) X, (int) Y, Width, Height);
         }
 
-        public override Borders DrawBorders()
+        public override void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override MoveBorders DrawBorders()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override ResizeBorders DrawResizeBorders()
         {
             throw new NotImplementedException();
         }
