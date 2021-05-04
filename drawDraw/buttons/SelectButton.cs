@@ -7,16 +7,14 @@ namespace DrawDraw.buttons
 {
     public class SelectButton: ButtonBase
     {
-        public SelectButton(int X, int Y, Rectangle texture, string name, ButtonStages buttonStage) : base(X, Y, texture, name, buttonStage)
+        public SelectButton(int X, int Y, Texture2D texture, string name, ButtonStages buttonStage) : base(X, Y, texture, name, buttonStage)
         {
         }
         
         public override void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
-            Texture2D _texture;
-            _texture = new Texture2D(graphicsDevice, 1, 1);
-            _texture.SetData(new Color[] { Color.Black });
-            spriteBatch.Draw(_texture, Texture, Color.White);
+            Vector2 position = new Vector2(x, y);
+            spriteBatch.Draw(Texture, new Vector2(x, y), Color.White);
         }
     }
 }

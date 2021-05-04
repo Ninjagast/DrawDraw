@@ -1,13 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace DrawDraw.buttons
 {
-    public class MoveButton: ButtonBase
+    public class CircleButton: ButtonBase
     {
-
-        public MoveButton(int X, int Y, Texture2D texture, string name, ButtonStages buttonStage) : base(X, Y, texture, name, buttonStage)
+        public CircleButton(int X, int Y, Texture2D texture, string name, ButtonStages buttonStage) : base(X, Y, texture, name, buttonStage)
         {
         }
         
@@ -16,7 +16,5 @@ namespace DrawDraw.buttons
             Vector2 position = new Vector2(x, y);
             spriteBatch.Draw(Texture, new Vector2(x, y), Color.White);
         }
-
-
     }
 }

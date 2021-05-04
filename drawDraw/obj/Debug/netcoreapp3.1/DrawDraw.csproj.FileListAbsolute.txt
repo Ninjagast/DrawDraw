@@ -44,10 +44,6 @@ C:\Users\Steven\source\repos\drawDraw\DrawDraw\obj\Debug\netcoreapp3.1\DrawDraw.
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\obj\Debug\netcoreapp3.1\DrawDraw.dll
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\obj\Debug\netcoreapp3.1\DrawDraw.pdb
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\obj\Debug\netcoreapp3.1\DrawDraw.genruntimeconfig.cache
-C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\corkel.xnb
-C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\snaly.xnb
-C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\squearl.xnb
-C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\triganelk.xnb
 C:\Users\Greyb\OneDrive\NHL\DesignPaterns\project\drawapp\drawDraw\bin\Debug\netcoreapp3.1\Content\corkel.xnb
 C:\Users\Greyb\OneDrive\NHL\DesignPaterns\project\drawapp\drawDraw\bin\Debug\netcoreapp3.1\Content\snaly.xnb
 C:\Users\Greyb\OneDrive\NHL\DesignPaterns\project\drawapp\drawDraw\bin\Debug\netcoreapp3.1\Content\squearl.xnb
@@ -109,3 +105,11 @@ C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\ro\Xceed.
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\ru\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\sv\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\circle.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\eraser.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\file.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\move.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\Open.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\save.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\Select.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\square.xnb

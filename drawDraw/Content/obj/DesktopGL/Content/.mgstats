@@ -1,5 +1,10 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/corkel.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/corkel.xnb","TextureProcessor","Texture2DContent",718,4181,0.1635411
-"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/snaly.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/snaly.xnb","TextureProcessor","Texture2DContent",1363,4181,0.0028039
-"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/squearl.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/squearl.xnb","TextureProcessor","Texture2DContent",169,4181,0.0022824
-"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/triganelk.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/triganelk.xnb","TextureProcessor","Texture2DContent",526,4181,0.0030702
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/circle.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/circle.xnb","TextureProcessor","Texture2DContent",414,2389,0.1348265
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/eraser.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/eraser.xnb","TextureProcessor","Texture2DContent",438,2389,0.0015683
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/file.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/file.xnb","TextureProcessor","Texture2DContent",442,2389,0.0013954
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/move.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/move.xnb","TextureProcessor","Texture2DContent",466,2389,0.001328
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/Open.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/Open.xnb","TextureProcessor","Texture2DContent",449,2389,0.0014915
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/resize.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/resize.xnb","TextureProcessor","Texture2DContent",444,2389,0.198773
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/save.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/save.xnb","TextureProcessor","Texture2DContent",449,2389,0.0014782
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/Select.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/Select.xnb","TextureProcessor","Texture2DContent",418,2389,0.0016251
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/square.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/square.xnb","TextureProcessor","Texture2DContent",405,2389,0.0013961

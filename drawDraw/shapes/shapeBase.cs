@@ -10,12 +10,13 @@ namespace DrawDraw.shapes
     {
         protected Canvas Canvas = Canvas.Instance;
         public Guid id { get; set; }
-        protected int X;
-        protected int Y;
-        protected int Width;
-        protected int Height;
-        protected int Type;
-        protected bool Select = false;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int Type { get; set; }
+        
+        public bool Select = false;
 
         protected ShapeBase(int x, int y, int width, int height, int type)
         {

@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using DrawDraw.buttons;
 using DrawDraw.shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace DrawDraw
 {
@@ -31,18 +34,21 @@ namespace DrawDraw
 
         public static Canvas Instance => _instance;
 
-        public void Init(GraphicsDevice graphicsDevice)
+        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton)
         {
             _graphicsDevice = graphicsDevice;
-            CreateButtons();
+            CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton);
         }
 
-        private void CreateButtons()
+        private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton)
         {
-            _buttons.Add(new RectangleButton(0, 0, new Rectangle(0, 0, 30, 30), "Rectangle", ButtonStages.Rectangle));
-            _buttons.Add(new CircleButtons(70, 0, new Rectangle(70, 0, 30, 30), "Circle", ButtonStages.Circle));
-            _buttons.Add(new SelectButton(140, 0, new Rectangle(140, 0, 30, 30), "Select", ButtonStages.Select));
-            _buttons.Add(new MoveButton(210, 0, new Rectangle(210, 0, 30, 30), "Move", ButtonStages.Move));
+            _buttons.Add(new RectangleButton(0, 0, squareButton, "Rectangle", ButtonStages.Rectangle));
+            _buttons.Add(new CircleButton(70, 0, circleButton, "Circle", ButtonStages.Circle));
+            _buttons.Add(new SelectButton(140, 0, selectButton, "Select", ButtonStages.Select));
+            _buttons.Add(new MoveButton(210, 0, moveButton, "Move", ButtonStages.Move));
+            _buttons.Add(new OpenButton(280, 0, openButton, "Open", ButtonStages.Open));
+            _buttons.Add(new SaveButton(350, 0, saveButton, "Save", ButtonStages.Save));
+            _buttons.Add(new SaveButton(420, 0, saveButton, "Resize", ButtonStages.Resize));
         }
 
         public Guid InsertRectangle(Point coords)
@@ -173,6 +179,27 @@ namespace DrawDraw
                 border.RightBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
             }
         }
+
+        public async void SaveFile()
+        {
+            BtnStage = ButtonStages.Select;
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var subFolderPath = path + "\\drawdraw";
+
+            if (!Directory.Exists(subFolderPath))
+            {
+                Directory.CreateDirectory(subFolderPath);
+            }
+
+            int i = 0;
+            while (File.Exists(subFolderPath + "\\saveFile" + i + ".txt"))
+            {
+                i++;
+            }
+
+            await using FileStream createStream = File.Create(subFolderPath + "\\saveFile"+ i +".txt");
+            await JsonSerializer.SerializeAsync(createStream, _textures);
+        }
     }
 
     public enum ButtonStages
@@ -181,6 +208,9 @@ namespace DrawDraw
         Circle,
         Undo,
         Select,
-        Move
+        Move,
+        Open,
+        Save,
+        Resize
     }
 }

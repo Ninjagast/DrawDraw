@@ -10,11 +10,11 @@ namespace DrawDraw.buttons
         protected static Canvas canvas = Canvas.Instance;
         protected int x;
         protected int y;
-        protected Rectangle Texture;
+        protected Texture2D Texture;
         protected string Name;
         protected ButtonStages ButtonValue;
 
-        protected ButtonBase(int X, int Y, Rectangle texture, string name, ButtonStages buttonStage)
+        protected ButtonBase(int X, int Y, Texture2D texture, string name, ButtonStages buttonStage)
         {
             ButtonValue = buttonStage;
             x = X;
