@@ -59,7 +59,8 @@ namespace DrawDraw
             switch (_canvas.BtnStage)
             {
                 case Canvas.ButtonStages.Open:
-                    //#todo Add file browser here which can open files and load them into the system
+                    Console.WriteLine("oooopen");
+                    _canvas.OpenFile();
                     break;
                 case Canvas.ButtonStages.Save:
                     Console.WriteLine("saaaaaaaaav");

@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Windows.Forms;
+using ButtonBase = DrawDraw.buttons.ButtonBase;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
 namespace DrawDraw
 {
@@ -247,15 +250,6 @@ namespace DrawDraw
                 _resizeBorders = null;
             }
         }
-        
-        public void MoveTexure(List<ShapeBase> selected, int x, int y)
-        {
-            foreach (ShapeBase select in selected)
-            {
-                Point dimensions = select.GetDimension();
-                select.Update(x, y, dimensions.X, dimensions.Y);
-            }
-        }
         public void MoveTexure(List<ShapeBase> selected, List<Point> oldPos)
         {
             int index = 0;
@@ -282,25 +276,22 @@ namespace DrawDraw
             _resizeBorders.Update(mouseState, _startPos);
         }
 
-        public async void SaveFile()
+        public void SaveFile()
         {
+            Stream stream;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 0;
+            saveFileDialog.RestoreDirectory = true;
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                stream = saveFileDialog.OpenFile();
+                stream.Write(JsonSerializer.SerializeToUtf8Bytes(_textures));
+                stream.Close();
+            }
             BtnStage = ButtonStages.Select;
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var subFolderPath = path + "\\drawdraw";
-
-            if (!Directory.Exists(subFolderPath))
-            {
-                Directory.CreateDirectory(subFolderPath);
-            }
-
-            int i = 0;
-            while (File.Exists(subFolderPath + "\\saveFile" + i + ".txt"))
-            {
-                i++;
-            }
-
-            await using FileStream createStream = File.Create(subFolderPath + "\\saveFile"+ i +".txt");
-            await JsonSerializer.SerializeAsync(createStream, _textures);
         }
         private void UnSelectAllTextures()
         {
@@ -331,6 +322,38 @@ namespace DrawDraw
             Left,
             Bottom,
             Right
+        }
+
+        public void OpenFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = @"D:\",
+                Title = "Select a save file",
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "txt",
+                Filter = "txt files (*.txt)|*.txt",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                
+                ResetCanvas();
+            }
+        }
+
+        private void ResetCanvas()
+        {
+            _textures = new List<ShapeBase>();
+            MoveStage = 0;
+            _moveBorders = new List<MoveBorders>();
         }
     }
 }
