@@ -18,7 +18,6 @@ namespace DrawDraw
     public class Canvas
     {
         private static Canvas _instance = new Canvas();
-        private List<ShapeBase> _textures = new List<ShapeBase>();
         private ArrayList _buttons = new ArrayList();
         private List<MoveBorders> _moveBorders = new List<MoveBorders>();
         public ResizeBorders _resizeBorders = null;
@@ -31,10 +30,17 @@ namespace DrawDraw
 
         public ButtonStages BtnStage;
 
+        // private List<ShapeBase> _textures = new List<ShapeBase>();
+        
+        // main tree
+        private Composite _textures = new Composite();
+        // List of all branches
+        private List<Component> groups = new List<Component>();
 
         private Canvas()
         {
-
+            groups.Add(new Composite());
+            _textures.Add(groups[0]);
         }
 
         public static Canvas Instance => _instance;
@@ -59,22 +65,23 @@ namespace DrawDraw
 
         public Guid InsertRectangle(Point coords)
         {
-            _textures.Add(new RectangleShape("", coords.X, coords.Y, 100, 100, 0));
-            return _textures[^1].id;
+            RectangleShape shape = new RectangleShape("", coords.X, coords.Y, 100, 100, 0);
+            groups[0].Add(new Leaf(shape));
+            return shape.id;
         }
         public Guid InsertCircle(Point coords)
         {
             CircleShape circle = new CircleShape("", coords.X, coords.Y, 100, 100, 1);
             circle.Circle = _circleTexture;
             
-            _textures.Add(circle);
-            return _textures[^1].id;
+            groups[0].Add(new Leaf(circle));
+            return circle.id;
         }
         
         public void DeleteTexture(Guid id)
         {
             ShapeBase delete = null;
-            foreach (ShapeBase texture in _textures)
+            foreach (ShapeBase texture in _textures.GetChildren())
             {
                 if (texture.id == id)
                 {
@@ -82,12 +89,13 @@ namespace DrawDraw
                     break;
                 }
             }
-            _textures.Remove(delete);
+            //TODO make sure to delete
+            // _textures.Remove(delete); 
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (ShapeBase texture in _textures)
+            foreach (ShapeBase texture in _textures.GetChildren())
             {
                 texture.Draw(spriteBatch, _graphicsDevice);
             }
@@ -127,7 +135,7 @@ namespace DrawDraw
         {
             Point mousePoint = new Point(mouseState.X, mouseState.Y);
 
-            foreach (ShapeBase shape in _textures)
+            foreach (ShapeBase shape in _textures.GetChildren())
             {
                 Point LeftTop = shape.GetPoint();
                 Point dimensions = shape.GetDimension();
@@ -149,7 +157,7 @@ namespace DrawDraw
         public List<ShapeBase> GetSelected()
         {
             List<ShapeBase> selected = new List<ShapeBase>();
-            foreach (var texure in _textures)
+            foreach (var texure in _textures.GetChildren())
             {
                 if (texure.IsSelected())
                 {
@@ -164,7 +172,7 @@ namespace DrawDraw
 //          draw borders of selected shit
             if (MoveStage == 0)
             {
-                foreach (ShapeBase shape in _textures)
+                foreach (ShapeBase shape in _textures.GetChildren())
                 {
                     if (shape.IsSelected())
                     {
@@ -178,7 +186,7 @@ namespace DrawDraw
             {
                 foreach (MoveBorders border in _moveBorders)
                 {
-                    foreach (ShapeBase shape in _textures)
+                    foreach (ShapeBase shape in _textures.GetChildren())
                     {
                         if (shape.id == border.ShapeId)
                         {
@@ -202,7 +210,7 @@ namespace DrawDraw
             {
                 UnSelectAllTextures();
                 
-                foreach (ShapeBase shape in _textures)
+                foreach (ShapeBase shape in _textures.GetChildren())
                 {
                     Point LeftTop = shape.GetPoint();
                     Point dimensions = shape.GetDimension();
@@ -224,7 +232,7 @@ namespace DrawDraw
 //          We select a side to resize
             else if(MoveStage == MoveStages.Select)
             {
-                foreach (ShapeBase shape in _textures)
+                foreach (ShapeBase shape in _textures.GetChildren())
                 {
                     if (shape.IsSelected())
                     {
@@ -240,7 +248,7 @@ namespace DrawDraw
             {
                 ShapeBase selected = null;
                 MoveStage = MoveStages.Undefined;
-                foreach (ShapeBase shape in _textures)
+                foreach (ShapeBase shape in _textures.GetChildren())
                 {
                     if (shape.IsSelected())
                     {
@@ -257,10 +265,10 @@ namespace DrawDraw
         }
         public ShapeBase ResizeTexure(Guid id, ShapeBase shape)
         {
-            if (_textures.Count > 0)
+            if (_textures.GetChildren().Count > 0)
             {
                 int index = 0;
-                foreach (ShapeBase texture in _textures)
+                foreach (ShapeBase texture in _textures.GetChildren())
                 {
                     if (texture.id == id)
                     {
@@ -268,8 +276,8 @@ namespace DrawDraw
                     }
                     index++;
                 }
-                ShapeBase selected = _textures[index].Clone(_textures[index].id);
-                _textures[index] = shape;
+                ShapeBase selected = _textures.GetChildren()[index].Clone(_textures.GetChildren()[index].id);
+                _textures.GetChildren()[index] = shape;
                 return selected;
             }
             return null;
@@ -319,7 +327,7 @@ namespace DrawDraw
         }
         private void UnSelectAllTextures()
         {
-            foreach (ShapeBase shape in _textures)
+            foreach (ShapeBase shape in _textures.GetChildren())
             {
                 if (shape.IsSelected())
                 {
@@ -395,7 +403,7 @@ namespace DrawDraw
                     return;
                 }
 
-                _textures = new List<ShapeBase>();
+                _textures = new Composite();
 
                 foreach (var shape in res)
                 {
@@ -405,11 +413,11 @@ namespace DrawDraw
                         {
                             CircleShape circle = new CircleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type);
                             circle.Circle = _circleTexture;
-                            _textures.Add(circle);
+                            // _textures.Add(circle);
                         }
                         else
                         {
-                            _textures.Add(new RectangleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type));
+                            // _textures.Add(new RectangleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type));
                         }
                     }
                     catch (Exception e)
