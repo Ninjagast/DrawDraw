@@ -5,73 +5,86 @@ using DrawDraw.shapes;
 
 namespace DrawDraw
 {
-    public interface Component
+    public interface IComponent
     {
-        public ShapeBase getShape();
-        public List<ShapeBase> GetChildren();
+        public List<ShapeBase> GetAllShapes();
         
-        public virtual void Add(Component component)
+        public virtual void Add(IComponent component)
         {
             throw new NotImplementedException();
         }
 
-        public virtual void Remove(Component component)
+        public virtual void Remove(IComponent component)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public virtual void Remove(int index)
         {
             throw new NotImplementedException();
         }
     }
     
     // is a item in a tree or branch
-    class Leaf : Component
+    class Leaf : IComponent
     {
-        private ShapeBase shape;
+        private ShapeBase _shape;
         public Leaf(ShapeBase shape)
         {
-            this.shape = shape;
+            _shape = shape;
         }
-
-        public ShapeBase getShape()
+        public List<ShapeBase> GetAllShapes()
         {
-            return shape;
-        }
-
-        public List<ShapeBase> GetChildren()
-        {
-            throw new NotImplementedException();
+            return new List<ShapeBase> {_shape};
         }
     }
     
     // can be a tree or branch
-    class Composite : Component
+    class Composite : IComponent
     {
-        private List<Component> children = new List<Component>();
+        private List<IComponent> _children = new List<IComponent>();
         
-        public void Add(Component component)
+        public void Add(IComponent component)
         {
-            this.children.Add(component);
+            _children.Add(component);
         }
 
-        public void Remove(Component component)
+        public IComponent GetFirstChild()
         {
-            this.children.Remove(component);
+            return _children[0];
+        }
+
+        public IComponent GetEntireBranch(int index)
+        {
+            if (_children.Count > index)
+            {
+                return _children[index];
+            }
+            else
+            {
+                Console.WriteLine("Out of bounds exception biiiiitch");
+                return null;
+            }
         }
         
-        public ShapeBase getShape()
+        public void Remove(IComponent component)
         {
-            return null;
+            _children.Remove(component);
         }
-        public List<ShapeBase> GetChildren()
+
+        public void Remove(int index)
+        {
+            _children.RemoveAt(index);
+        }
+        
+        public List<ShapeBase> GetAllShapes()
         {
             List<ShapeBase> result = new List<ShapeBase>();
-            foreach (var child in children)
+            foreach (var child in _children)
             {
-                if (child.GetType() == typeof(Leaf))
+                foreach (var childElement in child.GetAllShapes())
                 {
-                    result.Add(child.getShape());
-                }
-                else
-                {
-                    result = result.Union(child.GetChildren()).ToList();
+                    result.Add(childElement);
                 }
             }
             return result;

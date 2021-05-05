@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Windows.Forms;
 using ButtonBase = DrawDraw.buttons.ButtonBase;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
@@ -17,85 +16,465 @@ namespace DrawDraw
 {
     public class Canvas
     {
-        private static Canvas _instance = new Canvas();
-        private ArrayList _buttons = new ArrayList();
-        private List<MoveBorders> _moveBorders = new List<MoveBorders>();
-        public ResizeBorders _resizeBorders = null;
-        private Texture2D _circleTexture;
+//      static canvas call for singleton
+        private static Canvas            _instance      = new Canvas();
+        private        ArrayList         _buttons       = new ArrayList();
+        private        List<MoveBorders> _moveBorders   = new List<MoveBorders>();
+        private        ResizeBorders     _resizeBorders;
+        private        Texture2D         _circleTexture;
 
         public MoveStages MoveStage = 0;
+        
         private Point _startPos;
-
         private GraphicsDevice _graphicsDevice;
-
         public ButtonStages BtnStage;
 
-        // private List<ShapeBase> _textures = new List<ShapeBase>();
-        
-        // main tree
+        // main tree for the textures / groups
         private Composite _textures = new Composite();
-        // List of all branches
-        private List<Component> groups = new List<Component>();
 
+//      private constructor for singleton
         private Canvas()
         {
-            groups.Add(new Composite());
-            _textures.Add(groups[0]);
         }
 
+//      static _instance field for single instance accessibility
         public static Canvas Instance => _instance;
 
+        
+//      ######Initialization functions######
+//      init function for setting up the textures and creating all the buttons
         public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D circleTexture)
         {
+            _textures.Add(new Composite());
             _graphicsDevice = graphicsDevice;
             _circleTexture = circleTexture;
             CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton);
         }
 
+//      creates all buttons
         private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton)
         {
-            _buttons.Add(new RectangleButton(0, 0, squareButton, "Rectangle", ButtonStages.Rectangle));
-            _buttons.Add(new CircleButton(70, 0, circleButton, "Circle", ButtonStages.Circle));
-            _buttons.Add(new SelectButton(140, 0, selectButton, "Select", ButtonStages.Select));
-            _buttons.Add(new MoveButton(210, 0, moveButton, "Move", ButtonStages.Move));
-            _buttons.Add(new OpenButton(280, 0, openButton, "Open", ButtonStages.Open));
-            _buttons.Add(new SaveButton(350, 0, saveButton, "Save", ButtonStages.Save));
-            _buttons.Add(new ResizeButton(420, 0, resizeButton, "Resize", ButtonStages.Resize));
+            _buttons.Add(new RectangleButton(0,   0, squareButton, "Rectangle", ButtonStages.Rectangle));
+            _buttons.Add(new CircleButton(   70,  0, circleButton, "Circle",    ButtonStages.Circle));
+            _buttons.Add(new SelectButton(   140, 0, selectButton, "Select",    ButtonStages.Select));
+            _buttons.Add(new MoveButton(     210, 0, moveButton,   "Move",      ButtonStages.Move));
+            _buttons.Add(new OpenButton(     280, 0, openButton,   "Open",      ButtonStages.Open));
+            _buttons.Add(new SaveButton(     350, 0, saveButton,   "Save",      ButtonStages.Save));
+            _buttons.Add(new ResizeButton(   420, 0, resizeButton, "Resize",    ButtonStages.Resize));
         }
 
+//      ######Insertion / delete functions######
+//      function that creates a rectangle
         public Guid InsertRectangle(Point coords)
         {
+//          creates static shape #todo make it so you can draw a different size shape from the start
             RectangleShape shape = new RectangleShape("", coords.X, coords.Y, 100, 100, 0);
-            groups[0].Add(new Leaf(shape));
+            
+//          adds it to the base branch
+            _textures.GetFirstChild().Add(new Leaf(shape));
+            
             return shape.id;
         }
+        
+//      function that creates an ellipse 
         public Guid InsertCircle(Point coords)
         {
+//          creates static shape #todo make it so you can draw a different size shape from the start
             CircleShape circle = new CircleShape("", coords.X, coords.Y, 100, 100, 1);
+//          give it a texture
             circle.Circle = _circleTexture;
             
-            groups[0].Add(new Leaf(circle));
+//          adds it to the base branch
+            _textures.GetFirstChild().Add(new Leaf(circle));
+            
             return circle.id;
         }
         
+//      deletes a texture
         public void DeleteTexture(Guid id)
         {
-            ShapeBase delete = null;
-            foreach (ShapeBase texture in _textures.GetChildren())
+//          goes through all the non group shape #todo delete group branch when we have added groups or just make this group compatible in general
+            List<ShapeBase> textures = _textures.GetFirstChild().GetAllShapes();
+            for (int i = 0; i < textures.Count; i++)
             {
-                if (texture.id == id)
+                if (textures[i].id == id)
                 {
-                    delete = texture; 
+//                  destroy the child
+                    _textures.GetFirstChild().Remove(i);                    
                     break;
                 }
             }
-            //TODO make sure to delete
-            // _textures.Remove(delete); 
+        }
+//      ######button functions######
+//      checks if there user has clicked on a button
+        public bool CheckButtonClick(MouseState mouseState, MouseState prevMouseState)
+        {
+            if (prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
+            {
+                foreach (ButtonBase button in _buttons)
+                {
+                    if (button.OnClick(mouseState))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
+//      ######Behaviour functions######
+//      selects a texture based on the mouse' position
+        public void SelectTexture(MouseState mouseState)
+        {
+//          for all shapes
+            foreach (ShapeBase shape in _textures.GetAllShapes())
+            {
+//              we get its position and dimensions
+                Point LeftTop = shape.GetPoint();
+                Point dimensions = shape.GetDimension();
+
+//              the point is located between the x boundary
+                if (mouseState.X > LeftTop.X && mouseState.X < LeftTop.X + dimensions.X)
+                {
+//                  the point is located between the y boundary
+                    if (mouseState.Y > LeftTop.Y && mouseState.Y < LeftTop.Y + dimensions.Y)
+                    {
+//                      click click we found a fucking shape
+                        shape.ToggleSelect();
+                        return;
+                    }
+                }
+            }
+//          unselect everything if we have not clicked on anything
+            UnSelectAllTextures();
+        }
+
+//      returns all selected shapes
+        public List<ShapeBase> GetSelected()
+        {
+            List<ShapeBase> selected = new List<ShapeBase>();
+            
+//          for all shapes
+            foreach (var texure in _textures.GetAllShapes())
+            {
+//              if it is selected
+                if (texure.IsSelected())
+                {
+//                  add it to the return list
+                    selected.Add(texure);    
+                }
+            }
+            return selected;
+        }
+
+//      moves stuff
+        public void MoveStuff(MouseState mouseState)
+        {
+//          if we have not yet created the borders
+            if (MoveStage == 0)
+            {
+//              for all shapes
+                foreach (ShapeBase shape in _textures.GetAllShapes())
+                {
+//                  if it is selected
+                    if (shape.IsSelected())
+                    {
+//                      draw its move borders
+                        _moveBorders.Add(shape.DrawBorders());
+                        
+//                      log the start position
+                        _startPos = new Point(mouseState.X, mouseState.Y);
+                        
+//                      and move onto the next move stage
+                        MoveStage = MoveStages.Move;
+                    }
+                }
+            }
+//          if we are currently at the end of moving something
+            else if(MoveStage == MoveStages.Move)
+            {
+//              for all move borders
+                foreach (MoveBorders border in _moveBorders)
+                {
+//                  for all shapes
+                    foreach (ShapeBase shape in _textures.GetAllShapes())
+                    {
+//                      if the border matches the shape
+                        if (shape.id == border.ShapeId)
+                        {
+//                          teleport it to the new position
+                            Point finalPos = border.LeftMoveBorder.LatestPos;
+                            Point dimensions = shape.GetDimension();
+                            
+                            shape.Update(finalPos.X, finalPos.Y, dimensions.X, dimensions.Y);
+                        }
+                    }
+                }
+//              reset all move borders and the current moveStage
+                _moveBorders = new List<MoveBorders>();
+                MoveStage = MoveStages.Undefined;
+            }
+        }
+
+//      resizes drawn textures
+        public ShapeBase ResizeStuff(MouseState mouseState)
+        {
+            Point mousePoint = new Point(mouseState.X, mouseState.Y);
+            
+//          if we have not selected a texture to resize
+            if (MoveStage == MoveStages.Undefined)
+            {
+                UnSelectAllTextures();
+                
+//              for all shapes
+                foreach (ShapeBase shape in _textures.GetAllShapes())
+                {
+//                  if the click location is within this shape
+                    if (Canvas.PointWithinShape(shape, mouseState))
+                    {
+//                      we select it draw resize borders and move onto the next move stage
+                        shape.ToggleSelect();
+                        _resizeBorders = shape.DrawResizeBorders();
+                        MoveStage      = MoveStages.Select;
+                        break;
+                    }
+                }
+                return null;
+            }
+//          if have selected a texture to resize
+            else if(MoveStage == MoveStages.Select)
+            {
+//              for all shapes
+                foreach (ShapeBase shape in _textures.GetAllShapes())
+                {
+//                  if it is selected
+                    if (shape.IsSelected())
+                    {
+//                      we check which side we have just selected and save the start pos
+                        _startPos = mousePoint;
+                        _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
+                        break;
+                    }
+                }
+//              we move onto the next resize stage 
+                MoveStage = MoveStages.Resize;
+                return null;
+            }
+//          We can finally resize the texture
+            else
+            {
+                ShapeBase selected = null;
+                
+//              for all shapes
+                foreach (ShapeBase shape in _textures.GetAllShapes())
+                {
+//                  if the shape is selected
+                    if (shape.IsSelected())
+                    {
+//                      clone the selected clone for the history
+                        selected = shape.Clone(shape.id);
+//                      resize the texture
+                        shape.Resize(_resizeBorders.SelectedSide, mousePoint, _startPos);
+                    }
+                }
+//              reset everything
+                UnSelectAllTextures();
+                MoveStage      = MoveStages.Undefined;
+                _resizeBorders = null;
+                return selected;
+            }
+        }
+//      overloaded function for the history
+        public ShapeBase ResizeStuff(Guid id, ShapeBase shape)
+        {
+            if (_textures.GetAllShapes().Count > 0)
+            {
+                int index = 0;
+                foreach (ShapeBase texture in _textures.GetAllShapes())
+                {
+                    if (texture.id == id)
+                    {
+                        break;
+                    }
+                    index++;
+                }
+                ShapeBase selected = _textures.GetAllShapes()[index].Clone(_textures.GetAllShapes()[index].id);
+                _textures.GetAllShapes()[index] = shape;
+                return selected;
+            }
+            return null;
+        }
+
+//      moves the textures back
+        public void MoveTexure(List<ShapeBase> selected, List<Point> oldPos)
+        {
+            int index = 0;
+//          for all selected shapes
+            foreach (ShapeBase select in selected)
+            {
+//              get its dimensions and move it back
+                Point dimensions = select.GetDimension();
+                select.Update(oldPos[index].X, oldPos[index].Y, dimensions.X, dimensions.Y);
+                index++;
+            }
+        }
+//      ######border functions######
+//      updates the normal borders
+        public void UpdateBorders(MouseState mouseState)
+        {
+            foreach (MoveBorders border in _moveBorders)
+            {
+                border.BottomMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.TopMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.LeftMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+                border.RightMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
+            }
+        }
+//      updates the resize borders
+        public void UpdateResizeBorders(MouseState mouseState)
+        {
+            _resizeBorders.Update(mouseState, _startPos);
+        }
+        
+//      ######file I/O functions######
+//      saves a file
+        public void SaveFile()
+        {
+//          we create a savefile dialog box
+            Stream stream;
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+//          sets file dialog settings
+            saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog.FilterIndex = 0;
+            saveFileDialog.RestoreDirectory = true;
+
+//          if the user has chosen a location for the file
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+//              open the file
+                stream = saveFileDialog.OpenFile();
+                
+//              write the data to it
+                stream.Write(JsonSerializer.SerializeToUtf8Bytes(_textures));
+                
+                stream.Close();
+            }
+            BtnStage = ButtonStages.Select;
+        }
+        
+//      opens a file
+         public void OpenFile()
+        {
+//          opens the file dialog and sets all settings
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = @"D:\",
+                Title = "Select a save file",
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "txt",
+                Filter = "txt files (*.txt)|*.txt",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+//          if the user has selected a file
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+//              open the file
+                Stream file = openFileDialog.OpenFile();
+                String fileContent;
+                
+                using (StreamReader reader = new StreamReader(file))
+                {
+//                  read the file content
+                    fileContent = reader.ReadToEnd();
+                }
+
+                List<CanvasSave> res = null;
+
+                try
+                {
+//                  deserialize the file content if it is valid json
+                    res = JsonSerializer.Deserialize<List<CanvasSave>>(fileContent);
+                }
+                catch (Exception e)
+                {
+//                  not a valid save file
+                    BtnStage = ButtonStages.Select;
+                    return;
+                }
+//              we can reset the entire canvas
+                ResetCanvas();
+
+//              for all saved shapes
+                foreach (var shape in res)
+                {
+                    try
+                    {
+//                      if it is a circle
+                        if (shape.Type == 1)
+                        {
+//                          we create the circle and set the texture and add it to the base list #todo needs group compatibility
+                            CircleShape circle = new CircleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type);
+                            circle.Circle = _circleTexture;
+                            
+                            _textures.GetFirstChild().Add(new Leaf(circle));
+                        }
+                        else
+                        {
+//                          we create the rectangle and add it to the base list #todo needs group compatibility
+                            _textures.GetFirstChild().Add(new Leaf(new RectangleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type)));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+//                      not a valid save file
+                        BtnStage = ButtonStages.Select;
+                        return;
+                    }
+                }
+            }
+//          we always reset the button stage
+            BtnStage = ButtonStages.Select;
+        }
+         
+//      ######reset functions######
+//       resets the entire canvas to an empty state
+         private void ResetCanvas()
+         {
+             UnSelectAllTextures();
+             _textures = new Composite();
+             _textures.Add(new Composite());
+            
+             _moveBorders   = new List<MoveBorders>();
+             _resizeBorders = null;
+             MoveStage      = MoveStages.Undefined;
+             BtnStage       = ButtonStages.Select;
+         }
+         
+//      unselects all textures
+        private void UnSelectAllTextures()
+        {
+            foreach (ShapeBase shape in _textures.GetAllShapes())
+            {
+                if (shape.IsSelected())
+                {
+                    shape.ToggleSelect();
+                }
+            }
+        }
+        
+//      ######draw function######
+//      basic draw function which draws all textures currently on the canvas
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (ShapeBase texture in _textures.GetChildren())
+            foreach (ShapeBase texture in _textures.GetAllShapes())
             {
                 texture.Draw(spriteBatch, _graphicsDevice);
             }
@@ -116,225 +495,7 @@ namespace DrawDraw
             _resizeBorders?.drawBorder(spriteBatch, _graphicsDevice);
         }
 
-        public bool CheckButtons(MouseState mouseState, MouseState prevMouseState)
-        {
-            if (prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
-            {
-                foreach (ButtonBase button in _buttons)
-                {
-                    if (button.OnClick(mouseState))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public void SelectTexture(MouseState mouseState)
-        {
-            Point mousePoint = new Point(mouseState.X, mouseState.Y);
-
-            foreach (ShapeBase shape in _textures.GetChildren())
-            {
-                Point LeftTop = shape.GetPoint();
-                Point dimensions = shape.GetDimension();
-
-//              the point is located between the x boundary
-                if (mousePoint.X > LeftTop.X && mousePoint.X < LeftTop.X + dimensions.X)
-                {
-                    if (mousePoint.Y > LeftTop.Y && mousePoint.Y < LeftTop.Y + dimensions.Y)
-                    {
-//                      click click we found a shape
-                        shape.ToggleSelect();
-                        return;
-                    }
-                }
-            }
-            UnSelectAllTextures();
-        }
-
-        public List<ShapeBase> GetSelected()
-        {
-            List<ShapeBase> selected = new List<ShapeBase>();
-            foreach (var texure in _textures.GetChildren())
-            {
-                if (texure.IsSelected())
-                {
-                    selected.Add(texure);    
-                }
-            }
-            return selected;
-        }
-
-        public void MoveStuff(MouseState mouseState)
-        {
-//          draw borders of selected shit
-            if (MoveStage == 0)
-            {
-                foreach (ShapeBase shape in _textures.GetChildren())
-                {
-                    if (shape.IsSelected())
-                    {
-                        _moveBorders.Add(shape.DrawBorders());
-                        _startPos = new Point(mouseState.X, mouseState.Y);
-                        MoveStage = MoveStages.Move;
-                    }
-                }
-            }
-            else if(MoveStage == MoveStages.Move)
-            {
-                foreach (MoveBorders border in _moveBorders)
-                {
-                    foreach (ShapeBase shape in _textures.GetChildren())
-                    {
-                        if (shape.id == border.ShapeId)
-                        {
-                            Point finalPos = border.LeftMoveBorder.LatestPos;
-                            Point dimensions = shape.GetDimension();
-                            shape.Update(finalPos.X, finalPos.Y, dimensions.X, dimensions.Y);
-                        }
-                    }
-                }
-                _moveBorders = new List<MoveBorders>();
-                MoveStage = MoveStages.Undefined;
-            }
-        }
-
-        public ShapeBase ResizeStuff(MouseState mouseState)
-        {
-            Point mousePoint = new Point(mouseState.X, mouseState.Y);
-            
-//          select texture to resize
-            if (MoveStage == MoveStages.Undefined)
-            {
-                UnSelectAllTextures();
-                
-                foreach (ShapeBase shape in _textures.GetChildren())
-                {
-                    Point LeftTop = shape.GetPoint();
-                    Point dimensions = shape.GetDimension();
-
-//                  the point is located between the x boundary
-                    if (mousePoint.X > LeftTop.X && mousePoint.X < LeftTop.X + dimensions.X)
-                    {
-                        if (mousePoint.Y > LeftTop.Y && mousePoint.Y < LeftTop.Y + dimensions.Y)
-                        {
-//                          click click we found a shape
-                            shape.ToggleSelect();
-                            _resizeBorders = shape.DrawResizeBorders();
-                            MoveStage = MoveStages.Select;
-                            return null;
-                        }
-                    }
-                }
-            }
-//          We select a side to resize
-            else if(MoveStage == MoveStages.Select)
-            {
-                foreach (ShapeBase shape in _textures.GetChildren())
-                {
-                    if (shape.IsSelected())
-                    {
-                        _startPos = mousePoint;
-                        _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
-                    }
-                }
-                MoveStage = MoveStages.Resize;
-                return null;
-            }
-//          We move it to the newest location
-            else
-            {
-                ShapeBase selected = null;
-                MoveStage = MoveStages.Undefined;
-                foreach (ShapeBase shape in _textures.GetChildren())
-                {
-                    if (shape.IsSelected())
-                    {
-                        selected = shape.Clone(shape.id);
-                        shape.Resize(_resizeBorders.SelectedSide, mousePoint, _startPos);
-                        _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
-                    }
-                }
-                UnSelectAllTextures();
-                _resizeBorders = null;
-                return selected;
-            }
-            return null;
-        }
-        public ShapeBase ResizeTexure(Guid id, ShapeBase shape)
-        {
-            if (_textures.GetChildren().Count > 0)
-            {
-                int index = 0;
-                foreach (ShapeBase texture in _textures.GetChildren())
-                {
-                    if (texture.id == id)
-                    {
-                        break;
-                    }
-                    index++;
-                }
-                ShapeBase selected = _textures.GetChildren()[index].Clone(_textures.GetChildren()[index].id);
-                _textures.GetChildren()[index] = shape;
-                return selected;
-            }
-            return null;
-        }
-        public void MoveTexure(List<ShapeBase> selected, List<Point> oldPos)
-        {
-            int index = 0;
-            foreach (ShapeBase select in selected)
-            {
-                Point dimensions = select.GetDimension();
-                select.Update(oldPos[index].X, oldPos[index].Y, dimensions.X, dimensions.Y);
-                index++;
-            }
-        }
-
-        public void UpdateBorders(MouseState mouseState)
-        {
-            foreach (MoveBorders border in _moveBorders)
-            {
-                border.BottomMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
-                border.TopMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
-                border.LeftMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
-                border.RightMoveBorder.Update(new Point(mouseState.X, mouseState.Y), _startPos);
-            }
-        }
-        public void UpdateResizeBorders(MouseState mouseState)
-        {
-            _resizeBorders.Update(mouseState, _startPos);
-        }
-
-        public void SaveFile()
-        {
-            Stream stream;
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-
-            saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            saveFileDialog.FilterIndex = 0;
-            saveFileDialog.RestoreDirectory = true;
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                stream = saveFileDialog.OpenFile();
-                stream.Write(JsonSerializer.SerializeToUtf8Bytes(_textures));
-                stream.Close();
-            }
-            BtnStage = ButtonStages.Select;
-        }
-        private void UnSelectAllTextures()
-        {
-            foreach (ShapeBase shape in _textures.GetChildren())
-            {
-                if (shape.IsSelected())
-                {
-                    shape.ToggleSelect();
-                }
-            }
-        }
+//      ######enums######
         public enum ButtonStages
         {
             Rectangle,
@@ -362,81 +523,26 @@ namespace DrawDraw
             Move,
             Resize
         }
-        public void OpenFile()
+
+//      ######static functions######
+        static bool PointWithinShape(ShapeBase shape, MouseState mousePoint)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+//          we get its location and dimensions
+            Point LeftTop = shape.GetPoint();
+            Point dimensions = shape.GetDimension();
+
+//          the point is located between the x boundary
+            if (mousePoint.X > LeftTop.X && mousePoint.X < LeftTop.X + dimensions.X)
             {
-                InitialDirectory = @"D:\",
-                Title = "Select a save file",
-                CheckFileExists = true,
-                CheckPathExists = true,
-
-                DefaultExt = "txt",
-                Filter = "txt files (*.txt)|*.txt",
-                FilterIndex = 2,
-                RestoreDirectory = true,
-
-                ReadOnlyChecked = true,
-                ShowReadOnly = true
-            };
-            
-            String fileContent;
-            
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                Stream file = openFileDialog.OpenFile();
-
-                using (StreamReader reader = new StreamReader(file))
+//              the point is located between the x boundary
+                if (mousePoint.Y > LeftTop.Y && mousePoint.Y < LeftTop.Y + dimensions.Y)
                 {
-                    fileContent = reader.ReadToEnd();
+//                  click click we found a shape
+                    return true;
                 }
-
-                List<CanvasSave> res = null;
-                
-                try
-                {
-                    res = JsonSerializer.Deserialize<List<CanvasSave>>(fileContent);
-                }
-                catch (Exception e)
-                {
-                    BtnStage = ButtonStages.Select;
-                    return;
-                }
-
-                _textures = new Composite();
-
-                foreach (var shape in res)
-                {
-                    try
-                    {
-                        if (shape.Type == 1)
-                        {
-                            CircleShape circle = new CircleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type);
-                            circle.Circle = _circleTexture;
-                            // _textures.Add(circle);
-                        }
-                        else
-                        {
-                            // _textures.Add(new RectangleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type));
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        BtnStage = ButtonStages.Select;
-                        return;
-                    }
-                }
-                ResetCanvas();
             }
-            BtnStage = ButtonStages.Select;
-        }
 
-        private void ResetCanvas()
-        {
-            UnSelectAllTextures();
-            MoveStage = MoveStages.Undefined;
-            _moveBorders = new List<MoveBorders>();
-            BtnStage = ButtonStages.Select;
+            return false;
         }
     }
 }

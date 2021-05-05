@@ -116,7 +116,7 @@ namespace DrawDraw
 
         public ResizeTexure(MouseState mouseState)
         {
-            this._mouseState = mouseState;
+            _mouseState = mouseState;
         }
         public void ExecuteAction()
         {
@@ -125,12 +125,12 @@ namespace DrawDraw
 
         public void RedoAction()
         {
-            _selected = _canvas.ResizeTexure(_selected.id, _selected);
+            _selected = _canvas.ResizeStuff(_selected.id, _selected);
         }
 
         public void UndoAction()
         {
-            _selected = _canvas.ResizeTexure(_selected.id, _selected);
+            _selected = _canvas.ResizeStuff(_selected.id, _selected);
         }
     }
     
@@ -170,12 +170,11 @@ namespace DrawDraw
             return current >= 0 ? history.ElementAt(current) : null;
         } 
     }
-    internal class ModifyCanvas
+    internal class CanvasCommands
     {
         private static readonly Canvas Canvas = Canvas.Instance;
         private readonly CommandHistory history = new CommandHistory();
         private ICommand command;
-
         
         public void SetCommand(ICommand commands)
         {
