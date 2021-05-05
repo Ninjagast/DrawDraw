@@ -62,7 +62,7 @@ namespace DrawDraw
             }
             else
             {
-                Console.WriteLine("Out of bounds exception biiiiitch");
+                Console.WriteLine("Out of bounds exception");
                 return null;
             }
         }

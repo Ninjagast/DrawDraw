@@ -294,13 +294,12 @@ namespace DrawDraw
                 {
                     if (texture.id == id)
                     {
-                        break;
+                        ShapeBase selected = texture.Clone(texture.id);
+                        texture.Update(shape.X, shape.Y, shape.Width, shape.Height);
+                        return selected;
                     }
                     index++;
                 }
-                ShapeBase selected = _textures.GetAllShapes()[index].Clone(_textures.GetAllShapes()[index].id);
-                _textures.GetAllShapes()[index] = shape;
-                return selected;
             }
             return null;
         }

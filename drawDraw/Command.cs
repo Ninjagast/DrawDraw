@@ -143,8 +143,10 @@ namespace DrawDraw
         // push to last
         public void Push(ICommand action)
         {
-            if(current != -1 && history.Count > 0)
+            if (current != -1 && history.Count > 0)
                 history = history.GetRange(0, current + 1);
+            else if (current == -1)
+                history = new List<ICommand>();
 
             history.Add(action);
             current = history.Count - 1;
