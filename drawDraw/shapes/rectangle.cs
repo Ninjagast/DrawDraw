@@ -62,31 +62,10 @@ namespace DrawDraw.shapes
                     break;
             }
         }
-
-        public override MoveBorders DrawBorders()
+        public override ShapeBase Clone(Guid id)
         {
-            MoveBorders moveBorders = new MoveBorders
-            {
-                BottomMoveBorder = new MoveBorder(X, Y, Width, Height, 0),
-                TopMoveBorder = new MoveBorder(X, Y, Width, Height, 1),
-                LeftMoveBorder = new MoveBorder(X, Y, Width, Height, 2),
-                RightMoveBorder = new MoveBorder(X, Y, Width, Height, 3),
-                ShapeId = id
-            };
-
-            return moveBorders;
-        }
-
-        public override ResizeBorders DrawResizeBorders()
-        {
-            ResizeBorders resizeBorders = new ResizeBorders()
-            {
-                BottomResizeBorder = new ResizeBorder(X, Y, Width, Height, 0),
-                TopResizeBorder = new ResizeBorder(X, Y, Width, Height, 1),
-                RightResizeBorder = new ResizeBorder(X, Y, Width, Height, 2),
-                LeftResizeBorder = new ResizeBorder(X, Y, Width, Height, 3)
-            };
-            return resizeBorders;
+            RectangleShape rec = new RectangleShape("", X, Y, Width, Height, Type) {id = id};
+            return rec;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace DrawDraw
     public interface ICommand
     {
         void ExecuteAction();
+        void RedoAction();
         void UndoAction();
     }
     public class AddRectangle : ICommand
@@ -30,6 +31,11 @@ namespace DrawDraw
         {
             objectId = canvas.InsertRectangle(new Point(_mouseState.X, _mouseState.Y));
             Console.WriteLine("ADDING");
+        }
+
+        public void RedoAction()
+        {
+            objectId = canvas.InsertRectangle(new Point(_mouseState.X, _mouseState.Y));
         }
 
         public void UndoAction()
@@ -53,20 +59,26 @@ namespace DrawDraw
             objectId = canvas.InsertCircle(new Point(_mouseState.X, _mouseState.Y));
             Console.WriteLine("ADDING");
         }
+
+        public void RedoAction()
+        {
+            objectId = canvas.InsertCircle(new Point(_mouseState.X, _mouseState.Y));
+        }
+
         public void UndoAction()
         {
             canvas.DeleteTexture(objectId);
             Console.WriteLine("REMOVING");
         }
     }
-    
     public class MoveTexure : ICommand
     {
-        private static readonly Canvas canvas = Canvas.Instance;
+        private static readonly Canvas _canvas = Canvas.Instance;
         private MouseState _mouseState;
         private List<ShapeBase> _selected;
         private List<Point> _selected_old_pos = new List<Point>();
-        private Guid objectId; 
+        private List<Point> _new_positionings = new List<Point>();
+        
 
         public MoveTexure(MouseState mouseState, List<ShapeBase> selected)
         {
@@ -80,47 +92,48 @@ namespace DrawDraw
         }
         public void ExecuteAction()
         {
-            canvas.MoveStuff(_mouseState);
+            _canvas.MoveStuff(_mouseState);
+        }
+        public void RedoAction()
+        {
+            _canvas.MoveTexure(_selected, _new_positionings);
         }
         public void UndoAction()
         {
-            canvas.MoveTexure(_selected, _selected_old_pos);
+            foreach (ShapeBase select in _selected)
+            {
+                _new_positionings.Add(new Point(select.X, select.Y));
+            }
+            _canvas.MoveTexure(_selected, _selected_old_pos);
+        }
+    }
+
+    public class ResizeTexure : ICommand
+    {
+        private static readonly Canvas _canvas = Canvas.Instance;
+        private MouseState _mouseState;
+        private ShapeBase _selected;
+
+        public ResizeTexure(MouseState mouseState)
+        {
+            this._mouseState = mouseState;
+        }
+        public void ExecuteAction()
+        {
+            _selected = _canvas.ResizeStuff(_mouseState);
+        }
+
+        public void RedoAction()
+        {
+            _selected = _canvas.ResizeTexure(_selected.id, _selected);
+        }
+
+        public void UndoAction()
+        {
+            _selected = _canvas.ResizeTexure(_selected.id, _selected);
         }
     }
     
-    // The concrete commands go here.
-    // internal class CopyCommand : Command
-    // {
-    //     // the selected data type
-    //     private Texture2D _textures;
-    //
-    //     public CopyCommand(Texture2D canvas)
-    //     {
-    //         _textures = canvas;
-    //     }
-    //
-    //     public void Execute()
-    //     {
-    //         Clipboard = canvas;
-    //     }
-    // }
-    //
-    // internal class CutCommand : Command
-    // {
-    //     // the selected data type
-    //     private readonly Canvas canvas = Canvas.Instance;
-    //
-    //     public CutCommand(Canvas canvas)
-    //     {
-    //         this.canvas = canvas;
-    //     }
-    //
-    //     public override void Execute()
-    //     {
-    //         saveBackup();
-    //         Clipboard = canvas;
-    //     }
-    // }
 
     internal class CommandHistory
     {
@@ -159,14 +172,17 @@ namespace DrawDraw
     }
     internal class ModifyCanvas
     {
-        private Texture2D Clipboard;
+        private static readonly Canvas Canvas = Canvas.Instance;
         private readonly CommandHistory history = new CommandHistory();
         private ICommand command;
 
         
         public void SetCommand(ICommand commands)
         {
-            history.Push(commands);
+            if (Canvas.MoveStage == Canvas.MoveStages.Move || Canvas.MoveStage == Canvas.MoveStages.Resize || Canvas.BtnStage == Canvas.ButtonStages.Circle || Canvas.BtnStage == Canvas.ButtonStages.Rectangle)
+            {
+                history.Push(commands);
+            }
             command = commands;
             command.ExecuteAction();
         }
@@ -185,7 +201,7 @@ namespace DrawDraw
             if (history.Redo())
             {
                 command = history.GetCurrent();
-                command.ExecuteAction();
+                command.RedoAction();
             }
         }
     }

@@ -21,10 +21,10 @@ namespace DrawDraw
         private List<ShapeBase> _textures = new List<ShapeBase>();
         private ArrayList _buttons = new ArrayList();
         private List<MoveBorders> _moveBorders = new List<MoveBorders>();
-        private ResizeBorders _resizeBorders = null;
+        public ResizeBorders _resizeBorders = null;
         private Texture2D _circleTexture;
 
-        public int MoveStage = 0;
+        public MoveStages MoveStage = 0;
         private Point _startPos;
 
         private GraphicsDevice _graphicsDevice;
@@ -170,11 +170,11 @@ namespace DrawDraw
                     {
                         _moveBorders.Add(shape.DrawBorders());
                         _startPos = new Point(mouseState.X, mouseState.Y);
-                        MoveStage = 1;
+                        MoveStage = MoveStages.Move;
                     }
                 }
             }
-            else
+            else if(MoveStage == MoveStages.Move)
             {
                 foreach (MoveBorders border in _moveBorders)
                 {
@@ -189,16 +189,16 @@ namespace DrawDraw
                     }
                 }
                 _moveBorders = new List<MoveBorders>();
-                MoveStage = 0;
+                MoveStage = MoveStages.Undefined;
             }
         }
 
-        public void ResizeStuff(MouseState mouseState)
+        public ShapeBase ResizeStuff(MouseState mouseState)
         {
             Point mousePoint = new Point(mouseState.X, mouseState.Y);
             
 //          select texture to resize
-            if (MoveStage == 0)
+            if (MoveStage == MoveStages.Undefined)
             {
                 UnSelectAllTextures();
                 
@@ -215,14 +215,14 @@ namespace DrawDraw
 //                          click click we found a shape
                             shape.ToggleSelect();
                             _resizeBorders = shape.DrawResizeBorders();
-                            MoveStage = 1;
-                            return;
+                            MoveStage = MoveStages.Select;
+                            return null;
                         }
                     }
                 }
             }
 //          We select a side to resize
-            else if(MoveStage == 1)
+            else if(MoveStage == MoveStages.Select)
             {
                 foreach (ShapeBase shape in _textures)
                 {
@@ -232,23 +232,47 @@ namespace DrawDraw
                         _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
                     }
                 }
-                MoveStage = 2;
+                MoveStage = MoveStages.Resize;
+                return null;
             }
 //          We move it to the newest location
             else
             {
-                MoveStage = 0;
+                ShapeBase selected = null;
+                MoveStage = MoveStages.Undefined;
                 foreach (ShapeBase shape in _textures)
                 {
                     if (shape.IsSelected())
                     {
+                        selected = shape.Clone(shape.id);
                         shape.Resize(_resizeBorders.SelectedSide, mousePoint, _startPos);
                         _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
                     }
                 }
                 UnSelectAllTextures();
                 _resizeBorders = null;
+                return selected;
             }
+            return null;
+        }
+        public ShapeBase ResizeTexure(Guid id, ShapeBase shape)
+        {
+            if (_textures.Count > 0)
+            {
+                int index = 0;
+                foreach (ShapeBase texture in _textures)
+                {
+                    if (texture.id == id)
+                    {
+                        break;
+                    }
+                    index++;
+                }
+                ShapeBase selected = _textures[index].Clone(_textures[index].id);
+                _textures[index] = shape;
+                return selected;
+            }
+            return null;
         }
         public void MoveTexure(List<ShapeBase> selected, List<Point> oldPos)
         {
@@ -323,6 +347,13 @@ namespace DrawDraw
             Bottom,
             Right
         }
+        public enum MoveStages
+        {
+            Undefined,
+            Select,
+            Move,
+            Resize
+        }
         public void OpenFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -395,7 +426,7 @@ namespace DrawDraw
         private void ResetCanvas()
         {
             UnSelectAllTextures();
-            MoveStage = 0;
+            MoveStage = MoveStages.Undefined;
             _moveBorders = new List<MoveBorders>();
             BtnStage = ButtonStages.Select;
         }

@@ -69,13 +69,13 @@ namespace DrawDraw
             }
 
 //          borders have been drawn ready to have them follow the mouse
-            if (_canvas.BtnStage == Canvas.ButtonStages.Move && _canvas.MoveStage == 1)
+            if (_canvas.BtnStage == Canvas.ButtonStages.Move && _canvas.MoveStage == Canvas.MoveStages.Move)
             {
                 _canvas.UpdateBorders(mouseState);
             }
             
 //          borders have been drawn ready to have them follow the mouse
-            if (_canvas.BtnStage == Canvas.ButtonStages.Resize && _canvas.MoveStage == 2)
+            if (_canvas.BtnStage == Canvas.ButtonStages.Resize && _canvas.MoveStage == Canvas.MoveStages.Resize)
             {
                 _canvas.UpdateResizeBorders(mouseState);
             }
@@ -102,7 +102,7 @@ namespace DrawDraw
                         _modifyCanvas.SetCommand(new MoveTexure(mouseState, _canvas.GetSelected()));
                         break;
                     case Canvas.ButtonStages.Resize:
-                        _canvas.ResizeStuff(mouseState);
+                        _modifyCanvas.SetCommand(new ResizeTexure(mouseState));
                         break;
                             
                 }

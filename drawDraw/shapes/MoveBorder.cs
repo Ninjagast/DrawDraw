@@ -72,14 +72,9 @@ namespace DrawDraw.shapes
             }
         }
 
-        public override MoveBorders DrawBorders()
+        public override ShapeBase Clone(Guid id)
         {
-            throw new System.Exception("Don't draw borders of borders! Are you insane???");
-        }
-
-        public override ResizeBorders DrawResizeBorders()
-        {
-            throw new System.Exception("Don't draw resize borders of borders! Are you insane???");
+            throw new NotImplementedException();
         }
     }
 }

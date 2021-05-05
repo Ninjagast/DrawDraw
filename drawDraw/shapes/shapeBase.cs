@@ -14,8 +14,8 @@ namespace DrawDraw.shapes
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-//      rectangle = 0
-//      circle = 1
+        //      rectangle = 0
+        //      circle = 1
         public int Type { get; set; }
         
         public bool Select = false;
@@ -33,8 +33,31 @@ namespace DrawDraw.shapes
         public abstract void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice);
         public abstract void Update(int x, int y, int width, int height);
         public abstract void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint);
-        public abstract MoveBorders DrawBorders();
-        public abstract ResizeBorders DrawResizeBorders();
+        public abstract ShapeBase Clone(Guid id);
+        public MoveBorders DrawBorders()
+        {
+            MoveBorders moveBorders = new MoveBorders
+            {
+                BottomMoveBorder = new MoveBorder(X, Y, Width, Height, 0),
+                TopMoveBorder = new MoveBorder(X, Y, Width, Height, 1),
+                LeftMoveBorder = new MoveBorder(X, Y, Width, Height, 2),
+                RightMoveBorder = new MoveBorder(X, Y, Width, Height, 3),
+                ShapeId = id
+            };
+            return moveBorders;
+        }
+
+        public ResizeBorders DrawResizeBorders()
+        {
+            ResizeBorders resizeBorders = new ResizeBorders()
+            {
+                BottomResizeBorder = new ResizeBorder(X, Y, Width, Height, 0),
+                TopResizeBorder = new ResizeBorder(X, Y, Width, Height, 1),
+                RightResizeBorder = new ResizeBorder(X, Y, Width, Height, 2),
+                LeftResizeBorder = new ResizeBorder(X, Y, Width, Height, 3)
+            };
+            return resizeBorders;
+        }
 
         public Point GetPoint()
         {
@@ -96,7 +119,6 @@ namespace DrawDraw.shapes
                 Console.WriteLine("bot!");
                 return Canvas.BorderSides.Bottom;
             }
-
         }
     }
 }

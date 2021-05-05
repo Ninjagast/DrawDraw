@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace DrawDraw.shapes
@@ -47,7 +48,6 @@ namespace DrawDraw.shapes
         {
             throw new System.NotImplementedException();
         }
-
         public void Update(Point currentPos, Point startPos, Canvas.BorderSides side)
         {
 //          BottomBorder 0
@@ -72,16 +72,9 @@ namespace DrawDraw.shapes
                     break;
             }
         }
-
-        public override MoveBorders DrawBorders()
+        public override ShapeBase Clone(Guid id)
         {
-            throw new System.Exception("Don't draw borders of borders! Are you insane???");
-        }
-        
-        public override ResizeBorders DrawResizeBorders()
-        {
-            throw new System.Exception("Don't draw resize borders of borders! Are you insane???");
-
+            throw new System.NotImplementedException();
         }
     }
 }
