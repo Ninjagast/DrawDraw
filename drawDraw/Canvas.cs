@@ -19,6 +19,7 @@ namespace DrawDraw
         private ArrayList _buttons = new ArrayList();
         private List<MoveBorders> _moveBorders = new List<MoveBorders>();
         private ResizeBorders _resizeBorders = null;
+        private Texture2D _circleTexture;
 
         public int MoveStage = 0;
         private Point _startPos;
@@ -35,9 +36,10 @@ namespace DrawDraw
 
         public static Canvas Instance => _instance;
 
-        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton)
+        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D circleTexture)
         {
             _graphicsDevice = graphicsDevice;
+            _circleTexture = circleTexture;
             CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton);
         }
 
@@ -59,7 +61,10 @@ namespace DrawDraw
         }
         public Guid InsertCircle(Point coords)
         {
-            _textures.Add(new CircleShape("", coords.X, coords.Y, 100, 100, 1));
+            CircleShape circle = new CircleShape("", coords.X, coords.Y, 100, 100, 1);
+            circle.Circle = _circleTexture;
+            
+            _textures.Add(circle);
             return _textures[^1].id;
         }
         

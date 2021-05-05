@@ -1,5 +1,6 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/circle.png","C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/bin/DesktopGL/circle.xnb","TextureProcessor","Texture2DContent",414,2389,0.3270725
+"C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/circleTexture.png","C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/bin/DesktopGL/circleTexture.xnb","TextureProcessor","Texture2DContent",264,3929,0.3410764
 "C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/eraser.png","C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/bin/DesktopGL/eraser.xnb","TextureProcessor","Texture2DContent",438,2389,0.0060008
 "C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/file.png","C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/bin/DesktopGL/file.xnb","TextureProcessor","Texture2DContent",442,2389,0.0080011
 "C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/move.png","C:/Users/Steven/source/repos/drawDraw/drawDraw/Content/bin/DesktopGL/move.xnb","TextureProcessor","Texture2DContent",466,2389,0.0090032

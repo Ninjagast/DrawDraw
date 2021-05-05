@@ -5,6 +5,7 @@
   <Config />
   <SourceFiles>
     <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/circle.png</File>
+    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/circleTexture.png</File>
     <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/eraser.png</File>
     <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/file.png</File>
     <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/move.png</File>
@@ -15,6 +16,7 @@
     <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/square.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

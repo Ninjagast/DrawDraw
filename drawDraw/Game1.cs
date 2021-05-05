@@ -40,8 +40,9 @@ namespace DrawDraw
             Texture2D openButton   = Content.Load<Texture2D>("Open");
             Texture2D saveButton   = Content.Load<Texture2D>("save");
             Texture2D resizeButton = Content.Load<Texture2D>("resize");
+            Texture2D CircleTexture = Content.Load<Texture2D>("circleTexture");
             
-            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton);
+            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton, CircleTexture);
         }
 
         protected override void UnloadContent()
@@ -97,7 +98,7 @@ namespace DrawDraw
                         _canvas.SelectTexture(mouseState);
                         break;
                     case Canvas.ButtonStages.Move:
-                        modifyCanvas.SetCommand(new MoveTexure(mouseState, _canvas.GetSelected()));
+                        _modifyCanvas.SetCommand(new MoveTexure(mouseState, _canvas.GetSelected()));
                         break;
                     case Canvas.ButtonStages.Resize:
                         _canvas.ResizeStuff(mouseState);
@@ -131,33 +132,6 @@ namespace DrawDraw
 
             base.Draw(gameTime);
             _spriteBatch.End();
-        }
-
-//      yoinked function from stackoverflow to generate a circle
-        private static Texture2D GenerateCircleTexture(GraphicsDevice graphicsDevice, int radius, Color color, float sharpness)
-        {
-            var diameter = radius * 2;
-            var circleTexture = new Texture2D(graphicsDevice, diameter, diameter, false, SurfaceFormat.Color);
-            var colorData = new Color[circleTexture.Width * circleTexture.Height];
-            var center = new Vector2(radius);
-            for (var colIndex = 0; colIndex < circleTexture.Width; colIndex++)
-            for (var rowIndex = 0; rowIndex < circleTexture.Height; rowIndex++)
-            {
-                var position = new Vector2(colIndex, rowIndex);
-                var distance = Vector2.Distance(center, position);
-
-                // hermite iterpolation
-                var x = distance / diameter;
-                var edge0 = radius * sharpness / diameter;
-                var edge1 = radius / (float) diameter;
-                var temp = MathHelper.Clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
-                var result = temp * temp * (3.0f - 2.0f * temp);
-
-                colorData[rowIndex * circleTexture.Width + colIndex] = color * (1f - result);
-            }
-
-            circleTexture.SetData(colorData);
-            return circleTexture;
         }
     }
 }

@@ -114,3 +114,4 @@ C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\s
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\Select.xnb
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\square.xnb
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\resize.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\circleTexture.xnb
