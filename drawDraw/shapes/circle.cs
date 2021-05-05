@@ -55,7 +55,7 @@ namespace DrawDraw.shapes
 
         public override ShapeBase Clone(Guid id)
         {
-            CircleShape shape = new CircleShape("", X, Y, Width, Height, Type) {id = id};
+            CircleShape shape = new CircleShape("", X, Y, Width, Height, Type) {id = id, Circle = Circle};
             return shape;
         }
     }
