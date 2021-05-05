@@ -59,7 +59,7 @@ namespace DrawDraw
 
         public Guid InsertRectangle(Point coords)
         {
-            _textures.Add(new RectangleShape("", coords.X, coords.Y, 100, 100, 1));
+            _textures.Add(new RectangleShape("", coords.X, coords.Y, 100, 100, 0));
             return _textures[^1].id;
         }
         public Guid InsertCircle(Point coords)
@@ -323,7 +323,6 @@ namespace DrawDraw
             Bottom,
             Right
         }
-
         public void OpenFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -341,19 +340,64 @@ namespace DrawDraw
                 ReadOnlyChecked = true,
                 ShowReadOnly = true
             };
-
+            
+            String fileContent;
+            
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                Stream file = openFileDialog.OpenFile();
+
+                using (StreamReader reader = new StreamReader(file))
+                {
+                    fileContent = reader.ReadToEnd();
+                }
+
+                List<CanvasSave> res = null;
                 
+                try
+                {
+                    res = JsonSerializer.Deserialize<List<CanvasSave>>(fileContent);
+                }
+                catch (Exception e)
+                {
+                    BtnStage = ButtonStages.Select;
+                    return;
+                }
+
+                _textures = new List<ShapeBase>();
+
+                foreach (var shape in res)
+                {
+                    try
+                    {
+                        if (shape.Type == 1)
+                        {
+                            CircleShape circle = new CircleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type);
+                            circle.Circle = _circleTexture;
+                            _textures.Add(circle);
+                        }
+                        else
+                        {
+                            _textures.Add(new RectangleShape("", shape.X, shape.Y, shape.Width, shape.Height, shape.Type));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        BtnStage = ButtonStages.Select;
+                        return;
+                    }
+                }
                 ResetCanvas();
             }
+            BtnStage = ButtonStages.Select;
         }
 
         private void ResetCanvas()
         {
-            _textures = new List<ShapeBase>();
+            UnSelectAllTextures();
             MoveStage = 0;
             _moveBorders = new List<MoveBorders>();
+            BtnStage = ButtonStages.Select;
         }
     }
 }

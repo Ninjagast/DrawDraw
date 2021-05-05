@@ -14,6 +14,8 @@ namespace DrawDraw.shapes
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+//      rectangle = 0
+//      circle = 1
         public int Type { get; set; }
         
         public bool Select = false;
