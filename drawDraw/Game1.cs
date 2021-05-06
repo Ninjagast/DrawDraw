@@ -44,9 +44,10 @@ namespace DrawDraw
             Texture2D moveButton    = Content.Load<Texture2D>("move");
             Texture2D openButton    = Content.Load<Texture2D>("Open");
             Texture2D saveButton    = Content.Load<Texture2D>("save");
+            Texture2D groupButton    = Content.Load<Texture2D>("group");
             
 //          inits the canvas with all needed textures and the graphics device
-            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton, circleTexture);
+            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, circleTexture);
         }
 
         protected override void UnloadContent()
@@ -74,13 +75,17 @@ namespace DrawDraw
                     Console.WriteLine("saaaaaaaaav");
                     _canvas.SaveFile();
                     break;
+                case Canvas.ButtonStages.Group:
+                    _canvas.GroupTextures();
+                    break;
             }
 
 //          updates the resize and move borders
             UpdateBorders(mouseState);
 
 //          mouse button handler
-            if (!_canvas.CheckButtonClick(mouseState, _prevMouseState)) // if there was no button press
+//          if there was no button press and there was a mouse click
+            if (!_canvas.CheckButtonClick(mouseState, _prevMouseState) && (_prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)) 
             {
 //              we handle the click based on the current btnState
                 MouseClick(mouseState);
@@ -111,28 +116,24 @@ namespace DrawDraw
 //      this function handles a mouse click
         private void MouseClick(MouseState mouseState)
         {
-//          we handle the click based on the current btnState
-            if (_prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released) // click with left mouse button
+//          we do different things during different times
+            switch (_canvas.BtnStage)
             {
-//              we do different things during different times
-                switch (_canvas.BtnStage)
-                {
-                    case Canvas.ButtonStages.Circle:
-                        _canvasCommands.SetCommand(new AddCircle(mouseState));
-                        break;
-                    case Canvas.ButtonStages.Rectangle:
-                        _canvasCommands.SetCommand(new AddRectangle(mouseState));
-                        break;
-                    case Canvas.ButtonStages.Select:
-                        _canvas.SelectTexture(mouseState);
-                        break;
-                    case Canvas.ButtonStages.Move:
-                        _canvasCommands.SetCommand(new MoveTexure(mouseState, _canvas.GetSelected()));
-                        break;
-                    case Canvas.ButtonStages.Resize:
-                        _canvasCommands.SetCommand(new ResizeTexure(mouseState));
-                        break;
-                }
+                case Canvas.ButtonStages.Circle:
+                    _canvasCommands.SetCommand(new AddCircle(mouseState));
+                    break;
+                case Canvas.ButtonStages.Rectangle:
+                    _canvasCommands.SetCommand(new AddRectangle(mouseState));
+                    break;
+                case Canvas.ButtonStages.Select:
+                    _canvas.SelectTexture(mouseState);
+                    break;
+                case Canvas.ButtonStages.Move:
+                    _canvasCommands.SetCommand(new MoveTexure(mouseState, _canvas.GetSelected()));
+                    break;
+                case Canvas.ButtonStages.Resize:
+                    _canvasCommands.SetCommand(new ResizeTexure(mouseState));
+                    break;
             }
         }
 
