@@ -58,5 +58,10 @@ namespace DrawDraw.shapes
             CircleShape shape = new CircleShape("", X, Y, Width, Height, Type) {id = id, Circle = Circle};
             return shape;
         }
+
+        public override ShapeBase Action(IVisitor visitor)
+        {
+            return visitor.Visit(this);
+        }
     }
 }

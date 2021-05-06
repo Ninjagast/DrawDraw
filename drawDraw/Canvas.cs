@@ -208,11 +208,11 @@ namespace DrawDraw
 //                      if the border matches the shape
                         if (shape.id == border.ShapeId)
                         {
-//                          teleport it to the new position
                             Point finalPos = border.LeftMoveBorder.LatestPos;
                             Point dimensions = shape.GetDimension();
                             
-                            shape.Update(finalPos.X, finalPos.Y, dimensions.X, dimensions.Y);
+                            MoveObject move = new MoveObject(finalPos, dimensions);
+                            shape.Action(move);
                         }
                     }
                 }
