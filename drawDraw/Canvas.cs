@@ -280,7 +280,7 @@ namespace DrawDraw
 //                      clone the selected clone for the history
                         selected = shape.Clone(shape.id);
 //                      resize the texture
-                        shape.Resize(_resizeBorders.SelectedSide, mousePoint, _startPos);
+                        shape.Action(new Resize(_resizeBorders.SelectedSide, mousePoint, _startPos));
                     }
                 }
 //              reset everything
