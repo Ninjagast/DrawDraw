@@ -49,7 +49,7 @@ namespace DrawDraw.shapes
         {
             throw new NotImplementedException();
         }
-
+        
         public void Update(Point currentPos, Point startPos)
         {
             int x = X + (currentPos.X - startPos.X);
@@ -71,8 +71,11 @@ namespace DrawDraw.shapes
                     break;
             }
         }
-
         public override ShapeBase Clone(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+        public override ShapeBase Action(IVisitor visitor)
         {
             throw new NotImplementedException();
         }

@@ -76,5 +76,10 @@ namespace DrawDraw.shapes
         {
             throw new System.NotImplementedException();
         }
+
+        public override ShapeBase Action(IVisitor visitor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

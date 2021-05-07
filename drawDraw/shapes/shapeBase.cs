@@ -34,6 +34,8 @@ namespace DrawDraw.shapes
         public abstract void Update(int x, int y, int width, int height);
         public abstract void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint);
         public abstract ShapeBase Clone(Guid id);
+        public abstract ShapeBase Action(IVisitor visitor);
+
         public MoveBorders DrawBorders()
         {
             MoveBorders moveBorders = new MoveBorders

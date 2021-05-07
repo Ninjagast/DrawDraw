@@ -67,5 +67,10 @@ namespace DrawDraw.shapes
             RectangleShape rec = new RectangleShape("", X, Y, Width, Height, Type) {id = id};
             return rec;
         }
+
+        public override ShapeBase Action(IVisitor visitor)
+        {
+            return visitor.Visit(this);
+        }
     }
 }
