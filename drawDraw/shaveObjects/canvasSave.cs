@@ -13,17 +13,25 @@ namespace DrawDraw
         
         public IComponent GetTreeStruct(Texture2D circleTexture)
         {
-            IComponent returnTree = new Composite();
             if (Branches != null)
             {
+                IComponent returnTree = new Composite();
+
                 foreach (var branch in Branches)
                 {
-                    returnTree.Add(branch.GetTreeStruct(circleTexture));
+                    IComponent res = branch.GetTreeStruct(circleTexture);
+                    if (res != null)
+                    {
+                        returnTree.Add(branch.GetTreeStruct(circleTexture));
+                    }
                 }
+                return returnTree;
             }
 
             if (Leaf != null)
             {
+                IComponent returnTree = new Composite();
+
                 foreach (var child in Leaf)
                 {
                     Leaf leaf = null;
@@ -40,8 +48,9 @@ namespace DrawDraw
                     }
                     returnTree.Add(leaf);
                 }
+                return returnTree;
             }
-            return returnTree;
+            return null;
         }
     }
 

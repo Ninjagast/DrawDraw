@@ -19,22 +19,12 @@ namespace DrawDraw
             throw new NotImplementedException();
         }
 
-        public virtual List<IComponent> GetParents(IComponent selectedBranch)
-        {
-            throw new NotImplementedException();
-        }
-        
         public virtual List<IComponent> GetAllSelectedBranches()
         {
             throw new NotImplementedException();
         }
 
         public virtual int CreateGroup()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public virtual List<ShapeBase> GetAllGroupedShapes()
         {
             throw new NotImplementedException();
         }
@@ -58,11 +48,6 @@ namespace DrawDraw
             throw new NotImplementedException();
         }
 
-        public virtual List<ShapeBase> GetBranchShapes()
-        {
-            throw new NotImplementedException();
-        }        
-        
         public virtual ShapeBase GetShape()
         {
             throw new NotImplementedException();
@@ -74,6 +59,16 @@ namespace DrawDraw
         }
 
         public virtual int GetNumChildren()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual int CountBranches()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void ReverseChildren()
         {
             throw new NotImplementedException();
         }
@@ -140,26 +135,6 @@ namespace DrawDraw
                 }
             }
             return result;
-        }
-
-        public List<ShapeBase> GetAllGroupedShapes()
-        {
-            List<ShapeBase> returnShapes = new List<ShapeBase>();
-            if (_children.Count > 1)
-            {
-                for (int index = 1; index < _children.Count; index++)
-                {
-                    foreach (var childElement in _children[index].GetAllShapes())
-                    {
-                        returnShapes.Add(childElement);
-                    }
-                }
-                return returnShapes;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         public virtual bool SelectAll(MouseState mouseState, bool target = false)
@@ -414,43 +389,28 @@ namespace DrawDraw
             }
         }
 
-        public List<IComponent> GetParents(IComponent selectedBranch)
-        {
-            List<IComponent> returnList = new List<IComponent>();
-            if (_children.Count > 0)
-            {
-                foreach (var child in _children)
-                {
-                    if (child.GetType() != typeof(Leaf))
-                    {
-                        if (child == selectedBranch)
-                        {
-                            returnList.Add(this);
-                            return returnList;
-                        }
-                    }
-                }
-
-                foreach (var child in _children)
-                {
-                    if (child.GetType() != typeof(Leaf))
-                    {
-                        List<IComponent> res = child.GetParents(selectedBranch);
-                        if (res != null)
-                        {
-                            returnList = res;
-                            returnList.Add(child);
-                            return returnList;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
         public int GetNumChildren()
         {
             return _children.Count;
+        }
+
+        public int CountBranches()
+        {
+            int num = 0;
+            foreach (var branch in _children)
+            {
+                if (branch.GetType() != typeof(Leaf))
+                {
+                    num++;
+                }
+            }
+
+            return num;
+        }
+
+        public void ReverseChildren()
+        {
+            _children.Reverse();
         }
     }
 }

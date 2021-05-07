@@ -544,18 +544,58 @@ namespace DrawDraw
 //              for all saved shapes
                 _textures = new Composite();
 
-//              #todo does not work correctly with nested groups  fix this!
                 IComponent children = res.GetTreeStruct(_circleTexture);
 
-                int index = 0;
-
-                while (children.GetNumChildren() > 0)
+                if (children.GetBranch(0).CountBranches() == 0)
                 {
                     _textures.Add(children.GetBranch(0));
                     children.Remove(0);
-                    index++;
+                }
+                else
+                {
+                    _textures.Add(new Composite());
                 }
                 
+                int index = 0;
+
+                int outsideGroup = children.GetNumChildren();
+                
+                for (int j = 0; j < outsideGroup; j++)
+                {
+                    IComponent testGroup = children;
+                    while (testGroup.GetBranch(j).CountBranches() == 1)
+                    {
+                        testGroup = testGroup.GetBranch(0);
+                    }
+
+                    testGroup.GetBranch(0).ReverseChildren();
+                    
+                    int numBranches = testGroup.GetBranch(0).CountBranches();
+
+                    IComponent insertBranch = new Composite();
+                    IComponent updateBranch = insertBranch;
+
+                    for (int i = 0; i < numBranches; i++)
+                    {
+                        if (i != 0)
+                        {
+                            int nestIndex = updateBranch.CreateGroup();
+                            Console.WriteLine("test");
+                            updateBranch = updateBranch.GetBranch(nestIndex);
+                        }
+
+                        List<ShapeBase> shapes = (testGroup.GetBranch(0).GetBranch(i).GetAllShapes());
+
+                        foreach (var shape in shapes)
+                        {
+                            updateBranch.Add(new Leaf(shape));
+                        }
+                    }
+                    _textures.Add(insertBranch);
+                    
+                    children.Remove(0);
+                    index++;
+                }
             }
 //          we always reset the button stage
             BtnStage = ButtonStages.Select;
