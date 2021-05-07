@@ -148,19 +148,8 @@ namespace DrawDraw
                 }
             }
 
-            IComponent branches = null;
-            int startBranch = 1;
-            while ((branches = _textures.GetEntireBranch(startBranch)) != null)
-            {
-                if (branches.SelectAll(mouseState))
-                {
-                    return;
-                }
-                startBranch++;
-            }
- 
-//          unselect everything if we have not clicked on anything
-            UnSelectAllTextures();
+            _textures.SelectAll(mouseState);
+            
         }
 
 //      returns all selected shapes
@@ -343,20 +332,57 @@ namespace DrawDraw
                 }
             }
 
-            Console.WriteLine("selected texures = " + _numSelectedTextures);
-            Console.WriteLine("non grouped selected texures = " + selectedNonGroupShapes);
             if (selectedNonGroupShapes != _numSelectedTextures) // if a group is selected
             {
-                IComponent branch = _textures.GetSelectedBranch();
-                List<ShapeBase> nonGroupedShapes = _textures.GetNonGroupedSelectedshapes();
-                int branchIndex = branch.CreateGroup();
-
-                foreach (var shape in nonGroupedShapes)
+                if (selectedNonGroupShapes == 0)
                 {
-                    branch.GetBranch(branchIndex).Add(new Leaf(shape));
+                    Console.WriteLine("grouping a group with a group");
+                    List<IComponent> branches = _textures.GetAllSelectedBranches();
+
+                    foreach (var branch in branches)
+                    {
+                        _textures.Remove(branch);
+                    }
+
+                    int index = _textures.CreateGroup();
+
+                    IComponent insertBranch = _textures.GetBranch(index);
+                    bool first = true;
+                    
+                    
+                    foreach (var branch in branches)
+                    {
+                        if (!first)
+                        {
+                            index = insertBranch.CreateGroup();
+                            insertBranch = insertBranch.GetBranch(index);
+                        }
+                        else
+                        {
+                            first = false;
+                        }
+                        
+                        foreach (var shape in branch.GetAllShapes())
+                        {
+                            insertBranch.Add(new Leaf(shape));
+                        }
+                    }
+                    
+                    UnSelectAllTextures();
+
                 }
-                
-                Console.WriteLine("xd");
+                else
+                {
+                    IComponent branch = _textures.GetSelectedBranch();
+                    List<ShapeBase> nonGroupedShapes = _textures.GetNonGroupedSelectedshapes();
+
+                    foreach (var shape in nonGroupedShapes)
+                    {
+                        branch.Add(new Leaf(shape));
+                    }
+                    UnSelectAllTextures();
+                    Console.WriteLine("grouping non group with group");
+                }
             }
             else // if a group is not selected
             {
@@ -379,6 +405,7 @@ namespace DrawDraw
                 if (exit)
                 {
                     BtnStage = ButtonStages.Select;
+                    UnSelectAllTextures();
                     return;
                 }
                 
@@ -387,7 +414,7 @@ namespace DrawDraw
                     int groupIndex = _textures.CreateGroup();
                     foreach (ShapeBase groupShape in groupShapes)
                     {
-                        _textures.GetEntireBranch(groupIndex).Add(new Leaf(groupShape));
+                        _textures.GetBranch(groupIndex).Add(new Leaf(groupShape));
                     }
 
                     while (removeIndexes.Count > 0)
@@ -396,9 +423,11 @@ namespace DrawDraw
                         removeIndexes.RemoveAt(removeIndexes.Count - 1);
                     }
                     BtnStage = ButtonStages.Select;
+                    UnSelectAllTextures();
                     return;
                 }
             }
+            UnSelectAllTextures();
             BtnStage = ButtonStages.Select;
         }
         
@@ -514,20 +543,19 @@ namespace DrawDraw
 
 //              for all saved shapes
                 _textures = new Composite();
-                _textures.Add(new Composite());
 
 //              #todo does not work correctly with nested groups  fix this!
-                List<IComponent> children = res.GetTreeStruct(_circleTexture);
-                
-                foreach (var child in children[0].GetAllShapes())
+                IComponent children = res.GetTreeStruct(_circleTexture);
+
+                int index = 0;
+
+                while (children.GetNumChildren() > 0)
                 {
-                    _textures._children[0].Add(new Leaf(child));
+                    _textures.Add(children.GetBranch(0));
+                    children.Remove(0);
+                    index++;
                 }
                 
-                children.RemoveAt(0);
-
-                _textures._children = children;
-
             }
 //          we always reset the button stage
             BtnStage = ButtonStages.Select;

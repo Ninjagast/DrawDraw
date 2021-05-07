@@ -1,0 +1,3 @@
+﻿Lesser bugs I'm 2 lazy to fix rn
+
+Toggle select should be different functions so we can not have a cat and mouse game when we unselect group members.

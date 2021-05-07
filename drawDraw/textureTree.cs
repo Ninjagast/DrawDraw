@@ -11,9 +11,20 @@ namespace DrawDraw
     public interface IComponent
     {
         public List<ShapeBase> GetAllShapes();
+        
         public String Save();
 
-        public virtual bool SelectAll(MouseState mouseState)
+        public virtual bool SelectAll(MouseState mouseState, bool target = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual List<IComponent> GetParents(IComponent selectedBranch)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public virtual List<IComponent> GetAllSelectedBranches()
         {
             throw new NotImplementedException();
         }
@@ -61,6 +72,11 @@ namespace DrawDraw
         {
             throw new NotImplementedException();
         }
+
+        public virtual int GetNumChildren()
+        {
+            throw new NotImplementedException();
+        }
     }
     
     // is a item in a tree or branch
@@ -101,19 +117,6 @@ namespace DrawDraw
         public IComponent GetFirstChild()
         {
             return _children[0];
-        }
-
-        public IComponent GetEntireBranch(int index)
-        {
-            if (_children.Count > index)
-            {
-                return _children[index];
-            }
-            else
-            {
-                Console.WriteLine("Out of bounds exception");
-                return null;
-            }
         }
         
         public void Remove(IComponent component)
@@ -159,29 +162,37 @@ namespace DrawDraw
             }
         }
 
-        public virtual bool SelectAll(MouseState mouseState)
+        public virtual bool SelectAll(MouseState mouseState, bool target = false)
         {
 //          for all leaves in this branch
             List<IComponent> branchShapes = GetBranchShapes();
             if (branchShapes != null)
             {
-                foreach (var leaf in GetBranchShapes())
+                foreach (var leaf in branchShapes)
                 {
-//                  if it is the shape we are looking for
-                    if (Canvas.PointWithinShape(leaf.GetShape(), mouseState))
+//                  if it is the shape we are looking for or if it is a child branch of the target branch
+                    if (Canvas.PointWithinShape(leaf.GetShape(), mouseState) || target)
                     {
-//                      select everything in this branch
-                        foreach (var nestedLeaf in GetBranchShapes())
+                        Console.WriteLine("this is the branch or a target branch");
+//                      select everything in this branch and its branches
+                        foreach (var child in _children)
                         {
-                            if (nestedLeaf.GetShape().IsSelected())
+                            if (child.GetType() == typeof(Leaf))
                             {
-                                Canvas.Instance._numSelectedTextures--;
+                                if (child.GetShape().IsSelected())
+                                {
+                                    Canvas.Instance._numSelectedTextures--;
+                                }
+                                else
+                                {
+                                    Canvas.Instance._numSelectedTextures++;
+                                }
+                                child.GetShape().ToggleSelect();
                             }
                             else
                             {
-                                Canvas.Instance._numSelectedTextures++;
+                                child.SelectAll(mouseState, true);
                             }
-                            nestedLeaf.GetShape().ToggleSelect();
                         }
 //                      and return true
                         return true;
@@ -192,6 +203,8 @@ namespace DrawDraw
 //          if we have not found the correct leave
 
 //          for all children
+            bool foundit = false;
+            List<ShapeBase> allShapes = null;
             foreach (var child in _children)
             {
 //              if it is not a leaf
@@ -200,24 +213,11 @@ namespace DrawDraw
 //                  we call this function again
                     if (child.SelectAll(mouseState))
                     {
-//                      if this branch has the target branch
-                        foreach (var leaves in GetBranchShapes())
-                        {
-//                          we select all shapes in the branch
-                            if (leaves.GetShape().IsSelected())
-                            {
-                                Canvas.Instance._numSelectedTextures--;
-                            }
-                            else
-                            {
-                                Canvas.Instance._numSelectedTextures++;
-                            }
-                            leaves.GetShape().ToggleSelect();
-                        }
                         return true;
                     }
                 }
             }
+
             return false;
         }
 
@@ -286,27 +286,40 @@ namespace DrawDraw
 
         public IComponent GetSelectedBranch()
         {
+            bool first = true;
             foreach (var child in _children)
             {
-                IComponent res = null;
-                if (child.GetType() != typeof(Leaf))
+                if (first)
                 {
-                    res = child.GetSelectedBranch();
+                    first = false;
                 }
-
-                if (res != null)
+                else
                 {
-                    return res;
+                    IComponent res = null;
+                    if (child.GetType() != typeof(Leaf))
+                    {
+                        res = child.GetSelectedBranch();
+                    }
+
+                    if (res != null)
+                    {
+                        return res;
+                    }
                 }
             }
 
-            bool allSelected = true;
+            bool allSelected = false;
+            List<IComponent> leaves = GetBranchShapes();
             
-            foreach (var leaf in GetBranchShapes())
+            if (leaves != null)
             {
-                if (!leaf.GetShape().IsSelected())
+                allSelected = true;
+                foreach (var leaf in GetBranchShapes())
                 {
-                    allSelected = false;
+                    if (!leaf.GetShape().IsSelected())
+                    {
+                        allSelected = false;
+                    }
                 }
             }
 
@@ -346,7 +359,98 @@ namespace DrawDraw
 
         public IComponent GetBranch(int branchIndex)
         {
-            return _children[branchIndex];
+            if (_children.Count > branchIndex)
+            {
+                return _children[branchIndex];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<IComponent> GetAllSelectedBranches()
+        {
+            List<IComponent> returnList = new List<IComponent>();
+            foreach (var child in _children)
+            {
+                if (child.GetType() != typeof(Leaf))
+                {
+                    List<IComponent> res = child.GetAllSelectedBranches();
+                    if (res != null)
+                    {
+                        returnList.AddRange(res);
+                    }
+                }
+            }
+
+            bool allSelected = false;
+            List<IComponent> leaves = GetBranchShapes();
+            
+            if (leaves != null)
+            {
+                allSelected = true;
+                foreach (var leaf in GetBranchShapes())
+                {
+                    if (!leaf.GetShape().IsSelected())
+                    {
+                        allSelected = false;
+                    }
+                }
+            }
+            
+            if (allSelected)
+            {
+                returnList.Add(this);
+                return returnList;
+            }
+            if (returnList.Count > 0)
+            {
+                return returnList;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<IComponent> GetParents(IComponent selectedBranch)
+        {
+            List<IComponent> returnList = new List<IComponent>();
+            if (_children.Count > 0)
+            {
+                foreach (var child in _children)
+                {
+                    if (child.GetType() != typeof(Leaf))
+                    {
+                        if (child == selectedBranch)
+                        {
+                            returnList.Add(this);
+                            return returnList;
+                        }
+                    }
+                }
+
+                foreach (var child in _children)
+                {
+                    if (child.GetType() != typeof(Leaf))
+                    {
+                        List<IComponent> res = child.GetParents(selectedBranch);
+                        if (res != null)
+                        {
+                            returnList = res;
+                            returnList.Add(child);
+                            return returnList;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public int GetNumChildren()
+        {
+            return _children.Count;
         }
     }
 }

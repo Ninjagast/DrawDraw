@@ -10,17 +10,15 @@ namespace DrawDraw
     {
         public List<CanvasSave> Branches { get; set; }
         public List<canvasChild> Leaf { get; set; }
-
-        public List<IComponent> GetTreeStruct(Texture2D circleTexture)
+        
+        public IComponent GetTreeStruct(Texture2D circleTexture)
         {
-            List<IComponent> returnList = new List<IComponent>();
-            returnList.Add(new Composite());
-
+            IComponent returnTree = new Composite();
             if (Branches != null)
             {
                 foreach (var branch in Branches)
                 {
-                    returnList.AddRange(branch.GetTreeStruct(circleTexture));
+                    returnTree.Add(branch.GetTreeStruct(circleTexture));
                 }
             }
 
@@ -40,11 +38,10 @@ namespace DrawDraw
                         shape.Circle = circleTexture;
                         leaf = new Leaf(shape);
                     }
-                    returnList[0].Add(leaf);
+                    returnTree.Add(leaf);
                 }
             }
-
-            return returnList;
+            return returnTree;
         }
     }
 
