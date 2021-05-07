@@ -30,9 +30,10 @@ namespace DrawDraw
         private GraphicsDevice _graphicsDevice;
         public ButtonStages BtnStage;
 
+        public int _numSelectedTextures = 0;
+
         // main tree for the textures / groups
         private Composite _textures = new Composite();
-        private bool _selectedGroup = false;
 
         //      private constructor for singleton
         private Canvas()
@@ -134,6 +135,14 @@ namespace DrawDraw
             {
                 if (PointWithinShape(shape, mouseState))
                 {
+                    if (shape.IsSelected())
+                    {
+                        _numSelectedTextures--;
+                    }
+                    else
+                    {
+                        _numSelectedTextures++;
+                    }
                     shape.ToggleSelect();
                     return;
                 }
@@ -145,7 +154,6 @@ namespace DrawDraw
             {
                 if (branches.SelectAll(mouseState))
                 {
-                    Console.WriteLine("Found it biiitch");
                     return;
                 }
                 startBranch++;
@@ -326,11 +334,31 @@ namespace DrawDraw
         
         public void GroupTextures()
         {
-            if (_selectedGroup)
+            int selectedNonGroupShapes = 0;
+            foreach (var shape in _textures.GetFirstChild().GetAllShapes())
             {
-                
+                if (shape.IsSelected())
+                {
+                    selectedNonGroupShapes++;
+                }
             }
-            else
+
+            Console.WriteLine("selected texures = " + _numSelectedTextures);
+            Console.WriteLine("non grouped selected texures = " + selectedNonGroupShapes);
+            if (selectedNonGroupShapes != _numSelectedTextures) // if a group is selected
+            {
+                IComponent branch = _textures.GetSelectedBranch();
+                List<ShapeBase> nonGroupedShapes = _textures.GetNonGroupedSelectedshapes();
+                int branchIndex = branch.CreateGroup();
+
+                foreach (var shape in nonGroupedShapes)
+                {
+                    branch.GetBranch(branchIndex).Add(new Leaf(shape));
+                }
+                
+                Console.WriteLine("xd");
+            }
+            else // if a group is not selected
             {
                 bool exit = true;
                 int index = 0;
@@ -367,10 +395,10 @@ namespace DrawDraw
                         _textures.GetFirstChild().Remove(removeIndexes[removeIndexes.Count - 1]);
                         removeIndexes.RemoveAt(removeIndexes.Count - 1);
                     }
+                    BtnStage = ButtonStages.Select;
                     return;
                 }
             }
-
             BtnStage = ButtonStages.Select;
         }
         
@@ -413,14 +441,20 @@ namespace DrawDraw
                 
 //              write the data to it
 
-
-
                 string json = _textures.Save();
-                
-                json = json.Remove(json.Length - 1);
-                json = json.Remove(json.Length - 2);
-                json += "]";
 
+                json = json.Remove(json.Length - 1);
+
+                var searchText="Branches";
+                var arr=json.Split(new char[]{' ','\"'});
+                var count=Array.FindAll(arr, s => s.Equals(searchText.Trim())).Length;
+
+                while (count != 0)
+                {
+                    json = json + "]}";
+                    count--;
+                }
+                
                 stream.Write(System.Text.Encoding.UTF8.GetBytes(json));
                 
                 stream.Close();
@@ -472,6 +506,7 @@ namespace DrawDraw
                 {
 //                  not a valid save file
                     BtnStage = ButtonStages.Select;
+                    Console.WriteLine("invalid save");
                     return;
                 }
 //              we can reset the entire canvas
@@ -479,22 +514,26 @@ namespace DrawDraw
 
 //              for all saved shapes
                 _textures = new Composite();
-                try
+                _textures.Add(new Composite());
+
+//              #todo does not work correctly with nested groups  fix this!
+                List<IComponent> children = res.GetTreeStruct(_circleTexture);
+                
+                foreach (var child in children[0].GetAllShapes())
                 {
-                    _textures._children = res.Children;
+                    _textures._children[0].Add(new Leaf(child));
                 }
-                catch (Exception e)
-                {
-//                  not a valid save file
-                    BtnStage = ButtonStages.Select;
-                    return;
-                }
+                
+                children.RemoveAt(0);
+
+                _textures._children = children;
+
             }
 //          we always reset the button stage
             BtnStage = ButtonStages.Select;
         }
          
-//      ######reset functions######
+//       ######reset functions######
 //       resets the entire canvas to an empty state
          private void ResetCanvas()
          {
@@ -511,6 +550,7 @@ namespace DrawDraw
 //      unselects all textures
         private void UnSelectAllTextures()
         {
+            _numSelectedTextures = 0;
             foreach (ShapeBase shape in _textures.GetAllShapes())
             {
                 if (shape.IsSelected())
