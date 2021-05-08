@@ -584,6 +584,38 @@ namespace DrawDraw
                             updateBranch = updateBranch.GetBranch(nestIndex);
                         }
 
+                        int count = testGroup.GetBranch(0).GetBranch(i).CountBranches(); 
+                        
+                        if(count > 0)
+                        {
+                            IComponent nestingBranch = new Composite();
+                            IComponent pointBranch = nestingBranch;
+                            bool first = true;
+                            for (int NestIndex = 0; NestIndex < count; NestIndex++)
+                            {
+                                if (first)
+                                {
+                                    first = false;
+                                }
+                                else
+                                {
+                                    int newIndex = pointBranch.GetBranch(0).CreateGroup();
+                                    pointBranch = pointBranch.GetBranch(0).GetBranch(newIndex);
+                                }
+
+                                if(testGroup.GetBranch(0).GetBranch(i).GetBranch(NestIndex).GetBranch(0).GetType() == typeof(Leaf))
+                                {
+                                    pointBranch.Add(testGroup.GetBranch(0).GetBranch(i).GetBranch(NestIndex));
+                                }
+                                else
+                                {
+                                    pointBranch.Add(testGroup.GetBranch(0).GetBranch(i).GetBranch(NestIndex).GetBranch(0));
+                                }
+                            }
+                            _textures.Add(nestingBranch);
+                            continue;
+                        }
+                        
                         List<ShapeBase> shapes = (testGroup.GetBranch(0).GetBranch(i).GetAllShapes());
 
                         foreach (var shape in shapes)
