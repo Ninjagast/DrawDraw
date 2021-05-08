@@ -809,7 +809,7 @@ namespace DrawDraw
                         foreach (ShapeBase shape in branch.GetAllShapes())
                         {
                             int newScore = shape.X + shape.Y;
-                            if (score > newScore);
+                            if (newScore < score)
                             {
                                 score = (shape.X + shape.Y);
                                 result = shape;
