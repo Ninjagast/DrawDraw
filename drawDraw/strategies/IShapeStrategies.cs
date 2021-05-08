@@ -6,7 +6,7 @@ namespace DrawDraw.strategies
 {
     public interface IStrategy
     {
-        public void Draw(ShapeBase shape, SpriteBatch spriteBatch, Texture2D texture = null);
+        public void Draw(ShapeBase shape, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice);
 
         public void Resize(ShapeBase shape, Canvas.BorderSides selectedSide, Point mousePoint, Point startPoint);
     }

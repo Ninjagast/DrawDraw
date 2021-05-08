@@ -13,9 +13,9 @@ namespace DrawDraw.strategies
             _strategy = strategy;
         }
 
-        public void Draw(ShapeBase shape, SpriteBatch spriteBatch, Texture2D texture = null)
+        public void Draw(ShapeBase shape, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
-            _strategy.Draw(shape, spriteBatch, texture);
+            _strategy.Draw(shape, spriteBatch, graphicsDevice);
         }
 
         public void Resize(ShapeBase shape, Canvas.BorderSides selectedSide, Point mousePoint, Point startPoint)

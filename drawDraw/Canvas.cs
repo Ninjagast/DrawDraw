@@ -710,14 +710,13 @@ namespace DrawDraw
                 if (texture.GetType() == typeof(CircleShape))
                 {
                     _context.SetStrategy(CircleStrat.Instance);
-                    _context.Draw(texture, spriteBatch);
                 }
                 else
                 {
-                    Texture2D texture2D = new Texture2D(_graphicsDevice, 1 , 1);
                     _context.SetStrategy(RectangleStrat.Instance);
-                    _context.Draw(texture, spriteBatch, texture2D);
                 }
+                
+                _context.Draw(texture, spriteBatch, _graphicsDevice);
             }
             
             foreach (ButtonBase button in _buttons)
