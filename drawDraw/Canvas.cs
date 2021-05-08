@@ -475,63 +475,71 @@ namespace DrawDraw
 
         public void AddTextureCaption(String message, MouseState mouseState)
         {
-            Point mousePoint = new Point(mouseState.X, mouseState.Y);
-//          if we have not selected a texture to resize
-            if (MoveStage == MoveStages.Undefined)
+            if (_textures.GetSelectedBranch() == null)
             {
-                UnSelectAllTextures();
-                
-//              for all shapes
-                foreach (ShapeBase shape in _textures.GetAllShapes())
+                Point mousePoint = new Point(mouseState.X, mouseState.Y);
+    //          if we have not selected a texture to resize
+                if (MoveStage == MoveStages.Undefined)
                 {
-//                  if the click location is within this shape
-                    if (PointWithinShape(shape, mouseState))
+                    UnSelectAllTextures();
+                    
+    //              for all shapes
+                    foreach (ShapeBase shape in _textures.GetAllShapes())
                     {
-//                      we select it draw resize borders and move onto the next move stage
-                        shape.ToggleSelect();
-                        _resizeBorders = shape.DrawResizeBorders();
-                        MoveStage      = MoveStages.Select;
-                        break;
-                    }
-                }
-                return;
-            }
-//          if have selected a texture to resize
-            else if(MoveStage == MoveStages.Select)
-            {
-//              for all shapes
-                foreach (ShapeBase shape in _textures.GetAllShapes())
-                {
-//                  if it is selected
-                    if (shape.IsSelected())
-                    {
-//                      we check which side we have just selected and save the start pos
-                        _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
-                        switch (_resizeBorders.SelectedSide)
+    //                  if the click location is within this shape
+                        if (PointWithinShape(shape, mouseState))
                         {
-                            case BorderSides.Top:
-                                shape.AddCaption(new TopCaptions(shape.Caption, "NEW MESSAGE T"));
-                                break;
-                            case BorderSides.Right:
-                                shape.AddCaption(new RightCaptions(shape.Caption, "NEW MESSAGE R"));
-                                break;
-                            case BorderSides.Bottom:
-                                shape.AddCaption(new BottomCaptions(shape.Caption, "NEW MESSAGE B"));
-                                break;
-                            case BorderSides.Left:
-                                shape.AddCaption(new LeftCaptions(shape.Caption, "NEW MESSAGE L"));
-                                break;
+    //                      we select it draw resize borders and move onto the next move stage
+                            shape.ToggleSelect();
+                            _resizeBorders = shape.DrawResizeBorders();
+                            MoveStage      = MoveStages.Select;
+                            break;
                         }
-                        Console.WriteLine(shape.Caption.GetCaption());
-                        break;
                     }
+                    return;
                 }
-                
-//              we move onto the next resize stage 
-                BtnStage = ButtonStages.Caption;
-                MoveStage = MoveStages.Undefined;
-                _resizeBorders = null;
-                return;
+    //          if have selected a texture to resize
+                else if(MoveStage == MoveStages.Select)
+                {
+    //              for all shapes
+                    foreach (ShapeBase shape in _textures.GetAllShapes())
+                    {
+    //                  if it is selected
+                        if (shape.IsSelected())
+                        {
+    //                      we check which side we have just selected and save the start pos
+                            _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
+                            switch (_resizeBorders.SelectedSide)
+                            {
+                                case BorderSides.Top:
+                                    shape.AddCaption(new TopCaptions(shape.Caption, "NEW MESSAGE T"));
+                                    break;
+                                case BorderSides.Right:
+                                    shape.AddCaption(new RightCaptions(shape.Caption, "NEW MESSAGE R"));
+                                    break;
+                                case BorderSides.Bottom:
+                                    shape.AddCaption(new BottomCaptions(shape.Caption, "NEW MESSAGE B"));
+                                    break;
+                                case BorderSides.Left:
+                                    shape.AddCaption(new LeftCaptions(shape.Caption, "NEW MESSAGE L"));
+                                    break;
+                            }
+                            Console.WriteLine(shape.Caption.GetCaption());
+                            break;
+                        }
+                    }
+                    
+    //              we move onto the next resize stage 
+                    BtnStage = ButtonStages.Caption;
+                    MoveStage = MoveStages.Undefined;
+                    _resizeBorders = null;
+                    return;
+                }
+            }
+            else
+            {
+                IComponent branch = _textures.GetSelectedBranch();
+                branch.SetCaption("Group Caption");
             }
         }
         
@@ -790,6 +798,30 @@ namespace DrawDraw
                 button.Draw(spriteBatch, _graphicsDevice);
             }
 
+            foreach (IComponent branch in _textures.GetAllBranches())
+            {
+                if (branch._caption != null)
+                {
+                    if (branch._caption.Length > 0)
+                    {
+                        ShapeBase result = null;
+                        int score = 999999999;
+                        foreach (ShapeBase shape in branch.GetAllShapes())
+                        {
+                            int newScore = shape.X + shape.Y;
+                            if (score > newScore);
+                            {
+                                score = (shape.X + shape.Y);
+                                result = shape;
+                            }
+                        }
+
+                        if (result != null)
+                            spriteBatch.DrawString(_font,branch._caption, new Vector2(result.X, result.Y), Color.Black);
+                    }
+                }
+            }
+
             foreach (MoveBorders border in _moveBorders)
             {
                 border.BottomMoveBorder.Draw(spriteBatch, _graphicsDevice);
@@ -797,7 +829,6 @@ namespace DrawDraw
                 border.RightMoveBorder.Draw(spriteBatch, _graphicsDevice);
                 border.LeftMoveBorder.Draw(spriteBatch, _graphicsDevice);
             }
-
             _resizeBorders?.drawBorder(spriteBatch, _graphicsDevice);
         }
 

@@ -73,6 +73,13 @@
 /processorParam:TextureFormat=Color
 /build:file.png
 
+#begin fonts.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts.spritefont
+
 #begin group.png
 /importer:TextureImporter
 /processor:TextureProcessor

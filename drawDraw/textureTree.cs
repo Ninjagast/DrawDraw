@@ -11,8 +11,8 @@ namespace DrawDraw
     public interface IComponent
     {
         public List<ShapeBase> GetAllShapes();
-        
         public String Save();
+        public string _caption { get; set; }
 
         public virtual bool SelectAll(MouseState mouseState, bool target = false)
         {
@@ -72,13 +72,18 @@ namespace DrawDraw
         {
             throw new NotImplementedException();
         }
+        
+        public void SetCaption(string caption)
+        {
+            _caption = caption;
+        }
     }
     
     // is a item in a tree or branch
     class Leaf : IComponent
     {
         public ShapeBase _shape { get; set; }
-
+        public string _caption { get; set; }
         public Leaf(ShapeBase shape)
         {
             _shape = shape;
@@ -93,6 +98,7 @@ namespace DrawDraw
             return JsonSerializer.Serialize(_shape);
         }
 
+
         public ShapeBase GetShape()
         {
             return _shape;
@@ -103,27 +109,23 @@ namespace DrawDraw
     class Composite : IComponent
     {
         public List<IComponent> _children { get; set; } = new List<IComponent>();
-
+        public string _caption { get; set; }
         public void Add(IComponent component)
         {
             _children.Add(component);
         }
-
         public IComponent GetFirstChild()
         {
             return _children[0];
         }
-        
         public void Remove(IComponent component)
         {
             _children.Remove(component);
         }
-
         public void Remove(int index)
         {
             _children.RemoveAt(index);
         }
-        
         public List<ShapeBase> GetAllShapes()
         {
             List<ShapeBase> result = new List<ShapeBase>();
@@ -136,7 +138,6 @@ namespace DrawDraw
             }
             return result;
         }
-
         public virtual bool SelectAll(MouseState mouseState, bool target = false)
         {
 //          for all leaves in this branch
@@ -208,6 +209,19 @@ namespace DrawDraw
             }
             return shapes.Count > 0 ? shapes : null;
         }
+        
+        public virtual List<IComponent> GetAllBranches()
+        {
+            List<IComponent> branches = new List<IComponent>();
+            foreach (var child in _children)
+            {
+                if (child.GetType() != typeof(Leaf))
+                {
+                    branches.Add(child);
+                }
+            }
+            return branches;
+        }
 
         public int CreateGroup()
         {
@@ -243,7 +257,6 @@ namespace DrawDraw
 //          returns the json
             return result;
         }
-
         private string FormatShapes(List<IComponent> shapes)
         {
 //          if there are shapes in this branch

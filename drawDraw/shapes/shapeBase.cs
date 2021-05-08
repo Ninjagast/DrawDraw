@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.ComTypes;
 using DrawDraw.Decorators;
 using Microsoft.Xna.Framework;
@@ -20,7 +21,8 @@ namespace DrawDraw.shapes
         public int Type { get; set; }
         
         public bool Select = false;
-        public Captions Caption = new ConcreteCaptions();
+        public Captions Caption = new ConcreteCaptions() ;
+        public List<StorageText> storageText { get; set; } = new List<StorageText>();
 
         public virtual Texture2D GetCircle()
         {
@@ -51,6 +53,7 @@ namespace DrawDraw.shapes
         public void AddCaption(Decorator decorator)
         {
             Caption = decorator;
+            storageText = Caption.GetCaption();
         }
         
         public abstract ShapeBase Clone(Guid id);
