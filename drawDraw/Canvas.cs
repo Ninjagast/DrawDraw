@@ -46,16 +46,16 @@ namespace DrawDraw
         
 //      ######Initialization functions######
 //      init function for setting up the textures and creating all the buttons
-        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton, Texture2D circleTexture)
+        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton,Texture2D clearButton, Texture2D circleTexture)
         {
             _textures.Add(new Composite());
             _graphicsDevice = graphicsDevice;
             _circleTexture = circleTexture;
-            CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton);
+            CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton, clearButton);
         }
 
 //      creates all buttons
-        private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton)
+        private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton, Texture2D clearButton)
         {
             _buttons.Add(new RectangleButton(0,   0, squareButton, "Rectangle", ButtonStages.Rectangle));
             _buttons.Add(new CircleButton(   70,  0, circleButton, "Circle",    ButtonStages.Circle));
@@ -65,6 +65,7 @@ namespace DrawDraw
             _buttons.Add(new SaveButton(     350, 0, saveButton,   "Save",      ButtonStages.Save));
             _buttons.Add(new ResizeButton(   420, 0, resizeButton, "Resize",    ButtonStages.Resize));
             _buttons.Add(new GroupButton(    490, 0, groupButton,  "Group",     ButtonStages.Group));
+            _buttons.Add(new ClearButton(    560, 0, clearButton,  "Clear",     ButtonStages.Clear));
         }
 
 //      ######Insertion / delete functions######
@@ -635,7 +636,7 @@ namespace DrawDraw
          
 //       ######reset functions######
 //       resets the entire canvas to an empty state
-         private void ResetCanvas()
+         public void ResetCanvas()
          {
              UnSelectAllTextures();
              _textures = new Composite();
@@ -696,7 +697,8 @@ namespace DrawDraw
             Open,
             Save,
             Group,
-            Resize
+            Resize,
+            Clear
         }
         
         public enum BorderSides

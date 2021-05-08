@@ -122,3 +122,4 @@ C:\Users\Greyb\OneDrive\NHL\DesignPaterns\project\drawapp\drawDraw\bin\Debug\net
 C:\Users\Greyb\OneDrive\NHL\DesignPaterns\project\drawapp\drawDraw\bin\Debug\netcoreapp3.1\Content\square.xnb
 C:\Users\Greyb\OneDrive\NHL\DesignPaterns\project\drawapp\drawDraw\bin\Debug\netcoreapp3.1\Content\circleTexture.xnb
 C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\group.xnb
+C:\Users\Steven\source\repos\drawDraw\DrawDraw\bin\Debug\netcoreapp3.1\Content\emptyCanvas.xnb

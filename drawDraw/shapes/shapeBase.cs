@@ -93,32 +93,24 @@ namespace DrawDraw.shapes
             int distanceToTop = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), top.ToVector2()));
             int distanceToBottom = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), bot.ToVector2()));
 
-//          BottomBorder 0
-//          TopBorder 1
-//          LeftBorder 2
-//          RightBorder 3
             if (distanceToRight <= distanceToLeft && distanceToRight <= distanceToTop && distanceToRight <= distanceToBottom)
             {
 //              clicked on the right border
-                Console.WriteLine("right!");
                 return Canvas.BorderSides.Right;
             }
             else if (distanceToLeft <= distanceToRight && distanceToLeft <= distanceToTop && distanceToLeft <= distanceToBottom)
             {
 //              clicked on the left border
-                Console.WriteLine("left!");
                 return Canvas.BorderSides.Left;
             }
             else if (distanceToTop <= distanceToRight && distanceToTop <= distanceToLeft && distanceToTop <= distanceToBottom)
             {
 //              clicked on the top border
-                Console.WriteLine("top!");
                 return Canvas.BorderSides.Top;
             }
             else
             {
 //              clicked on the bottom border
-                Console.WriteLine("bot!");
                 return Canvas.BorderSides.Bottom;
             }
         }

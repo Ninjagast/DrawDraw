@@ -1,2 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/emptyCanvas.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/emptyCanvas.xnb","TextureProcessor","Texture2DContent",421,2389,0.1470607
 "C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/group.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/group.xnb","TextureProcessor","Texture2DContent",445,2389,0.1482419
