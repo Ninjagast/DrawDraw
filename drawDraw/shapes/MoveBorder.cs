@@ -32,7 +32,7 @@ namespace DrawDraw.shapes
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
             Texture2D texture;
             texture = new Texture2D(graphicsDevice, 1, 1);
@@ -40,18 +40,6 @@ namespace DrawDraw.shapes
             spriteBatch.Draw(texture, _border, Color.White);
         }
 
-        public override void Update(int x, int y, int width, int height)
-        {
-//          can't update a border here
-            throw new System.NotImplementedException();
-        }
-
-        public override void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint)
-        {
-//          resize a move border? Yh right!
-            throw new NotImplementedException();
-        }
-        
 //      actual update function which makes the border follow the mouse
         public void Update(Point currentPos, Point startPos)
         {

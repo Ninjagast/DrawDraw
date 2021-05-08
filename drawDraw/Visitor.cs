@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DrawDraw.shapes;
+using DrawDraw.strategies;
 
 namespace DrawDraw
 {

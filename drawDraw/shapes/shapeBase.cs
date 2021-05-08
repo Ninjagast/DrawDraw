@@ -20,6 +20,21 @@ namespace DrawDraw.shapes
         
         public bool Select = false;
 
+        public virtual Texture2D GetCircle()
+        {
+            throw new NotImplementedException();
+        }        
+        
+        public virtual Rectangle GetNewRectangle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void SetRectangle(Rectangle rectangle)
+        {
+            throw new NotImplementedException();
+        }
+        
         protected ShapeBase(int x, int y, int width, int height, int type)
         {
             id = Guid.NewGuid();
@@ -29,10 +44,7 @@ namespace DrawDraw.shapes
             Height = height;
             Type = type;
         }
-
-        public abstract void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice);
-        public abstract void Update(int x, int y, int width, int height);
-        public abstract void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint);
+        
         public abstract ShapeBase Clone(Guid id);
         public abstract ShapeBase Action(IVisitor visitor);
 
@@ -49,6 +61,14 @@ namespace DrawDraw.shapes
             return moveBorders;
         }
 
+        public void Update(int x, int y, int width, int height)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+        
         public ResizeBorders DrawResizeBorders()
         {
             ResizeBorders resizeBorders = new ResizeBorders()

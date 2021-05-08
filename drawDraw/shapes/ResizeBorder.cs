@@ -30,7 +30,7 @@ namespace DrawDraw.shapes
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
             Texture2D texture;
             texture = new Texture2D(graphicsDevice, 1, 1);
@@ -38,16 +38,6 @@ namespace DrawDraw.shapes
             spriteBatch.Draw(texture, _border, Color.White);
         }
 
-        public override void Update(int x, int y, int width, int height)
-        {
-            
-            throw new System.NotImplementedException();
-        }
-
-        public override void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint)
-        {
-            throw new System.NotImplementedException();
-        }
         public void Update(Point currentPos, Point startPos, Canvas.BorderSides side)
         {
 //          BottomBorder 0

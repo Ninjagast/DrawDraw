@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Text.Json;
 using System.Windows.Forms;
 using System.Xml;
+using DrawDraw.strategies;
 using ButtonBase = DrawDraw.buttons.ButtonBase;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
@@ -23,6 +24,7 @@ namespace DrawDraw
         private        List<MoveBorders> _moveBorders   = new List<MoveBorders>();
         private        ResizeBorders     _resizeBorders;
         private        Texture2D         _circleTexture;
+        private        Context           _context;
 
         public MoveStages MoveStage = 0;
         
@@ -51,6 +53,7 @@ namespace DrawDraw
             _textures.Add(new Composite());
             _graphicsDevice = graphicsDevice;
             _circleTexture = circleTexture;
+            _context = new Context();
             CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton, clearButton);
         }
 
@@ -278,7 +281,7 @@ namespace DrawDraw
 //                      clone the selected clone for the history
                         selected = shape.Clone(shape.id);
 //                      resize the texture
-                        shape.Action(new Resize(_resizeBorders.SelectedSide, mousePoint, _startPos));
+                        shape.Action(new Resize(_resizeBorders.SelectedSide, mousePoint, _startPos, _context));
                     }
                 }
 //              reset everything
@@ -704,7 +707,17 @@ namespace DrawDraw
         {
             foreach (ShapeBase texture in _textures.GetAllShapes())
             {
-                texture.Draw(spriteBatch, _graphicsDevice);
+                if (texture.GetType() == typeof(CircleShape))
+                {
+                    _context.SetStrategy(CircleStrat.Instance);
+                    _context.Draw(texture, spriteBatch);
+                }
+                else
+                {
+                    Texture2D texture2D = new Texture2D(_graphicsDevice, 1 , 1);
+                    _context.SetStrategy(RectangleStrat.Instance);
+                    _context.Draw(texture, spriteBatch, texture2D);
+                }
             }
             
             foreach (ButtonBase button in _buttons)
