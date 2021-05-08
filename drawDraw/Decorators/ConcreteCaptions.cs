@@ -1,60 +1,67 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DrawDraw.Decorators
 {
     public class TopCaptions : Decorator
     {
-        private String _message;
+        private string _message;
         public TopCaptions(Captions captions, String message) : base(captions)
         {
             _message = message;
         }
 
-        public override string GetCaption()
+        public override List<StorageText> GetCaption()
         {
-            return base.GetCaption() + "{Top : " + _message + "}";
+            List<StorageText> storageText = base.GetCaption();
+            storageText.Add(new StorageText(0, _message));
+            return storageText;
         }
     }    
     
-    public class BottomCaptions : Decorator
-    {
-        private String _message;
-        public BottomCaptions(Captions captions, String message) : base(captions)
-        {
-            _message = message;
-        }
-        
-        public override string GetCaption()
-        {
-            return base.GetCaption() + "{Bottom : " + _message + "}";
-        }
-    }
-    
     public class RightCaptions : Decorator
     {
-        private String _message;
+        private string _message;
         public RightCaptions(Captions captions, String message) : base(captions)
         {
             _message = message;
         }
         
-        public override string GetCaption()
+        public override List<StorageText> GetCaption()
         {
-            return base.GetCaption() + "{Right : " + _message + "}";
+            List<StorageText> storageText = base.GetCaption();
+            storageText.Add(new StorageText(1, _message));
+            return storageText;
+        }
+    }
+    
+    public class BottomCaptions : Decorator
+    {
+        private string _message;
+        public BottomCaptions(Captions captions, String message) : base(captions)
+        {
+            _message = message;
+        }
+        public override List<StorageText> GetCaption()
+        {
+            List<StorageText> storageText = base.GetCaption();
+            storageText.Add(new StorageText(2, _message));
+            return storageText;
         }
     }
     
     public class LeftCaptions : Decorator
     {
-        private String _message;
+        private string _message;
         public LeftCaptions(Captions captions, String message) : base(captions)
         {
             _message = message;
         }
-        
-        public override string GetCaption()
+        public override List<StorageText> GetCaption()
         {
-            return base.GetCaption() + "{Left : " + _message + "}";
+            List<StorageText> storageText = base.GetCaption();
+            storageText.Add(new StorageText(3, _message));
+            return storageText;
         }
     }
 }

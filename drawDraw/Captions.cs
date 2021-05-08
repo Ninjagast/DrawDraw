@@ -1,19 +1,33 @@
-﻿namespace DrawDraw
+﻿using System.Collections.Generic;
+
+namespace DrawDraw
 {
     // The base Component interface defines operations that can be altered by
     // decorators.
     public abstract class Captions
     {
-        public abstract string GetCaption();
+        public abstract List<StorageText> GetCaption();
     }
     
     // Concrete Components provide default implementations of the operations.
     // There might be several variations of these classes.
     public class ConcreteCaptions : Captions
     {
-        public override string GetCaption()
+        public override List<StorageText> GetCaption()
         {
-            return "";
+            return new List<StorageText>();
+        }
+    }
+
+    public class StorageText
+    {
+        public int _side;
+        public string _message;
+
+        public StorageText(int side, string message)
+        {
+            _side = side;
+            _message = message;
         }
     }
 }

@@ -43,9 +43,10 @@ namespace DrawDraw
             Texture2D groupButton   = Content.Load<Texture2D>("group");
             Texture2D clearButton   = Content.Load<Texture2D>("emptyCanvas");
             Texture2D captionButton = Content.Load<Texture2D>("emptyCanvas");
+            SpriteFont font = Content.Load<SpriteFont>("fonts");
             
 //          inits the canvas with all needed textures and the graphics device
-            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, clearButton, circleTexture, captionButton);
+            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, clearButton, circleTexture, captionButton, font);
         }
         protected override void UnloadContent()
         {

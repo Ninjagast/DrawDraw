@@ -27,7 +27,8 @@ namespace DrawDraw
         private        ResizeBorders     _resizeBorders;
         private        Texture2D         _circleTexture;
         private        Context           _context;
-
+        public         SpriteFont        _font;
+        
         public MoveStages MoveStage = 0;
         
         private Point _startPos;
@@ -50,12 +51,13 @@ namespace DrawDraw
         
 //      ######Initialization functions######
 //      init function for setting up the textures and creating all the buttons
-        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton,Texture2D clearButton, Texture2D circleTexture, Texture2D captionTexture)
+        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton,Texture2D clearButton, Texture2D circleTexture, Texture2D captionTexture, SpriteFont font)
         {
             _textures.Add(new Composite());
             _graphicsDevice = graphicsDevice;
             _circleTexture = circleTexture;
             _context = new Context();
+            _font = font;
             CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton, clearButton, captionTexture);
         }
 
@@ -526,7 +528,7 @@ namespace DrawDraw
                 }
                 
 //              we move onto the next resize stage 
-                BtnStage = ButtonStages.Select;
+                BtnStage = ButtonStages.Caption;
                 MoveStage = MoveStages.Undefined;
                 _resizeBorders = null;
                 return;

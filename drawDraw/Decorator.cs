@@ -1,4 +1,7 @@
-﻿namespace DrawDraw
+﻿using System;
+using System.Collections.Generic;
+
+namespace DrawDraw
 {
     // The base Decorator class follows the same interface as the other
     // components. The primary purpose of this class is to define the wrapping
@@ -14,15 +17,11 @@
             this._captions = captions;
         }
 
-        public void SetComponent(Captions captions)
+        // The Decorator delegates all work to the wrapped component.
+        public override List<StorageText> GetCaption()
         {
-            this._captions = captions;
+            return _captions.GetCaption();
         }
 
-        // The Decorator delegates all work to the wrapped component.
-        public override string GetCaption()
-        {
-            return this._captions != null ? this._captions.GetCaption() : string.Empty;
-        }
     }
 }

@@ -1,2 +1,4 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/emptyCanvas.png","C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/bin/DesktopGL/Content/emptyCanvas.xnb","TextureProcessor","Texture2DContent",421,2389,0.2297904
+"C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/file.png","C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/bin/DesktopGL/Content/file.xnb","TextureProcessor","Texture2DContent",442,2389,0.2900015
+"C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/fonts.spritefont","C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/bin/DesktopGL/Content/fonts.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21538,0.2315068
