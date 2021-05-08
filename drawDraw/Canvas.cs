@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using DrawDraw.buttons;
 using DrawDraw.shapes;
@@ -11,6 +12,7 @@ using System.Text.Json;
 using System.Windows.Forms;
 using System.Xml;
 using DrawDraw.strategies;
+using DrawDraw.Decorators;
 using ButtonBase = DrawDraw.buttons.ButtonBase;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
@@ -48,27 +50,28 @@ namespace DrawDraw
         
 //      ######Initialization functions######
 //      init function for setting up the textures and creating all the buttons
-        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton,Texture2D clearButton, Texture2D circleTexture)
+        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton,Texture2D clearButton, Texture2D circleTexture, Texture2D captionTexture)
         {
             _textures.Add(new Composite());
             _graphicsDevice = graphicsDevice;
             _circleTexture = circleTexture;
             _context = new Context();
-            CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton, clearButton);
+            CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton, clearButton, captionTexture);
         }
 
 //      creates all buttons
-        private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton, Texture2D clearButton)
+        private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton, Texture2D clearButton, Texture2D captionTexture)
         {
-            _buttons.Add(new RectangleButton(0,   0, squareButton, "Rectangle", ButtonStages.Rectangle));
-            _buttons.Add(new CircleButton(   70,  0, circleButton, "Circle",    ButtonStages.Circle));
-            _buttons.Add(new SelectButton(   140, 0, selectButton, "Select",    ButtonStages.Select));
-            _buttons.Add(new MoveButton(     210, 0, moveButton,   "Move",      ButtonStages.Move));
-            _buttons.Add(new OpenButton(     280, 0, openButton,   "Open",      ButtonStages.Open));
-            _buttons.Add(new SaveButton(     350, 0, saveButton,   "Save",      ButtonStages.Save));
-            _buttons.Add(new ResizeButton(   420, 0, resizeButton, "Resize",    ButtonStages.Resize));
-            _buttons.Add(new GroupButton(    490, 0, groupButton,  "Group",     ButtonStages.Group));
-            _buttons.Add(new ClearButton(    560, 0, clearButton,  "Clear",     ButtonStages.Clear));
+            _buttons.Add(new RectangleButton(0,   0, squareButton,  "Rectangle", ButtonStages.Rectangle));
+            _buttons.Add(new CircleButton(   70,  0, circleButton,  "Circle",    ButtonStages.Circle));
+            _buttons.Add(new SelectButton(   140, 0, selectButton,  "Select",    ButtonStages.Select));
+            _buttons.Add(new MoveButton(     210, 0, moveButton,    "Move",      ButtonStages.Move));
+            _buttons.Add(new OpenButton(     280, 0, openButton,    "Open",      ButtonStages.Open));
+            _buttons.Add(new SaveButton(     350, 0, saveButton,    "Save",      ButtonStages.Save));
+            _buttons.Add(new ResizeButton(   420, 0, resizeButton,  "Resize",    ButtonStages.Resize));
+            _buttons.Add(new GroupButton(    490, 0, groupButton,   "Group",     ButtonStages.Group));
+            _buttons.Add(new ClearButton(    560, 0, clearButton,   "Clear",     ButtonStages.Clear));
+            _buttons.Add(new CaptionButtons( 610, 0, captionTexture,"Caption",   ButtonStages.Caption));
         }
 
 //      ######Insertion / delete functions######
@@ -173,7 +176,6 @@ namespace DrawDraw
             }
             return selected;
         }
-
 //      moves stuff
         public void MoveStuff(MouseState mouseState)
         {
@@ -468,6 +470,68 @@ namespace DrawDraw
         {
             _resizeBorders.Update(mouseState, _startPos);
         }
+
+        public void AddTextureCaption(String message, MouseState mouseState)
+        {
+            Point mousePoint = new Point(mouseState.X, mouseState.Y);
+//          if we have not selected a texture to resize
+            if (MoveStage == MoveStages.Undefined)
+            {
+                UnSelectAllTextures();
+                
+//              for all shapes
+                foreach (ShapeBase shape in _textures.GetAllShapes())
+                {
+//                  if the click location is within this shape
+                    if (PointWithinShape(shape, mouseState))
+                    {
+//                      we select it draw resize borders and move onto the next move stage
+                        shape.ToggleSelect();
+                        _resizeBorders = shape.DrawResizeBorders();
+                        MoveStage      = MoveStages.Select;
+                        break;
+                    }
+                }
+                return;
+            }
+//          if have selected a texture to resize
+            else if(MoveStage == MoveStages.Select)
+            {
+//              for all shapes
+                foreach (ShapeBase shape in _textures.GetAllShapes())
+                {
+//                  if it is selected
+                    if (shape.IsSelected())
+                    {
+//                      we check which side we have just selected and save the start pos
+                        _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
+                        switch (_resizeBorders.SelectedSide)
+                        {
+                            case BorderSides.Top:
+                                shape.AddCaption(new TopCaptions(shape.Caption, "NEW MESSAGE T"));
+                                break;
+                            case BorderSides.Right:
+                                shape.AddCaption(new RightCaptions(shape.Caption, "NEW MESSAGE R"));
+                                break;
+                            case BorderSides.Bottom:
+                                shape.AddCaption(new BottomCaptions(shape.Caption, "NEW MESSAGE B"));
+                                break;
+                            case BorderSides.Left:
+                                shape.AddCaption(new LeftCaptions(shape.Caption, "NEW MESSAGE L"));
+                                break;
+                        }
+                        Console.WriteLine(shape.Caption.GetCaption());
+                        break;
+                    }
+                }
+                
+//              we move onto the next resize stage 
+                BtnStage = ButtonStages.Select;
+                MoveStage = MoveStages.Undefined;
+                _resizeBorders = null;
+                return;
+            }
+        }
         
 //      ######file I/O functions######
 //      saves a file
@@ -747,7 +811,8 @@ namespace DrawDraw
             Save,
             Group,
             Resize,
-            Clear
+            Clear,
+            Caption
         }
         
         public enum BorderSides

@@ -4,18 +4,18 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/circle.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/circleTexture.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/emptyCanvas.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/eraser.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/file.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/group.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/move.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/Open.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/resize.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/save.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/Select.png</File>
-    <File>C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/square.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/circle.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/circleTexture.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/emptyCanvas.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/eraser.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/file.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/group.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/move.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/Open.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/resize.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/save.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/Select.png</File>
+    <File>C:/Users/Greyb/OneDrive/NHL/DesignPaterns/project/drawapp/drawDraw/Content/square.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices.ComTypes;
+using DrawDraw.Decorators;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Xceed.Wpf.Toolkit.Converters;
@@ -19,6 +20,7 @@ namespace DrawDraw.shapes
         public int Type { get; set; }
         
         public bool Select = false;
+        public Captions Caption = new ConcreteCaptions();
 
         public virtual Texture2D GetCircle()
         {
@@ -35,6 +37,8 @@ namespace DrawDraw.shapes
             throw new NotImplementedException();
         }
         
+        
+
         protected ShapeBase(int x, int y, int width, int height, int type)
         {
             id = Guid.NewGuid();
@@ -43,6 +47,10 @@ namespace DrawDraw.shapes
             Width = width;
             Height = height;
             Type = type;
+        }
+        public void AddCaption(Decorator decorator)
+        {
+            Caption = decorator;
         }
         
         public abstract ShapeBase Clone(Guid id);
@@ -80,7 +88,7 @@ namespace DrawDraw.shapes
             };
             return resizeBorders;
         }
-
+        
         public Point GetPoint()
         {
             return new Point(X, Y);

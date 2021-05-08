@@ -244,7 +244,7 @@ namespace DrawDraw
             {
                 history.Push(commands);
             } 
-            else if (Canvas.BtnStage == Canvas.ButtonStages.Group)
+            else if (Canvas.BtnStage == Canvas.ButtonStages.Clear)
             {
                 history.ClearHistory();
             }

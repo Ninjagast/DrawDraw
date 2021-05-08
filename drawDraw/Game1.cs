@@ -42,9 +42,10 @@ namespace DrawDraw
             Texture2D saveButton    = Content.Load<Texture2D>("save");
             Texture2D groupButton   = Content.Load<Texture2D>("group");
             Texture2D clearButton   = Content.Load<Texture2D>("emptyCanvas");
+            Texture2D captionButton = Content.Load<Texture2D>("emptyCanvas");
             
 //          inits the canvas with all needed textures and the graphics device
-            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, clearButton, circleTexture);
+            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, clearButton, circleTexture, captionButton);
         }
         protected override void UnloadContent()
         {
@@ -129,6 +130,9 @@ namespace DrawDraw
                     break;
                 case Canvas.ButtonStages.Resize:
                     _canvasCommands.SetCommand(new ResizeTexure(mouseState));
+                    break;
+                case Canvas.ButtonStages.Caption:
+                    _canvas.AddTextureCaption("asd",mouseState);
                     break;
             }
         }
