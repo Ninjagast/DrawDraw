@@ -11,25 +11,21 @@ namespace DrawDraw
     {
 //      creates the first and only instance of the canvas class
         private readonly Canvas _canvas = Canvas.Instance;
+//      Save the previus mouseState
         private MouseState _prevMouseState;
-        
 //      changes and modifies the canvas
         private CanvasCommands _canvasCommands = new CanvasCommands();
-        
         private SpriteBatch _spriteBatch;
-        
         public Game1()
         {
             new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
-
         protected override void Initialize()
         {
             base.Initialize();
         }
-
 //      loads the content of the "game" aka mouse buttons and the circleTexture
         protected override void LoadContent()
         {
@@ -50,12 +46,10 @@ namespace DrawDraw
 //          inits the canvas with all needed textures and the graphics device
             _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, clearButton, circleTexture);
         }
-
         protected override void UnloadContent()
         {
             Content.Unload();
         }
-
 //      update function for behaviour
         protected override void Update(GameTime gameTime)
         {
@@ -69,18 +63,18 @@ namespace DrawDraw
             switch (_canvas.BtnStage)
             {
                 case Canvas.ButtonStages.Open:
-                    Console.WriteLine("oooopen");
+                    Console.WriteLine("Open");
                     _canvas.OpenFile();
                     break;
                 case Canvas.ButtonStages.Save:
-                    Console.WriteLine("saaaaaaaaav");
+                    Console.WriteLine("Save");
                     _canvas.SaveFile();
                     break;
                 case Canvas.ButtonStages.Group:
-                    _canvas.GroupTextures();
+                    _canvasCommands.SetCommand(new GroupTexure());
                     break;
                 case Canvas.ButtonStages.Clear:
-                    _canvas.ResetCanvas();
+                    _canvasCommands.SetCommand(new ClearCanvas());
                     break;
             }
 
@@ -103,7 +97,6 @@ namespace DrawDraw
             
             base.Update(gameTime);
         }
-
 //      this function checks for all the button presses
         private void CheckButtonPress(MouseState mouseState)
         {
@@ -116,7 +109,6 @@ namespace DrawDraw
                 _canvasCommands.RedoActions();
             }
         }
-
 //      this function handles a mouse click
         private void MouseClick(MouseState mouseState)
         {
@@ -140,7 +132,6 @@ namespace DrawDraw
                     break;
             }
         }
-
 //      makes the borders follow the mouse
         private void UpdateBorders(MouseState mouseState)
         {
@@ -155,11 +146,9 @@ namespace DrawDraw
                 _canvas.UpdateResizeBorders(mouseState);
             }
         }
-        
 //      ##########################
 //      ###End update functions###
 //      ##########################
-        
         protected override void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
