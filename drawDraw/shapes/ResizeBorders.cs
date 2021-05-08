@@ -18,7 +18,8 @@ namespace DrawDraw.shapes
         public ResizeBorder BottomResizeBorder;
         public Guid ShapeId;
         public Canvas.BorderSides SelectedSide = Canvas.BorderSides.Undefined;
-
+        
+//      we update the border based on the side the user has selected
         public void Update(MouseState mouseState, Point startPos)
         {
             if (SelectedSide == Canvas.BorderSides.Bottom)
@@ -51,8 +52,10 @@ namespace DrawDraw.shapes
             }
         }
 
+//      draws the border 
         public void drawBorder(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
+//          draws all borders if the user has not selected a side yet
             if (SelectedSide == Canvas.BorderSides.Undefined)
             {
                 LeftResizeBorder.Draw(spriteBatch, graphicsDevice);
@@ -60,6 +63,7 @@ namespace DrawDraw.shapes
                 TopResizeBorder.Draw(spriteBatch, graphicsDevice);
                 BottomResizeBorder.Draw(spriteBatch, graphicsDevice);
             }
+//          else draws only the selected border
             else
             {
                 switch (SelectedSide)

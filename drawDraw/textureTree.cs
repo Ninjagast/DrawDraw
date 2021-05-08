@@ -223,18 +223,24 @@ namespace DrawDraw
             bool first = true;
             foreach (var child in _children)
             {
+//              if it is not a leaf
                 if (child.GetType() != typeof(Leaf))
                 {
+//                  we nest the branch
                     if (first)
                     {
                         result += "{\"Branches\":[";
                     }
+//                  and call this function
                     result += child.Save();
                     first = false;
                 }
             }
+            
+//          formats the shapes into this branch
             List<IComponent> shapes = GetBranchShapes();
             result += FormatShapes(shapes);
+//          returns the json
             return result;
         }
 
@@ -255,13 +261,14 @@ namespace DrawDraw
                 result = result.Remove(result.Length - 1);
                 result += "]},";
             }
-
             return result;
         }
 
+//      gets the first selected branch
         public IComponent GetSelectedBranch()
         {
             bool first = true;
+//          for all branches in this branch
             foreach (var child in _children)
             {
                 if (first)
@@ -273,6 +280,7 @@ namespace DrawDraw
                     IComponent res = null;
                     if (child.GetType() != typeof(Leaf))
                     {
+//                      recall this function
                         res = child.GetSelectedBranch();
                     }
 
@@ -282,12 +290,15 @@ namespace DrawDraw
                     }
                 }
             }
-
+            
+//          if this is a branch with only leaves
             bool allSelected = false;
             List<IComponent> leaves = GetBranchShapes();
             
+//          if it has leaves
             if (leaves != null)
             {
+//              we check if all of them are selected
                 allSelected = true;
                 foreach (var leaf in GetBranchShapes())
                 {
@@ -297,7 +308,7 @@ namespace DrawDraw
                     }
                 }
             }
-
+//          if it is? return this branch otherwise return null
             if (allSelected)
             {
                 return this;
@@ -308,6 +319,7 @@ namespace DrawDraw
             }
         }
 
+//      getsAll non grouped shapes and removes them from the tree
         public List<ShapeBase> GetNonGroupedSelectedshapes()
         {
             List<ShapeBase> shapes = new List<ShapeBase>();
@@ -344,6 +356,7 @@ namespace DrawDraw
             }
         }
 
+//      works the same as the singular branch function "GetSelectedBranch"
         public List<IComponent> GetAllSelectedBranches()
         {
             List<IComponent> returnList = new List<IComponent>();

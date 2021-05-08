@@ -24,7 +24,7 @@ namespace DrawDraw.buttons
             Name = name;
         }
         
-        // @return true: If a player enters the button with mouse
+        // @return true: if the player has clicked on this button
         protected bool CheckClick(MouseState mouseState)
         {
             Point point = new Point(mouseState.X, mouseState.Y);

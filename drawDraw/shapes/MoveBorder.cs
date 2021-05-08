@@ -42,14 +42,17 @@ namespace DrawDraw.shapes
 
         public override void Update(int x, int y, int width, int height)
         {
+//          can't update a border here
             throw new System.NotImplementedException();
         }
 
         public override void Resize(Canvas.BorderSides resizeBordersSelectedSide, Point mousePoint, Point startPoint)
         {
+//          resize a move border? Yh right!
             throw new NotImplementedException();
         }
         
+//      actual update function which makes the border follow the mouse
         public void Update(Point currentPos, Point startPos)
         {
             int x = X + (currentPos.X - startPos.X);

@@ -322,8 +322,10 @@ namespace DrawDraw
             }
         }
         
+//      groups textures
         public void GroupTextures()
         {
+//          get all selected non group shapes
             int selectedNonGroupShapes = 0;
             foreach (var shape in _textures.GetFirstChild().GetAllShapes())
             {
@@ -333,26 +335,33 @@ namespace DrawDraw
                 }
             }
 
-            if (selectedNonGroupShapes != _numSelectedTextures) // if a group is selected
+//          if there are selected shapes missing then a group is selected
+            if (selectedNonGroupShapes != _numSelectedTextures)
             {
+//              if there are only groups selected
                 if (selectedNonGroupShapes == 0)
                 {
-                    Console.WriteLine("grouping a group with a group");
+//                  get a list of all selected branches
                     List<IComponent> branches = _textures.GetAllSelectedBranches();
 
+//                  remove all these branches from the tree
                     foreach (var branch in branches)
                     {
                         _textures.Remove(branch);
                     }
 
+//                  create a new group for these groups
                     int index = _textures.CreateGroup();
 
+//                  make a branch pointer
                     IComponent insertBranch = _textures.GetBranch(index);
+                    
                     bool first = true;
                     
-                    
+//                  for all selected branches
                     foreach (var branch in branches)
                     {
+//                      the first one does not need a new group
                         if (!first)
                         {
                             index = insertBranch.CreateGroup();
@@ -362,7 +371,7 @@ namespace DrawDraw
                         {
                             first = false;
                         }
-                        
+//                      insert all shapes
                         foreach (var shape in branch.GetAllShapes())
                         {
                             insertBranch.Add(new Leaf(shape));
@@ -370,19 +379,20 @@ namespace DrawDraw
                     }
                     
                     UnSelectAllTextures();
-
                 }
                 else
                 {
+//                  we are adding a non group with a group #todo make this function grab the last selected branch
                     IComponent branch = _textures.GetSelectedBranch();
                     List<ShapeBase> nonGroupedShapes = _textures.GetNonGroupedSelectedshapes();
 
+//                  for all shapes in the non grouped shapes
                     foreach (var shape in nonGroupedShapes)
                     {
+//                      we add it to the selected branch
                         branch.Add(new Leaf(shape));
                     }
                     UnSelectAllTextures();
-                    Console.WriteLine("grouping non group with group");
                 }
             }
             else // if a group is not selected
@@ -391,10 +401,13 @@ namespace DrawDraw
                 int index = 0;
                 List<int> removeIndexes = new List<int>(); 
                 List<ShapeBase> groupShapes = new List<ShapeBase>();
+//              for all selected shapes in the non group group
                 foreach (ShapeBase shape in _textures.GetFirstChild().GetAllShapes())
                 {
+//                  if it is selected
                     if (shape.IsSelected())
                     {
+//                      add it to the group
                         groupShapes.Add(shape);
                         removeIndexes.Add(index);
                         exit = false;
@@ -403,6 +416,7 @@ namespace DrawDraw
                     index++;
                 }
 
+//              if there are no selected textures
                 if (exit)
                 {
                     BtnStage = ButtonStages.Select;
@@ -410,14 +424,16 @@ namespace DrawDraw
                     return;
                 }
                 
+//              if there are group shapes
                 if (groupShapes.Count > 0)
                 {
+//                  we put it in the group
                     int groupIndex = _textures.CreateGroup();
                     foreach (ShapeBase groupShape in groupShapes)
                     {
                         _textures.GetBranch(groupIndex).Add(new Leaf(groupShape));
                     }
-
+//                  and we remove all grouped shapes from the main branch
                     while (removeIndexes.Count > 0)
                     {
                         _textures.GetFirstChild().Remove(removeIndexes[removeIndexes.Count - 1]);
@@ -469,31 +485,36 @@ namespace DrawDraw
 //              open the file
                 stream = saveFileDialog.OpenFile();
                 
-//              write the data to it
-
+//              create the json
                 string json = _textures.Save();
 
+//              remove the last ,
                 json = json.Remove(json.Length - 1);
 
+//              For each branch we close it
                 var searchText="Branches";
                 var arr=json.Split(new char[]{' ','\"'});
                 var count=Array.FindAll(arr, s => s.Equals(searchText.Trim())).Length;
-
+                
+//              close it
                 while (count != 0)
                 {
                     json = json + "]}";
                     count--;
                 }
                 
+//              write it to the file
                 stream.Write(System.Text.Encoding.UTF8.GetBytes(json));
                 
+//              close the stream
                 stream.Close();
             }
+//          return to the select functionality
             BtnStage = ButtonStages.Select;
         }
         
 //      opens a file
-         public void OpenFile()
+        public void OpenFile()
         {
 //          opens the file dialog and sets all settings
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -542,9 +563,9 @@ namespace DrawDraw
 //              we can reset the entire canvas
                 ResetCanvas();
 
-//              for all saved shapes
                 _textures = new Composite();
 
+//              gets the tree struct
                 IComponent children = res.GetTreeStruct(_circleTexture);
 
                 if (children.GetBranch(0).CountBranches() == 0)
@@ -559,25 +580,31 @@ namespace DrawDraw
                 
                 int index = 0;
 
+//              get all children outside
                 int outsideGroup = children.GetNumChildren();
                 
+//              for all children outside
                 for (int j = 0; j < outsideGroup; j++)
                 {
-                    IComponent testGroup = children;
-                    while (testGroup.GetBranch(j).CountBranches() == 1)
+//                  we look for the branch with the children
+                    IComponent payLoad = children;
+                    while (payLoad.GetBranch(j).CountBranches() == 1)
                     {
-                        testGroup = testGroup.GetBranch(0);
+                        payLoad = payLoad.GetBranch(0);
                     }
-
-                    testGroup.GetBranch(0).ReverseChildren();
                     
-                    int numBranches = testGroup.GetBranch(0).CountBranches();
+//                  we reverse the children back in order
+                    payLoad.GetBranch(0).ReverseChildren();
+                    
+                    int numBranches = payLoad.GetBranch(0).CountBranches();
 
                     IComponent insertBranch = new Composite();
                     IComponent updateBranch = insertBranch;
 
+//                  for all branches
                     for (int i = 0; i < numBranches; i++)
                     {
+//                      we don't have to create a group for the first shape
                         if (i != 0)
                         {
                             int nestIndex = updateBranch.CreateGroup();
@@ -585,13 +612,16 @@ namespace DrawDraw
                             updateBranch = updateBranch.GetBranch(nestIndex);
                         }
 
-                        int count = testGroup.GetBranch(0).GetBranch(i).CountBranches(); 
-                        
+                        int count = payLoad.GetBranch(0).GetBranch(i).CountBranches(); 
+            
+//                      if this branch has branches
                         if(count > 0)
                         {
+//                          we nest this branch so that the groups persist
                             IComponent nestingBranch = new Composite();
                             IComponent pointBranch = nestingBranch;
                             bool first = true;
+//                          for all nested branches
                             for (int NestIndex = 0; NestIndex < count; NestIndex++)
                             {
                                 if (first)
@@ -604,28 +634,35 @@ namespace DrawDraw
                                     pointBranch = pointBranch.GetBranch(0).GetBranch(newIndex);
                                 }
 
-                                if(testGroup.GetBranch(0).GetBranch(i).GetBranch(NestIndex).GetBranch(0).GetType() == typeof(Leaf))
+//                              if it is not the last branch
+                                if(payLoad.GetBranch(0).GetBranch(i).GetBranch(NestIndex).GetBranch(0).GetType() == typeof(Leaf))
                                 {
-                                    pointBranch.Add(testGroup.GetBranch(0).GetBranch(i).GetBranch(NestIndex));
+//                                  insert the last branch
+                                    pointBranch.Add(payLoad.GetBranch(0).GetBranch(i).GetBranch(NestIndex));
                                 }
                                 else
                                 {
-                                    pointBranch.Add(testGroup.GetBranch(0).GetBranch(i).GetBranch(NestIndex).GetBranch(0));
+//                                  insert the last branch
+                                    pointBranch.Add(payLoad.GetBranch(0).GetBranch(i).GetBranch(NestIndex).GetBranch(0));
                                 }
                             }
                             _textures.Add(nestingBranch);
                             continue;
                         }
                         
-                        List<ShapeBase> shapes = (testGroup.GetBranch(0).GetBranch(i).GetAllShapes());
+//                      for all shapes
+                        List<ShapeBase> shapes = payLoad.GetBranch(0).GetBranch(i).GetAllShapes();
 
+//                      for all shapes we add it to the updateBranch
                         foreach (var shape in shapes)
                         {
                             updateBranch.Add(new Leaf(shape));
                         }
                     }
+//                  we insert this new nested branch
                     _textures.Add(insertBranch);
                     
+//                  and remove it from the result array
                     children.Remove(0);
                     index++;
                 }
