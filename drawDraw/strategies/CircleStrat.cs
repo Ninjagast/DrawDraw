@@ -55,7 +55,7 @@ namespace DrawDraw.strategies
         {
             Canvas _canvas = Canvas.Instance;
             List<StorageText> captions = shape.Caption.GetCaption();
-            if (shape.Caption == null && shape.saveString != null)
+            if (captions.Count == 0 && shape.saveString != null)
             {
                 List<textObject> res = JsonSerializer.Deserialize<List<textObject>>(shape.saveString);
                 

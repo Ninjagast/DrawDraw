@@ -4,6 +4,7 @@ using DrawDraw.shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Text.Json;
+using DrawDraw.Decorators;
 
 namespace DrawDraw.strategies
 {
@@ -61,6 +62,31 @@ namespace DrawDraw.strategies
         {
             Canvas _canvas = Canvas.Instance;
             List<StorageText> captions = shape.Caption.GetCaption();
+
+            if (captions.Count == 0 && shape.saveString != null)
+            {
+                List<textObject> res = JsonSerializer.Deserialize<List<textObject>>(shape.saveString);
+                
+                foreach (var textObject in res)
+                {
+                    switch (textObject.side)
+                    {
+                        case 0:
+                            shape.AddCaption(new TopCaptions(shape.Caption, "NEW MESSAGE T"));
+                            break;
+                        case 1:
+                            shape.AddCaption(new RightCaptions(shape.Caption, "NEW MESSAGE R"));
+                            break;
+                        case 2:
+                            shape.AddCaption(new BottomCaptions(shape.Caption, "NEW MESSAGE B"));
+                            break;
+                        case 3:
+                            shape.AddCaption(new LeftCaptions(shape.Caption, "NEW MESSAGE L"));
+                            break;
+                    }
+                }
+            }
+            
             foreach (StorageText caption in captions)
             {
                 switch (caption._side)

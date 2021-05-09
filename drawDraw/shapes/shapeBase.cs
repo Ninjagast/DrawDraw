@@ -54,7 +54,7 @@ namespace DrawDraw.shapes
         public void AddCaption(Decorator decorator)
         {
             Caption = decorator;
-            saveString = "{" + Caption.GetCaptionString() + "}";
+            saveString = "{\"textObject\" : [" + Caption.GetCaptionString() + "]}";
         }
         
         public abstract ShapeBase Clone(Guid id);

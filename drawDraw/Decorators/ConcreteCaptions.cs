@@ -23,7 +23,7 @@ namespace DrawDraw.Decorators
             String result = _captions.GetCaptionString();
             if (result.Length > 0)
                 result += ",";
-            result += "\"0\"" +": \""+ _message + "\"";
+            result += "{\"side\" : 0," +"\"message\" :\""+ _message + "\"}";
             return result;
         }
     }    
@@ -47,7 +47,7 @@ namespace DrawDraw.Decorators
             String result = _captions.GetCaptionString();
             if (result.Length > 0)
                 result += ",";
-            result += "\"1\"" +": \""+ _message + "\"";
+            result += "{\"side\" : 1," +"\"message\" :\""+ _message + "\"}";
             return result;
         }
     }
@@ -70,7 +70,7 @@ namespace DrawDraw.Decorators
             String result = _captions.GetCaptionString();
             if (result.Length > 0)
                 result += ",";
-            result += "\"2\"" +": \""+ _message + "\"";
+            result += "{\"side\" : 2," +"\"message\" :\""+ _message + "\"}";
             return result;
         }
     }
@@ -93,7 +93,7 @@ namespace DrawDraw.Decorators
             String result = _captions.GetCaptionString();
             if (result.Length > 0)
                 result += ",";
-            result += "\" 3 \"" +": \""+ _message + "\"";
+            result += "{\"side\" : 3," +"\"message\" :\""+ _message + "\"}";
             return result;
         }
     }
