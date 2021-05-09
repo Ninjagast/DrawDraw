@@ -678,6 +678,19 @@ namespace DrawDraw
                     IComponent insertBranch = new Composite();
                     IComponent updateBranch = insertBranch;
 
+                    if (numBranches == 0)
+                    {
+                        List<ShapeBase> shapes = payLoad.GetBranch(0).GetAllShapes();
+                        IComponent inserttBranch = new Composite();
+
+//                      for all shapes we add it to the updateBranch
+                        foreach (var shape in shapes)
+                        {
+                            inserttBranch.Add(new Leaf(shape));
+                        }
+                        _textures.Add(inserttBranch);
+                    }
+                    
 //                  for all branches
                     for (int i = 0; i < numBranches; i++)
                     {
