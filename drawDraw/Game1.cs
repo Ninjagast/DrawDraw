@@ -30,7 +30,8 @@ namespace DrawDraw
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
+            Texture2D menuBackground= Content.Load<Texture2D>("background");
             Texture2D circleTexture = Content.Load<Texture2D>("circleTexture");
             Texture2D resizeButton  = Content.Load<Texture2D>("resize");
             Texture2D circleButton  = Content.Load<Texture2D>("circle");
@@ -42,11 +43,11 @@ namespace DrawDraw
             Texture2D saveButton    = Content.Load<Texture2D>("save");
             Texture2D groupButton   = Content.Load<Texture2D>("group");
             Texture2D clearButton   = Content.Load<Texture2D>("emptyCanvas");
-            Texture2D captionButton = Content.Load<Texture2D>("emptyCanvas");
+            Texture2D captionButton = Content.Load<Texture2D>("captionCanvas");
             SpriteFont font = Content.Load<SpriteFont>("fonts");
             
 //          inits the canvas with all needed textures and the graphics device
-            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, clearButton, circleTexture, captionButton, font);
+            _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, clearButton, circleTexture, captionButton, font, menuBackground);
         }
         protected override void UnloadContent()
         {
@@ -155,15 +156,14 @@ namespace DrawDraw
 //      ###End update functions###
 //      ##########################
         protected override void Draw(GameTime gameTime)
-        {
+        {  
             _spriteBatch.Begin();
             
 //              standard background
                 GraphicsDevice.Clear(Color.CornflowerBlue);
-
 //              draws all textures
                 _canvas.Draw(_spriteBatch);
-
+                
                 base.Draw(gameTime);
             
             _spriteBatch.End();

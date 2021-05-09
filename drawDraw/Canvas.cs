@@ -51,29 +51,31 @@ namespace DrawDraw
         
 //      ######Initialization functions######
 //      init function for setting up the textures and creating all the buttons
-        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton,Texture2D clearButton, Texture2D circleTexture, Texture2D captionTexture, SpriteFont font)
+        public void Init(GraphicsDevice graphicsDevice, Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton,Texture2D clearButton, Texture2D circleTexture, Texture2D captionTexture, SpriteFont font,  Texture2D menuBackground)
         {
             _textures.Add(new Composite());
             _graphicsDevice = graphicsDevice;
             _circleTexture = circleTexture;
             _context = new Context();
             _font = font;
-            CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton, clearButton, captionTexture);
+            CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton, clearButton, captionTexture, menuBackground);
         }
 
 //      creates all buttons
-        private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton, Texture2D clearButton, Texture2D captionTexture)
+        private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton, Texture2D clearButton, Texture2D captionTexture, Texture2D menuBackground)
         {
-            _buttons.Add(new RectangleButton(0,   0, squareButton,  "Rectangle", ButtonStages.Rectangle));
-            _buttons.Add(new CircleButton(   70,  0, circleButton,  "Circle",    ButtonStages.Circle));
-            _buttons.Add(new SelectButton(   140, 0, selectButton,  "Select",    ButtonStages.Select));
-            _buttons.Add(new MoveButton(     210, 0, moveButton,    "Move",      ButtonStages.Move));
-            _buttons.Add(new OpenButton(     280, 0, openButton,    "Open",      ButtonStages.Open));
-            _buttons.Add(new SaveButton(     350, 0, saveButton,    "Save",      ButtonStages.Save));
-            _buttons.Add(new ResizeButton(   420, 0, resizeButton,  "Resize",    ButtonStages.Resize));
-            _buttons.Add(new GroupButton(    490, 0, groupButton,   "Group",     ButtonStages.Group));
-            _buttons.Add(new ClearButton(    560, 0, clearButton,   "Clear",     ButtonStages.Clear));
-            _buttons.Add(new CaptionButtons( 610, 0, captionTexture,"Caption",   ButtonStages.Caption));
+            _buttons.Add(new ButtonBase( 0,   0, squareButton,  "Rectangle", ButtonStages.Rectangle));
+            _buttons.Add(new ButtonBase( 24,  0, circleButton,  "Circle",    ButtonStages.Circle));
+            _buttons.Add(new ButtonBase( 48,  0, selectButton,  "Select",    ButtonStages.Select));
+            _buttons.Add(new ButtonBase( 72,  0, moveButton,    "Move",      ButtonStages.Move));
+            _buttons.Add(new ButtonBase( 96,  0, resizeButton,  "Resize",    ButtonStages.Resize));
+            _buttons.Add(new ButtonBase( 120, 0, groupButton,   "Group",     ButtonStages.Group));
+            _buttons.Add(new ButtonBase( 144, 0, clearButton,   "Clear",     ButtonStages.Clear));
+            _buttons.Add(new ButtonBase( 168, 0, captionTexture,"Caption",   ButtonStages.Caption));
+
+            _buttons.Add(new ButtonBase( 704, 0, openButton,    "Open",      ButtonStages.Open));
+            _buttons.Add(new ButtonBase( 752, 0, saveButton,    "Save",      ButtonStages.Save));
+            _buttons.Add(new ButtonBase( 0,   0, menuBackground,  "menuBackground", ButtonStages.Unselected));
         }
 
 //      ######Insertion / delete functions######
@@ -862,7 +864,8 @@ namespace DrawDraw
             Group,
             Resize,
             Clear,
-            Caption
+            Caption,
+            Unselected
         }
         
         public enum BorderSides

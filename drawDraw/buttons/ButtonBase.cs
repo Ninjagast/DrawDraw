@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DrawDraw.buttons
 {
-    public abstract class ButtonBase
+    public class ButtonBase
     {
         protected static Canvas canvas = Canvas.Instance;
         protected int x;
@@ -15,7 +15,7 @@ namespace DrawDraw.buttons
         protected string Name;
         protected Canvas.ButtonStages ButtonValue;
 
-        protected ButtonBase(int X, int Y, Texture2D texture, string name, Canvas.ButtonStages buttonStage)
+        public ButtonBase(int X, int Y, Texture2D texture, string name, Canvas.ButtonStages buttonStage)
         {
             ButtonValue = buttonStage;
             x = X;
@@ -39,7 +39,12 @@ namespace DrawDraw.buttons
             return false;
         }
 
-        public abstract void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice);
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        {
+            Vector2 position = new Vector2(x, y);
+            spriteBatch.Draw(Texture, new Vector2(x, y), Color.White);
+        }
+        
         public bool OnClick(MouseState mouseState)
         {
             if (CheckClick(mouseState))
