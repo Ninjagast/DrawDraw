@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DrawDraw
 {
@@ -7,6 +8,7 @@ namespace DrawDraw
     public abstract class Captions
     {
         public abstract List<StorageText> GetCaption();
+        public abstract String GetCaptionString();
     }
     
     // Concrete Components provide default implementations of the operations.
@@ -16,6 +18,11 @@ namespace DrawDraw
         public override List<StorageText> GetCaption()
         {
             return new List<StorageText>();
+        }
+
+        public override string GetCaptionString()
+        {
+            return "";
         }
     }
 

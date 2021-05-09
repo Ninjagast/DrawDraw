@@ -11,6 +11,8 @@ namespace DrawDraw
         public List<CanvasSave> Branches { get; set; }
         public List<canvasChild> Leaf { get; set; }
         
+        public String _caption { get; set; }
+        
 //      returns the saved state of the tree
         public IComponent GetTreeStruct(Texture2D circleTexture)
         {
@@ -76,5 +78,6 @@ namespace DrawDraw
 //      circle = 1
         public int Type { get; set; }
         public List<canvasChild> Children;
+        public String saveString { get; set; }
     }
 }

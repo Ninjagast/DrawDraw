@@ -104,7 +104,7 @@ namespace DrawDraw
         // Move texture to new positioning
         public void RedoAction()
         {
-            _canvas.MoveTexure(_selected, _new_positionings);
+            _canvas.MoveTexture(_selected, _new_positionings);
         }
         // Move texture to old positioning
         public void UndoAction()
@@ -113,7 +113,7 @@ namespace DrawDraw
             {
                 _new_positionings.Add(new Point(select.X, select.Y));
             }
-            _canvas.MoveTexure(_selected, _selected_old_pos);
+            _canvas.MoveTexture(_selected, _selected_old_pos);
         }
     }
     // Resizes one texture

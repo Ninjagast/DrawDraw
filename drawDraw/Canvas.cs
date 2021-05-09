@@ -316,7 +316,7 @@ namespace DrawDraw
         }
 
 //      moves the textures back
-        public void MoveTexure(List<ShapeBase> selected, List<Point> oldPos)
+        public void MoveTexture(List<ShapeBase> selected, List<Point> oldPos)
         {
             int index = 0;
 //          for all selected shapes
@@ -815,7 +815,6 @@ namespace DrawDraw
                                 result = shape;
                             }
                         }
-
                         if (result != null)
                             spriteBatch.DrawString(_font,branch._caption, new Vector2(result.X, result.Y), Color.Black);
                     }

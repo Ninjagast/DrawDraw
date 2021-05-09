@@ -17,6 +17,15 @@ namespace DrawDraw.Decorators
             storageText.Add(new StorageText(0, _message));
             return storageText;
         }
+        
+        public override string GetCaptionString()
+        {
+            String result = _captions.GetCaptionString();
+            if (result.Length > 0)
+                result += ",";
+            result += "\"0\"" +": \""+ _message + "\"";
+            return result;
+        }
     }    
     
     public class RightCaptions : Decorator
@@ -33,6 +42,14 @@ namespace DrawDraw.Decorators
             storageText.Add(new StorageText(1, _message));
             return storageText;
         }
+        public override string GetCaptionString()
+        {
+            String result = _captions.GetCaptionString();
+            if (result.Length > 0)
+                result += ",";
+            result += "\"1\"" +": \""+ _message + "\"";
+            return result;
+        }
     }
     
     public class BottomCaptions : Decorator
@@ -48,6 +65,14 @@ namespace DrawDraw.Decorators
             storageText.Add(new StorageText(2, _message));
             return storageText;
         }
+        public override string GetCaptionString()
+        {
+            String result = _captions.GetCaptionString();
+            if (result.Length > 0)
+                result += ",";
+            result += "\"2\"" +": \""+ _message + "\"";
+            return result;
+        }
     }
     
     public class LeftCaptions : Decorator
@@ -62,6 +87,14 @@ namespace DrawDraw.Decorators
             List<StorageText> storageText = base.GetCaption();
             storageText.Add(new StorageText(3, _message));
             return storageText;
+        }
+        public override string GetCaptionString()
+        {
+            String result = _captions.GetCaptionString();
+            if (result.Length > 0)
+                result += ",";
+            result += "\" 3 \"" +": \""+ _message + "\"";
+            return result;
         }
     }
 }

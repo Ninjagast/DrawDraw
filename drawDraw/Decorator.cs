@@ -23,5 +23,9 @@ namespace DrawDraw
             return _captions.GetCaption();
         }
 
+        public override string GetCaptionString()
+        {
+            return _captions.GetCaptionString(); 
+        }
     }
 }

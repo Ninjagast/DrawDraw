@@ -95,6 +95,7 @@ namespace DrawDraw
 
         public string Save()
         {
+            // saveString = "{" + _shape.Caption.GetCaptionString() + "}";
             return JsonSerializer.Serialize(_shape);
         }
 
@@ -245,6 +246,7 @@ namespace DrawDraw
                     {
                         result += "{\"Branches\":[";
                     }
+                    
 //                  and call this function
                     result += child.Save();
                     first = false;
@@ -272,7 +274,21 @@ namespace DrawDraw
                 }
 //              remove the last , which is not needed
                 result = result.Remove(result.Length - 1);
-                result += "]},";
+                result += "]";
+                
+                if (_caption != null)
+                {
+                    if (_caption.Length > 0)
+                    {
+                        result += ", \"_caption\" : \"" + _caption + "\"";
+                    } 
+                }
+                else
+                {
+                    result += ", \"_caption\" : \" \"";
+                }
+                
+                result += "},";
             }
             return result;
         }
