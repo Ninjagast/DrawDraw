@@ -153,12 +153,16 @@ namespace DrawDraw
                         _numSelectedTextures++;
                     }
                     shape.ToggleSelect();
+                    Console.WriteLine(_numSelectedTextures);
                     return;
                 }
             }
 
-            _textures.SelectAll(mouseState);
-            
+            if (!_textures.SelectAll(mouseState))
+            {
+                UnSelectAllTextures();
+            }
+            Console.WriteLine(_numSelectedTextures);
         }
 
 //      returns all selected shapes
@@ -491,6 +495,7 @@ namespace DrawDraw
                         {
     //                      we select it draw resize borders and move onto the next move stage
                             shape.ToggleSelect();
+                            _numSelectedTextures++;
                             _resizeBorders = shape.DrawResizeBorders();
                             MoveStage      = MoveStages.Select;
                             break;

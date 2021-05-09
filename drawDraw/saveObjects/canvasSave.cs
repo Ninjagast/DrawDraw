@@ -29,6 +29,7 @@ namespace DrawDraw
                     {
 //                      puts the result from this function into this branch
                         returnTree.Add(branch.GetTreeStruct(circleTexture));
+                        returnTree._caption = branch._caption;
                     }
                 }
                 return returnTree;
@@ -49,12 +50,14 @@ namespace DrawDraw
                     if (child.Type == 0)
                     {
                         RectangleShape shape = new RectangleShape("", child.X, child.Y, child.Width, child.Height, 0);
+                        shape.saveString = child.saveString;
                         leaf = new Leaf(shape);
                     }
                     else
                     {
                         CircleShape shape = new CircleShape("", child.X, child.Y, child.Width, child.Height, 1);
                         shape.Circle = circleTexture;
+                        shape.saveString = child.saveString;
                         leaf = new Leaf(shape);
                     }
 //                  add them to the tree
