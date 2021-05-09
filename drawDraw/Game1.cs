@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Microsoft.Xna.Framework;
 using System;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,7 +13,9 @@ namespace DrawDraw
 //      creates the first and only instance of the canvas class
         private readonly Canvas _canvas = Canvas.Instance;
 //      Save the previus mouseState
-        private MouseState _prevMouseState;
+        private MouseState _prevMouseState; 
+//      Save the previus KeyState
+        private KeyboardState _previousState;
 //      changes and modifies the canvas
         private CanvasCommands _canvasCommands = new CanvasCommands();
         private SpriteBatch _spriteBatch;
@@ -25,6 +28,7 @@ namespace DrawDraw
         protected override void Initialize()
         {
             base.Initialize();
+            _previousState = Keyboard.GetState();
         }
 //      loads the content of the "game" aka mouse buttons and the circleTexture
         protected override void LoadContent()
@@ -58,6 +62,9 @@ namespace DrawDraw
         {
 //          get the mouse state
             MouseState mouseState = Mouse.GetState();
+            
+//          Poll for current keyboard state
+            KeyboardState state = Keyboard.GetState();
 
 //          we exit the "game" when the player clicks on the back button or the escape key
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
@@ -84,6 +91,7 @@ namespace DrawDraw
 //          updates the resize and move borders
             UpdateBorders(mouseState);
 
+            
 //          mouse button handler
 //          if there was no button press and there was a mouse click
             if (!_canvas.CheckButtonClick(mouseState, _prevMouseState) && (_prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)) 
@@ -94,6 +102,9 @@ namespace DrawDraw
 
 //          we check for a button press
             CheckButtonPress(mouseState);
+            
+//          we check for a key press
+            CheckKeyPress(state);
             
 //          we save the current mouse state for single click checks
             _prevMouseState = mouseState;
@@ -111,6 +122,37 @@ namespace DrawDraw
             {
                 _canvasCommands.RedoActions();
             }
+        }
+//      this function check all key pressed
+        private void CheckKeyPress(KeyboardState state)
+        {
+            // If they hit esc, exit
+            if (state.IsKeyDown(Keys.Escape))
+                Exit();
+
+            bool ctrl = false;
+            bool shift = false;
+            bool keyZ = false;
+            
+            foreach (Keys key in state.GetPressedKeys())
+            {
+                if (key == Keys.LeftControl)
+                    ctrl = true;
+                
+                if(key == Keys.Z)
+                    keyZ = true;
+
+                if (key == Keys.LeftShift)
+                    shift = true;
+            }
+            
+            if (ctrl && keyZ && !shift &&  _previousState.IsKeyUp(Keys.Z))
+                _canvasCommands.UndoActions();
+            
+            if (ctrl && keyZ && shift && _previousState.IsKeyUp(Keys.Z))
+                _canvasCommands.RedoActions();
+
+            _previousState = state;
         }
 //      this function handles a mouse click
         private void MouseClick(MouseState mouseState)
@@ -134,7 +176,7 @@ namespace DrawDraw
                     _canvasCommands.SetCommand(new ResizeTexure(mouseState));
                     break;
                 case Canvas.ButtonStages.Caption:
-                    _canvas.AddTextureCaption("asd",mouseState);
+                    _canvas.AddTextureCaption("",mouseState);
                     break;
             }
         }
