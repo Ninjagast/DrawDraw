@@ -687,7 +687,7 @@ namespace DrawDraw
                     {
                         List<ShapeBase> shapes = payLoad.GetBranch(0).GetAllShapes();
                         IComponent inserttBranch = new Composite();
-
+                        inserttBranch._caption = children._caption;
 //                      for all shapes we add it to the updateBranch
                         foreach (var shape in shapes)
                         {
