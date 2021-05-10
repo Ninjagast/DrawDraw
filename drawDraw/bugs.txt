@@ -1,5 +1,0 @@
-﻿Lesser bugs I'm 2 lazy to fix rn
-
-grouping a group which in itself is already a group breaks it.
-
-adding a nested group to a nested nested group breaks it

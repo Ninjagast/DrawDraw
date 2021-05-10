@@ -1,9 +1,8 @@
-﻿using System;
-using DrawDraw.shapes;
-using DrawDraw.strategies;
+﻿using DrawDraw.shapes;
+using DrawDraw.strategiesPattern;
 using Microsoft.Xna.Framework;
 
-namespace DrawDraw
+namespace DrawDraw.VisitorsPattern
 {
     public class Resize : IVisitor
     {

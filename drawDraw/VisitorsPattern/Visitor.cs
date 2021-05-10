@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using DrawDraw.shapes;
-using DrawDraw.strategies;
+﻿using DrawDraw.shapes;
 
-namespace DrawDraw
+namespace DrawDraw.VisitorsPattern
 {
     public interface IVisitor
     {

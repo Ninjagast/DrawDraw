@@ -1,4 +1,5 @@
 ﻿using System;
+using DrawDraw.VisitorsPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,10 +10,10 @@ namespace DrawDraw.shapes
         private Rectangle _border;
         public ResizeBorder(int x, int y, int width, int height, int type) : base(x, y, width, height, type)
         {
-            // BottomBorder 0
-            // TopBorder 1
-            // LeftBorder 2
-            // RightBorder 3
+//          BottomBorder 0
+//          TopBorder 1
+//          LeftBorder 2
+//          RightBorder 3
             switch (type)
             {
                 case 0:
@@ -64,7 +65,7 @@ namespace DrawDraw.shapes
         }
         public override ShapeBase Clone(Guid id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override ShapeBase Action(IVisitor visitor)

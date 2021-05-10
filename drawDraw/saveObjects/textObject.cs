@@ -1,6 +1,7 @@
-﻿namespace DrawDraw
+﻿namespace DrawDraw.saveObjects
 {
-    public class textObject
+//  template class for json serialization
+    public class TextObject
     {
         public int side { get; set; }
         public string message { get; set; }

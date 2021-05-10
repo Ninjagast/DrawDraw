@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DrawDraw.strategies
+namespace DrawDraw.strategiesPattern
 {
     public class Context
     {

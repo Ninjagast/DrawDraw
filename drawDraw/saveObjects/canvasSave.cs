@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using DrawDraw.CompositionPattern;
 using DrawDraw.shapes;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace DrawDraw
+namespace DrawDraw.saveObjects
 {
     public class CanvasSave
     {
+//      template class for json serialization
         public List<CanvasSave> Branches { get; set; }
         public List<canvasChild> Leaf { get; set; }
-        
-        public String _caption { get; set; }
+        public String Caption { get; set; }
         
 //      returns the saved state of the tree
         public IComponent GetTreeStruct(Texture2D circleTexture)
@@ -29,7 +29,7 @@ namespace DrawDraw
                     {
 //                      puts the result from this function into this branch
                         returnTree.Add(branch.GetTreeStruct(circleTexture));
-                        returnTree._caption = branch._caption;
+                        returnTree.Caption = branch.Caption;
                     }
                 }
                 return returnTree;
@@ -49,15 +49,18 @@ namespace DrawDraw
 //                  is this child a ellipse or a rectangle?
                     if (child.Type == 0)
                     {
-                        RectangleShape shape = new RectangleShape("", child.X, child.Y, child.Width, child.Height, 0);
-                        shape.saveString = child.saveString;
+                        RectangleShape shape = new RectangleShape("", child.X, child.Y, child.Width, child.Height, 0)
+                        {
+                            SaveString = child.SaveString
+                        };
                         leaf = new Leaf(shape);
                     }
                     else
                     {
-                        CircleShape shape = new CircleShape("", child.X, child.Y, child.Width, child.Height, 1);
-                        shape.Circle = circleTexture;
-                        shape.saveString = child.saveString;
+                        CircleShape shape = new CircleShape("", child.X, child.Y, child.Width, child.Height, 1)
+                        {
+                            Circle = circleTexture, SaveString = child.SaveString
+                        };
                         leaf = new Leaf(shape);
                     }
 //                  add them to the tree
@@ -81,6 +84,6 @@ namespace DrawDraw
 //      circle = 1
         public int Type { get; set; }
         public List<canvasChild> Children;
-        public String saveString { get; set; }
+        public String SaveString { get; set; }
     }
 }

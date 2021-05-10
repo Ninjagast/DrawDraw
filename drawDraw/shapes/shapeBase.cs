@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text.Json;
-using DrawDraw.Decorators;
+using DrawDraw.DecoratorsPattern;
+using DrawDraw.VisitorsPattern;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Xceed.Wpf.Toolkit.Converters;
 
 namespace DrawDraw.shapes
 {
     public abstract class ShapeBase
     {
-        protected Canvas Canvas = Canvas.Instance;
         public Guid id { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
@@ -23,7 +19,7 @@ namespace DrawDraw.shapes
         
         public bool Select = false;
         public Captions Caption = new ConcreteCaptions() ;
-        public String saveString { get; set; }
+        public String SaveString { get; set; }
 
         public virtual Texture2D GetCircle()
         {
@@ -40,8 +36,6 @@ namespace DrawDraw.shapes
             throw new NotImplementedException();
         }
         
-        
-
         protected ShapeBase(int x, int y, int width, int height, int type)
         {
             id = Guid.NewGuid();
@@ -54,7 +48,7 @@ namespace DrawDraw.shapes
         public void AddCaption(Decorator decorator)
         {
             Caption = decorator;
-            saveString = "[" + Caption.GetCaptionString() + "]";
+            SaveString = "[" + Caption.GetCaptionString() + "]";
         }
         
         public abstract ShapeBase Clone(Guid id);
@@ -115,16 +109,19 @@ namespace DrawDraw.shapes
 
         public Canvas.BorderSides DetectSide(Point mousePoint)
         {
+//          creates a point per side of the texture
             Point right = new Point(X + Width, Y + Width / 2);
             Point left  = new Point(X, Y + Width / 2);
             Point top   = new Point(X + Width / 2, Y);
             Point bot   = new Point(X + Width / 2, Y + Width / 2);
             
-            int distanceToRight = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), right.ToVector2()));
-            int distanceToLeft = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), left.ToVector2()));
-            int distanceToTop = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), top.ToVector2()));
+//          calculates distance from mouse to each point
+            int distanceToRight  = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), right.ToVector2()));
+            int distanceToLeft   = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), left.ToVector2()));
+            int distanceToTop    = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), top.ToVector2()));
             int distanceToBottom = (int)Math.Floor(Vector2.Distance(mousePoint.ToVector2(), bot.ToVector2()));
 
+//          checks which one is the smallest
             if (distanceToRight <= distanceToLeft && distanceToRight <= distanceToTop && distanceToRight <= distanceToBottom)
             {
 //              clicked on the right border

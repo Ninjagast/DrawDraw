@@ -1,5 +1,9 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/background.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/background.xnb","TextureProcessor","Texture2DContent",361,76885,0.1956054
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/captionCanvas.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/captionCanvas.xnb","TextureProcessor","Texture2DContent",350,2389,0.0019491
 "C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/circleTexture.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/circleTexture.xnb","TextureProcessor","Texture2DContent",7128,640085,0.1557066
-"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/emptyCanvas.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/emptyCanvas.xnb","TextureProcessor","Texture2DContent",421,2389,0.0015292
-"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/fonts.spritefont","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/fonts.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21538,0.0943158
-"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/group.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/group.xnb","TextureProcessor","Texture2DContent",445,2389,0.0013422
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/emptyCanvas.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/emptyCanvas.xnb","TextureProcessor","Texture2DContent",421,2389,0.0017499
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/fonts.spritefont","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/fonts.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21538,0.1268077
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/group.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/group.xnb","TextureProcessor","Texture2DContent",445,2389,0.0021296
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/Open.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/Open.xnb","TextureProcessor","Texture2DContent",347,4693,0.0019915
+"C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/save.png","C:/Users/Steven/source/repos/drawDraw/DrawDraw/Content/bin/DesktopGL/Content/save.xnb","TextureProcessor","Texture2DContent",293,4693,0.00239

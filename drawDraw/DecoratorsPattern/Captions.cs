@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DrawDraw
+namespace DrawDraw.DecoratorsPattern
 {
     // The base Component interface defines operations that can be altered by
     // decorators.
@@ -28,13 +28,13 @@ namespace DrawDraw
 
     public class StorageText
     {
-        public int _side;
-        public string _message;
+        public int Side;
+        public string Message;
 
         public StorageText(int side, string message)
         {
-            _side = side;
-            _message = message;
+            Side = side;
+            Message = message;
         }
     }
 }

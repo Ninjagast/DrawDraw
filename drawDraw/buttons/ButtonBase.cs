@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,18 +6,18 @@ namespace DrawDraw.buttons
 {
     public class ButtonBase
     {
-        protected static Canvas canvas = Canvas.Instance;
-        protected int x;
-        protected int y;
+        protected static Canvas Canvas = Canvas.Instance;
+        protected int X;
+        protected int Y;
         protected Texture2D Texture;
         protected string Name;
         protected Canvas.ButtonStages ButtonValue;
 
-        public ButtonBase(int X, int Y, Texture2D texture, string name, Canvas.ButtonStages buttonStage)
+        public ButtonBase(int x, int y, Texture2D texture, string name, Canvas.ButtonStages buttonStage)
         {
             ButtonValue = buttonStage;
-            x = X;
-            y = Y;
+            this.X = x;
+            this.Y = y;
             Texture = texture;
             Name = name;
         }
@@ -29,9 +27,9 @@ namespace DrawDraw.buttons
         {
             Point point = new Point(mouseState.X, mouseState.Y);
 
-            if (point.X > x && point.X < x + Texture.Width)
+            if (point.X > X && point.X < X + Texture.Width)
             {
-                if (point.Y > y && point.Y < y + Texture.Height)
+                if (point.Y > Y && point.Y < Y + Texture.Height)
                 {
                     return true;
                 }
@@ -41,17 +39,15 @@ namespace DrawDraw.buttons
 
         public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
-            Vector2 position = new Vector2(x, y);
-            spriteBatch.Draw(Texture, new Vector2(x, y), Color.White);
+            spriteBatch.Draw(Texture, new Vector2(X, Y), Color.White);
         }
         
+//      when a button gets clicked: Do something!
         public bool OnClick(MouseState mouseState)
         {
             if (CheckClick(mouseState))
             {
-                canvas.BtnStage = ButtonValue;
-                Console.WriteLine(Name);
-                Console.WriteLine("Button stage : " + canvas.BtnStage);
+                Canvas.BtnStage = ButtonValue;
                 return true;
             }
             return false;

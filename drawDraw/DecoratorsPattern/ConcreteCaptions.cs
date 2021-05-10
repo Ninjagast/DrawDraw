@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DrawDraw.Decorators
+namespace DrawDraw.DecoratorsPattern
 {
     public class TopCaptions : Decorator
     {
@@ -11,6 +11,7 @@ namespace DrawDraw.Decorators
             _message = message;
         }
 
+//      returns a list of all nested captions
         public override List<StorageText> GetCaption()
         {
             List<StorageText> storageText = base.GetCaption();
@@ -18,9 +19,10 @@ namespace DrawDraw.Decorators
             return storageText;
         }
         
+//      returns the caption in json so we can save it
         public override string GetCaptionString()
         {
-            String result = _captions.GetCaptionString();
+            String result = Captions.GetCaptionString();
             if (result.Length > 0)
                 result += ",";
             result += "{\"side\" : 0," +"\"message\" :\""+ _message + "\"}";
@@ -44,7 +46,7 @@ namespace DrawDraw.Decorators
         }
         public override string GetCaptionString()
         {
-            String result = _captions.GetCaptionString();
+            String result = Captions.GetCaptionString();
             if (result.Length > 0)
                 result += ",";
             result += "{\"side\" : 1," +"\"message\" :\""+ _message + "\"}";
@@ -67,7 +69,7 @@ namespace DrawDraw.Decorators
         }
         public override string GetCaptionString()
         {
-            String result = _captions.GetCaptionString();
+            String result = Captions.GetCaptionString();
             if (result.Length > 0)
                 result += ",";
             result += "{\"side\" : 2," +"\"message\" :\""+ _message + "\"}";
@@ -90,7 +92,7 @@ namespace DrawDraw.Decorators
         }
         public override string GetCaptionString()
         {
-            String result = _captions.GetCaptionString();
+            String result = Captions.GetCaptionString();
             if (result.Length > 0)
                 result += ",";
             result += "{\"side\" : 3," +"\"message\" :\""+ _message + "\"}";

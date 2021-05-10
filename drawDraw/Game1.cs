@@ -1,8 +1,6 @@
-﻿using System.Runtime.Serialization;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
-using System.Text;
-using Microsoft.Xna.Framework;
+using DrawDraw.CommandPattern;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -30,6 +28,7 @@ namespace DrawDraw
             base.Initialize();
             _previousState = Keyboard.GetState();
         }
+        
 //      loads the content of the "game" aka mouse buttons and the circleTexture
         protected override void LoadContent()
         {
@@ -48,7 +47,7 @@ namespace DrawDraw
             Texture2D groupButton   = Content.Load<Texture2D>("group");
             Texture2D clearButton   = Content.Load<Texture2D>("emptyCanvas");
             Texture2D captionButton = Content.Load<Texture2D>("captionCanvas");
-            SpriteFont font = Content.Load<SpriteFont>("fonts");
+            SpriteFont font         = Content.Load<SpriteFont>("fonts");
             
 //          inits the canvas with all needed textures and the graphics device
             _canvas.Init(GraphicsDevice, circleButton, eraserButton, moveButton, selectButton,squareButton, openButton, saveButton, resizeButton,groupButton, clearButton, circleTexture, captionButton, font, menuBackground);
@@ -57,6 +56,7 @@ namespace DrawDraw
         {
             Content.Unload();
         }
+        
 //      update function for behaviour
         protected override void Update(GameTime gameTime)
         {
@@ -73,11 +73,9 @@ namespace DrawDraw
             switch (_canvas.BtnStage)
             {
                 case Canvas.ButtonStages.Open:
-                    Console.WriteLine("Open");
                     _canvas.OpenFile();
                     break;
                 case Canvas.ButtonStages.Save:
-                    Console.WriteLine("Save");
                     _canvas.SaveFile();
                     break;
                 case Canvas.ButtonStages.Group:
@@ -88,10 +86,6 @@ namespace DrawDraw
                     break;
             }
 
-//          updates the resize and move borders
-            UpdateBorders(mouseState);
-
-            
 //          mouse button handler
 //          if there was no button press and there was a mouse click
             if (!_canvas.CheckButtonClick(mouseState, _prevMouseState) && (_prevMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)) 
@@ -100,36 +94,20 @@ namespace DrawDraw
                 MouseClick(mouseState);
             }
 
-//          we check for a button press
-            CheckButtonPress(mouseState);
-            
 //          we check for a key press
             CheckKeyPress(state);
             
 //          we save the current mouse state for single click checks
             _prevMouseState = mouseState;
             
+//          updates the resize and move borders
+            UpdateBorders(mouseState);
+            
             base.Update(gameTime);
-        }
-//      this function checks for all the button presses
-        private void CheckButtonPress(MouseState mouseState)
-        {
-            if(_prevMouseState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released)
-            {
-                _canvasCommands.UndoActions();
-            } 
-            else if (_prevMouseState.MiddleButton == ButtonState.Pressed && mouseState.MiddleButton == ButtonState.Released)
-            {
-                _canvasCommands.RedoActions();
-            }
         }
 //      this function check all key pressed
         private void CheckKeyPress(KeyboardState state)
         {
-            // If they hit esc, exit
-            if (state.IsKeyDown(Keys.Escape))
-                Exit();
-
             bool ctrl = false;
             bool shift = false;
             bool keyZ = false;
@@ -197,6 +175,7 @@ namespace DrawDraw
 //      ##########################
 //      ###End update functions###
 //      ##########################
+
         protected override void Draw(GameTime gameTime)
         {  
             _spriteBatch.Begin();

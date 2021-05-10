@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using DrawDraw.DecoratorsPattern;
+using DrawDraw.saveObjects;
 using DrawDraw.shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Text.Json;
-using DrawDraw.Decorators;
 
-namespace DrawDraw.strategies
+namespace DrawDraw.strategiesPattern
 {
     public class RectangleStrat: IStrategy
     {
@@ -30,7 +30,7 @@ namespace DrawDraw.strategies
         
             texture2D.SetData(color);
             spriteBatch.Draw(texture2D, shape.GetNewRectangle(), Color.White);
-            DrawContext(shape, spriteBatch);
+            DrawCaption(shape, spriteBatch);
         }
 
         public void Resize(ShapeBase shape, Canvas.BorderSides selectedSide, Point mousePoint, Point startPoint)
@@ -58,14 +58,13 @@ namespace DrawDraw.strategies
             }
         }
 
-        public void DrawContext(ShapeBase shape, SpriteBatch spriteBatch)
+        public void DrawCaption(ShapeBase shape, SpriteBatch spriteBatch)
         {
-            Canvas _canvas = Canvas.Instance;
             List<StorageText> captions = shape.Caption.GetCaption();
 
-            if (captions.Count == 0 && shape.saveString != null)
+            if (captions.Count == 0 && shape.SaveString != null)
             {
-                List<textObject> res = JsonSerializer.Deserialize<List<textObject>>(shape.saveString);
+                List<TextObject> res = JsonSerializer.Deserialize<List<TextObject>>(shape.SaveString);
                 
                 foreach (var textObject in res)
                 {
@@ -89,19 +88,19 @@ namespace DrawDraw.strategies
             
             foreach (StorageText caption in captions)
             {
-                switch (caption._side)
+                switch (caption.Side)
                 {
                     case 0: // Top
-                        spriteBatch.DrawString(_canvas._font,caption._message, new Vector2(shape.X + (shape.Width / 2), shape.Y), Color.Black);
+                        spriteBatch.DrawString(Canvas.Instance.Font,caption.Message, new Vector2(shape.X + (shape.Width / 2), shape.Y), Color.Black);
                         break;
                     case 1: // Right
-                        spriteBatch.DrawString(_canvas._font,caption._message, new Vector2(shape.X + (shape.Width), shape.Y + (shape.Height / 2)), Color.Black);
+                        spriteBatch.DrawString(Canvas.Instance.Font,caption.Message, new Vector2(shape.X + (shape.Width), shape.Y + (shape.Height / 2)), Color.Black);
                         break;
                     case 2: // Bottom
-                        spriteBatch.DrawString(_canvas._font,caption._message, new Vector2(shape.X + (shape.Width / 2), shape.Y + shape.Height), Color.Black);
+                        spriteBatch.DrawString(Canvas.Instance.Font,caption.Message, new Vector2(shape.X + (shape.Width / 2), shape.Y + shape.Height), Color.Black);
                         break;
                     case 3: // Left
-                        spriteBatch.DrawString(_canvas._font,caption._message, new Vector2(shape.X, shape.Y + (shape.Height / 2)), Color.Black);
+                        spriteBatch.DrawString(Canvas.Instance.Font,caption.Message, new Vector2(shape.X, shape.Y + (shape.Height / 2)), Color.Black);
                         break;
                 }
             }

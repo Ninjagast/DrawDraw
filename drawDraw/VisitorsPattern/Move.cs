@@ -2,7 +2,7 @@
 using DrawDraw.shapes;
 using Microsoft.Xna.Framework;
 
-namespace DrawDraw
+namespace DrawDraw.VisitorsPattern
 {
     public class MoveObject : IVisitor
     {
@@ -17,14 +17,12 @@ namespace DrawDraw
         public ShapeBase Visit(RectangleShape shape)
         {
             shape.Update(_finalPos.X, _finalPos.Y, _dimensions.X, _dimensions.Y);
-            Console.WriteLine("Move Rectangle shape");
             return shape;
         }
 
         public ShapeBase Visit(CircleShape shape)
         {
             shape.Update(_finalPos.X, _finalPos.Y, _dimensions.X, _dimensions.Y);
-            Console.WriteLine("Move Circle shape");
             return shape;
         }
     }

@@ -1,18 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
-using DrawDraw.buttons;
 using DrawDraw.shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Text.Json;
 using System.Windows.Forms;
-using System.Xml;
-using DrawDraw.strategies;
-using DrawDraw.Decorators;
+using DrawDraw.CompositionPattern;
+using DrawDraw.DecoratorsPattern;
+using DrawDraw.saveObjects;
+using DrawDraw.strategiesPattern;
+using DrawDraw.VisitorsPattern;
 using ButtonBase = DrawDraw.buttons.ButtonBase;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
@@ -27,7 +27,7 @@ namespace DrawDraw
         private        ResizeBorders     _resizeBorders;
         private        Texture2D         _circleTexture;
         private        Context           _context;
-        public         SpriteFont        _font;
+        public         SpriteFont        Font;
         
         public MoveStages MoveStage = 0;
         
@@ -35,7 +35,7 @@ namespace DrawDraw
         private GraphicsDevice _graphicsDevice;
         public ButtonStages BtnStage;
 
-        public int _numSelectedTextures = 0;
+        public int NumSelectedTextures = 0;
 
         // main tree for the textures / groups
         private Composite _textures = new Composite();
@@ -57,24 +57,24 @@ namespace DrawDraw
             _graphicsDevice = graphicsDevice;
             _circleTexture = circleTexture;
             _context = new Context();
-            _font = font;
+            Font = font;
             CreateButtons(circleButton, eraserButton, moveButton, selectButton, squareButton, openButton, saveButton, resizeButton, groupButton, clearButton, captionTexture, menuBackground);
         }
 
 //      creates all buttons
         private void CreateButtons(Texture2D circleButton, Texture2D eraserButton, Texture2D moveButton, Texture2D selectButton, Texture2D squareButton, Texture2D openButton, Texture2D saveButton, Texture2D resizeButton, Texture2D groupButton, Texture2D clearButton, Texture2D captionTexture, Texture2D menuBackground)
         {
-            _buttons.Add(new ButtonBase( 0,   0, squareButton,  "Rectangle", ButtonStages.Rectangle));
-            _buttons.Add(new ButtonBase( 24,  0, circleButton,  "Circle",    ButtonStages.Circle));
-            _buttons.Add(new ButtonBase( 48,  0, selectButton,  "Select",    ButtonStages.Select));
-            _buttons.Add(new ButtonBase( 72,  0, moveButton,    "Move",      ButtonStages.Move));
-            _buttons.Add(new ButtonBase( 96,  0, resizeButton,  "Resize",    ButtonStages.Resize));
-            _buttons.Add(new ButtonBase( 120, 0, groupButton,   "Group",     ButtonStages.Group));
-            _buttons.Add(new ButtonBase( 144, 0, clearButton,   "Clear",     ButtonStages.Clear));
-            _buttons.Add(new ButtonBase( 168, 0, captionTexture,"Caption",   ButtonStages.Caption));
-
-            _buttons.Add(new ButtonBase( 704, 0, openButton,    "Open",      ButtonStages.Open));
-            _buttons.Add(new ButtonBase( 752, 0, saveButton,    "Save",      ButtonStages.Save));
+            _buttons.Add(new ButtonBase( 0,   0, squareButton,    "Rectangle",      ButtonStages.Rectangle));
+            _buttons.Add(new ButtonBase( 24,  0, circleButton,    "Circle",         ButtonStages.Circle));
+            _buttons.Add(new ButtonBase( 48,  0, selectButton,    "Select",         ButtonStages.Select));
+            _buttons.Add(new ButtonBase( 72,  0, moveButton,      "Move",           ButtonStages.Move));
+            _buttons.Add(new ButtonBase( 96,  0, resizeButton,    "Resize",         ButtonStages.Resize));
+            _buttons.Add(new ButtonBase( 120, 0, groupButton,     "Group",          ButtonStages.Group));
+            _buttons.Add(new ButtonBase( 144, 0, clearButton,     "Clear",          ButtonStages.Clear));
+            _buttons.Add(new ButtonBase( 168, 0, captionTexture,  "Caption",        ButtonStages.Caption));
+       
+            _buttons.Add(new ButtonBase( 704, 0, openButton,      "Open",           ButtonStages.Open));
+            _buttons.Add(new ButtonBase( 752, 0, saveButton,      "Save",           ButtonStages.Save));
             _buttons.Add(new ButtonBase( 0,   0, menuBackground,  "menuBackground", ButtonStages.Unselected));
         }
 
@@ -82,7 +82,6 @@ namespace DrawDraw
 //      function that creates a rectangle
         public Guid InsertRectangle(Point coords)
         {
-//          creates static shape #todo make it so you can draw a different size shape from the start
             RectangleShape shape = new RectangleShape("", coords.X, coords.Y, 100, 100, 0);
             
 //          adds it to the base branch
@@ -94,11 +93,9 @@ namespace DrawDraw
 //      function that creates an ellipse 
         public Guid InsertCircle(Point coords)
         {
-//          creates static shape #todo make it so you can draw a different size shape from the start
-            CircleShape circle = new CircleShape("", coords.X, coords.Y, 100, 100, 1);
+            CircleShape circle = new CircleShape("", coords.X, coords.Y, 100, 100, 1) {Circle = _circleTexture};
 //          give it a texture
-            circle.Circle = _circleTexture;
-            
+
 //          adds it to the base branch
             _textures.GetFirstChild().Add(new Leaf(circle));
             
@@ -108,7 +105,6 @@ namespace DrawDraw
 //      deletes a texture
         public void DeleteTexture(Guid id)
         {
-//          goes through all the non group shape #todo delete group branch when we have added groups or just make this group compatible in general
             List<ShapeBase> textures = _textures.GetFirstChild().GetAllShapes();
             for (int i = 0; i < textures.Count; i++)
             {
@@ -148,14 +144,14 @@ namespace DrawDraw
                 {
                     if (shape.IsSelected())
                     {
-                        _numSelectedTextures--;
+                        NumSelectedTextures--;
                     }
                     else
                     {
-                        _numSelectedTextures++;
+                        NumSelectedTextures++;
                     }
                     shape.ToggleSelect();
-                    Console.WriteLine(_numSelectedTextures);
+                    Console.WriteLine(NumSelectedTextures);
                     return;
                 }
             }
@@ -164,7 +160,7 @@ namespace DrawDraw
             {
                 UnSelectAllTextures();
             }
-            Console.WriteLine(_numSelectedTextures);
+            Console.WriteLine(NumSelectedTextures);
         }
 
 //      returns all selected shapes
@@ -184,6 +180,7 @@ namespace DrawDraw
             }
             return selected;
         }
+        
 //      moves stuff
         public void MoveStuff(MouseState mouseState)
         {
@@ -301,6 +298,7 @@ namespace DrawDraw
                 return selected;
             }
         }
+        
 //      overloaded function for the history
         public ShapeBase ResizeStuff(Guid id, ShapeBase shape)
         {
@@ -349,7 +347,7 @@ namespace DrawDraw
             }
 
 //          if there are selected shapes missing then a group is selected
-            if (selectedNonGroupShapes != _numSelectedTextures)
+            if (selectedNonGroupShapes != NumSelectedTextures)
             {
 //              if there are only groups selected
                 if (selectedNonGroupShapes == 0)
@@ -395,9 +393,8 @@ namespace DrawDraw
                 }
                 else
                 {
-//                  we are adding a non group with a group #todo make this function grab the last selected branch
                     IComponent branch = _textures.GetSelectedBranch();
-                    List<ShapeBase> nonGroupedShapes = _textures.GetNonGroupedSelectedshapes();
+                    List<ShapeBase> nonGroupedShapes = _textures.GetNonGroupedSelectedShapes();
 
 //                  for all shapes in the non grouped shapes
                     foreach (var shape in nonGroupedShapes)
@@ -484,37 +481,36 @@ namespace DrawDraw
             if (_textures.GetSelectedBranch() == null)
             {
                 Point mousePoint = new Point(mouseState.X, mouseState.Y);
-    //          if we have not selected a texture to resize
+//              if we have not selected a texture to resize
                 if (MoveStage == MoveStages.Undefined)
                 {
                     UnSelectAllTextures();
                     
-    //              for all shapes
+//                  for all shapes
                     foreach (ShapeBase shape in _textures.GetAllShapes())
                     {
-    //                  if the click location is within this shape
+//                      if the click location is within this shape
                         if (PointWithinShape(shape, mouseState))
                         {
-    //                      we select it draw resize borders and move onto the next move stage
+//                          we select it draw resize borders and move onto the next move stage
                             shape.ToggleSelect();
-                            _numSelectedTextures++;
+                            NumSelectedTextures++;
                             _resizeBorders = shape.DrawResizeBorders();
                             MoveStage      = MoveStages.Select;
                             break;
                         }
                     }
-                    return;
                 }
-    //          if have selected a texture to resize
+//              if have selected a texture to resize
                 else if(MoveStage == MoveStages.Select)
                 {
-    //              for all shapes
+//                  for all shapes
                     foreach (ShapeBase shape in _textures.GetAllShapes())
                     {
-    //                  if it is selected
+//                      if it is selected
                         if (shape.IsSelected())
                         {
-    //                      we check which side we have just selected and save the start pos
+//                          we check which side we have just selected and save the start pos
                             _resizeBorders.SelectedSide = shape.DetectSide(mousePoint);
                             switch (_resizeBorders.SelectedSide)
                             {
@@ -536,11 +532,10 @@ namespace DrawDraw
                         }
                     }
                     
-    //              we move onto the next resize stage 
+//                  we move onto the next resize stage 
                     BtnStage = ButtonStages.Caption;
                     MoveStage = MoveStages.Undefined;
                     _resizeBorders = null;
-                    return;
                 }
             }
             else
@@ -630,7 +625,7 @@ namespace DrawDraw
                     fileContent = reader.ReadToEnd();
                 }
 
-                CanvasSave res = null;
+                CanvasSave res;
 
                 try
                 {
@@ -654,8 +649,11 @@ namespace DrawDraw
 
                 if (children.GetBranch(0).CountBranches() == 0)
                 {
-                    _textures.Add(children.GetBranch(0));
-                    children.Remove(0);
+                    if (children.GetBranch(0).GetBranch(0).CountBranches() == 0)
+                    {
+                        _textures.Add(children.GetBranch(0));
+                        children.Remove(0);
+                    }
                 }
                 else
                 {
@@ -689,7 +687,7 @@ namespace DrawDraw
                     {
                         List<ShapeBase> shapes = payLoad.GetBranch(0).GetAllShapes();
                         IComponent inserttBranch = new Composite();
-                        inserttBranch._caption = children._caption;
+                        inserttBranch.Caption = children.Caption;
 //                      for all shapes we add it to the updateBranch
                         foreach (var shape in shapes)
                         {
@@ -705,10 +703,13 @@ namespace DrawDraw
                         if (i != 0)
                         {
                             int nestIndex = updateBranch.CreateGroup();
-                            Console.WriteLine("test");
                             updateBranch = updateBranch.GetBranch(nestIndex);
                         }
 
+                        if (i == 0)
+                        {
+                            updateBranch.Caption = payLoad.GetBranch(0).Caption;
+                        }
                         int count = payLoad.GetBranch(0).GetBranch(i).CountBranches(); 
             
 //                      if this branch has branches
@@ -785,7 +786,7 @@ namespace DrawDraw
 //      unselects all textures
         private void UnSelectAllTextures()
         {
-            _numSelectedTextures = 0;
+            NumSelectedTextures = 0;
             foreach (ShapeBase shape in _textures.GetAllShapes())
             {
                 if (shape.IsSelected())
@@ -818,11 +819,12 @@ namespace DrawDraw
                 button.Draw(spriteBatch, _graphicsDevice);
             }
 
+//          should be only ran when loading in but grey doesn't want it changed don't @ me (⓿_⓿)
             foreach (IComponent branch in _textures.GetAllBranches())
             {
-                if (branch._caption != null)
+                if (branch.Caption != null)
                 {
-                    if (branch._caption.Length > 0)
+                    if (branch.Caption.Length > 0)
                     {
                         ShapeBase result = null;
                         int score = 999999999;
@@ -836,7 +838,7 @@ namespace DrawDraw
                             }
                         }
                         if (result != null)
-                            spriteBatch.DrawString(_font,branch._caption, new Vector2(result.X, result.Y), Color.Black);
+                            spriteBatch.DrawString(Font,branch.Caption, new Vector2(result.X, result.Y), Color.Black);
                     }
                 }
             }
@@ -848,7 +850,7 @@ namespace DrawDraw
                 border.RightMoveBorder.Draw(spriteBatch, _graphicsDevice);
                 border.LeftMoveBorder.Draw(spriteBatch, _graphicsDevice);
             }
-            _resizeBorders?.drawBorder(spriteBatch, _graphicsDevice);
+            _resizeBorders?.DrawBorder(spriteBatch, _graphicsDevice);
         }
 
 //      ######enums######
@@ -856,7 +858,6 @@ namespace DrawDraw
         {
             Rectangle,
             Circle,
-            Undo,
             Select,
             Move,
             Open,
@@ -902,7 +903,6 @@ namespace DrawDraw
                     return true;
                 }
             }
-
             return false;
         }
     }
